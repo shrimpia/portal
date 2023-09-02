@@ -1,0 +1,23 @@
+{
+  "name": "shrimpia-portal",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20230821.0",
+    "@types/uuid": "^9.0.3",
+    "typescript": "^5.0.4",
+    "wrangler": "^3.6.0"
+  },
+  "dependencies": {
+    "hono": "^3.5.6",
+    "misskey-js": "^0.0.16",
+    "random-string-generator": "^1.0.1",
+    "uuid": "^9.0.0",
+    "workers-qb": "^1.1.0"
+  },
+  "packageManager": "pnpm@8.7.1"
+}
