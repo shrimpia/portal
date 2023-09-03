@@ -1,3 +1,6 @@
+/**
+ * Misskeyのユーザー情報
+ */
 export interface MisskeyUser {
 	id: string;
 	username: string;
