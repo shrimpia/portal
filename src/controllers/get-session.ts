@@ -41,5 +41,6 @@ export const getSessionController: Controller = async c => {
     name: i.name || i.username,
     shrimpiaPlus: getShrimpiaPlus(i),
     isEmperor: i.isAdmin,
+    avatarUrl: i.avatarUrl,
   });
 };

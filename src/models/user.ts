@@ -7,6 +7,7 @@ export interface MisskeyUser {
 	name: string | null;
 	isAdmin: boolean;
 	isModerator: boolean;
+	avatarUrl: string;
 
 	roles: {
 		id: string;
