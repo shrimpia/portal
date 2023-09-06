@@ -1,4 +1,8 @@
+-- Migration number: 0001 	 2023-09-06T09:38:00.192Z
+
 ---- 初期化用のSQL
+----  初期のスキーマを追加します。
+----  追加バージョン: 2023.9.0
 
 -- 1. 既に user テーブルが存在する場合は削除
 DROP TABLE IF EXISTS user;
@@ -36,24 +40,38 @@ CREATE TABLE emoji_request (
 	-- 絵文字の画像URL
 	image_url TEXT NOT NULL,
 
-	-- カテゴリ
-	category TEXT NOT NULL,
-
-	-- タグ
-	tags TEXT NOT NULL,
-
 	-- リクエストしたユーザーのID
-	user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE
+	user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+
+	-- リクエスト作成年
+	created_year INT NOT NULL,
+
+	-- リクエスト作成月
+	created_month INT NOT NULL,
+
+	-- ステータス
+	--  pending: 承認待ち
+	--  approved: 承認済み
+	--  rejected: 却下済み
+	status TEXT NOT NULL DEFAULT 'pending'
 );
 
--- 5. 既に delete_request テーブルが存在する場合は削除
-DROP TABLE IF EXISTS delete_request;
+-- 5. 既に account_deletion_request テーブルが存在する場合は削除
+DROP TABLE IF EXISTS account_deletion_request;
 
--- 6. delete_request テーブルを作成
-CREATE TABLE delete_request (
+-- 6. account_deletion_request テーブルを作成
+CREATE TABLE account_deletion_request (
 	-- リクエストID
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 
 	-- 削除をリクエストしたユーザーのID
-	user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE
+	user_id INT NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+
+	-- コメント
+	comment TEXT NOT NULL,
+
+	-- 完了済みフラグ
+	--  0: 未完了
+	--  1: 完了
+	is_completed INT NOT NULL DEFAULT 0
 );

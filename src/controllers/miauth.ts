@@ -1,7 +1,8 @@
 import { URL_EMPIRE } from '../const';
-import { generateToken } from '../services/generate-token';
+import { upsertUser } from '../services/upsert-user';
 
 import type { Controller } from './base';
+import type { MisskeyUser } from '../models/user';
 
 /**
  * MiAuth のチェック処理を行い、ポータルアカウントを新規作成または更新します。
@@ -26,27 +27,11 @@ export const miauthController: Controller = async c => {
     });
   }
 
-  const data = await res.json() as { token: string, user: Record<string, unknown> };
-  console.log(`username: ${data.user.username}`);
-  const user = await c.env.DB.prepare('SELECT * FROM user WHERE username = ?')
-    .bind(data.user.username)
-    .first();
+  const data = await res.json() as { token: string, user: MisskeyUser };
 
-  let portalToken: string;
-
-  if (user) {
-    portalToken = user.portal_token as string;
-    await c.env.DB.prepare('UPDATE user SET misskey_token = ?')
-      .bind(data.token)
-      .run();
-  } else {
-    portalToken = generateToken();
-    await c.env.DB.prepare('INSERT INTO user (portal_token, misskey_token, username) VALUES (?, ?, ?)')
-      .bind(portalToken, data.token, data.user.username)
-      .run();
-  }
+  const { portal_token } = await upsertUser(c.env.DB, data.token, data.user);
 
   return c.json({
-    token: portalToken,
+    token: portal_token,
   });
 };
