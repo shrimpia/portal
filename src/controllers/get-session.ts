@@ -2,7 +2,7 @@ import { URL_EMPIRE } from '../const';
 import { getShrimpiaPlus } from '../services/get-shrimpia-plus';
 
 import type { Controller } from './base';
-import type { MisskeyUser } from '../models/user';
+import type { MisskeyUser } from '../types/user';
 
 /**
  * 現在のセッションを取得します。

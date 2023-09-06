@@ -2,7 +2,7 @@ import { Users } from '../db/repository';
 
 import { generateToken } from './generate-token';
 
-import type { MisskeyUser } from '../models/user';
+import type { MisskeyUser } from '../types/user';
 
 export const upsertUser = async (db: D1Database, token: string, miUser: MisskeyUser) => {
   const user = await Users.readByName(db, miUser.username);

@@ -2,7 +2,7 @@ import { URL_EMPIRE } from '../const';
 import { upsertUser } from '../services/upsert-user';
 
 import type { Controller } from './base';
-import type { MisskeyUser } from '../models/user';
+import type { MisskeyUser } from '../types/user';
 
 /**
  * MiAuth のチェック処理を行い、ポータルアカウントを新規作成または更新します。

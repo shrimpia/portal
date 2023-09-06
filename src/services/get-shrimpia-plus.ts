@@ -1,7 +1,7 @@
 import { SHRIMPIA_PLUS_ROLE_NAME } from '../const';
 
-import type { ShrimpiaPlus } from '../models/shrimpia-plus';
-import type { MisskeyUser } from '../models/user';
+import type { ShrimpiaPlus } from '../types/shrimpia-plus';
+import type { MisskeyUser } from '../types/user';
 
 /**
  * 指定したユーザーのShrimpia+プランを取得します。
