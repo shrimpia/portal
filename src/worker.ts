@@ -19,6 +19,9 @@ const app = new Hono<PortalEnv>();
 
 app.use('*', cors());
 
+app.get('/', c => {
+  return c.text('Portal API');
+});
 app.post('/miauth', miauthController);
 app.get('/session', sessionGuard, getSessionController);
 app.post('/emoji-requests', sessionGuard, createEmojiRequestController);

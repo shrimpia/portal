@@ -1,4 +1,3 @@
-import { PORTAL_FRONTEND_URL } from '../const';
 import { Bucket, EmojiRequests } from '../db/repository';
 import { postNewEmojiRequestToDiscord } from '../services/discord';
 import { sendError, sendFailedToGetMisskeyUserError } from '../services/error';
@@ -53,7 +52,7 @@ export const createEmojiRequestController: Controller = async (c) => {
     id,
     name,
     comment: comment.trim(),
-    imageUrl: PORTAL_FRONTEND_URL + 'admin/emoji-requests/' + key,
+    imageUrl: new URL(c.req.url).origin + '/uploaded/' + key,
   });
 
   return c.json({
