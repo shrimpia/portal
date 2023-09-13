@@ -1,46 +1,25 @@
-import { URL_EMPIRE } from '../const';
+import { sendFailedToGetMisskeyUserError } from '../services/error';
 import { getShrimpiaPlus } from '../services/get-shrimpia-plus';
+import { getMisskeyUser } from '../services/misskey-api';
+
 
 import type { Controller } from './base';
-import type { MisskeyUser } from '../types/user';
 
 /**
  * 現在のセッションを取得します。
  */
 export const getSessionController: Controller = async c => {
-  const token = c.req.header('X-Shrimpia-Token');
-  if (token == null) {
-    c.status(400);
-    return c.json({
-      error: 'Missing token',
-    });
+  const misskeyUser = await getMisskeyUser(c.portalUser!.misskey_token);
+  if (!misskeyUser) {
+    return sendFailedToGetMisskeyUserError(c);
   }
-  const results = await c.env.DB.prepare('SELECT misskey_token FROM user WHERE portal_token = ?')
-    .bind(token)
-    .first();
-
-  if (results == null) {
-    c.status(400);
-    return c.json({
-      error: 'Invalid token',
-    });
-  }
-
-  const i: MisskeyUser = await fetch(`${URL_EMPIRE}/api/i`, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    method: 'POST',
-    body: JSON.stringify({
-      i: results.misskey_token,
-    }),
-  }).then(res => res.json());
 
   return c.json({
-    username: i.username,
-    name: i.name || i.username,
-    shrimpiaPlus: getShrimpiaPlus(i),
-    isEmperor: i.isAdmin,
-    avatarUrl: i.avatarUrl,
+    username: misskeyUser.username,
+    name: misskeyUser.name || misskeyUser.username,
+    shrimpiaPlus: getShrimpiaPlus(misskeyUser),
+    isEmperor: misskeyUser.isAdmin,
+    avatarUrl: misskeyUser.avatarUrl,
+    canManageCustomEmojis: misskeyUser.policies.canManageCustomEmojis,
   });
 };

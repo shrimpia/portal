@@ -1,13 +1,15 @@
 import type { AccountDeletionRequest } from '../models/account-deletion-request';
 
 export class AccountDeletionRequestRepository {
-  async create(db: D1Database, userId: string, comment: string) {
-    return db.prepare('INSERT INTO account_deletion_request (user_id, comment) VALUES (?, ?)')
-      .bind(userId, comment)
+  async create(db: D1Database, data: { userId: string, comment: string}) {
+    const id = crypto.randomUUID();
+    await db.prepare('INSERT INTO account_deletion_request (id, user_id, comment) VALUES (?, ?, ?)')
+      .bind(id, data.userId, data.comment)
       .run();
+    return id;
   }
 
-  async readById(db: D1Database, id: number) {
+  async readById(db: D1Database, id: string) {
     return db.prepare('SELECT * FROM account_deletion_request WHERE id = ? LIMIT 1')
       .bind(id)
       .first<AccountDeletionRequest>();
@@ -32,13 +34,13 @@ export class AccountDeletionRequestRepository {
       .then(e => e.results);
   }
 
-  async updateIsCompleted(db: D1Database, id: number, isCompleted: boolean) {
+  async updateIsCompleted(db: D1Database, id: string, isCompleted: boolean) {
     return db.prepare('UPDATE account_deletion_request SET is_completed = ? WHERE id = ?')
       .bind(isCompleted, id)
       .run();
   }
 
-  async delete(db: D1Database, id: number) {
+  async delete(db: D1Database, id: string) {
     return db.prepare('DELETE FROM account_deletion_request WHERE id = ?')
       .bind(id)
       .run();

@@ -12,6 +12,10 @@ export const sendNotEmperorError = (c: Context) => {
   return sendError(c, 403, 'You are not emperor');
 };
 
+export const sendFailedToGetMisskeyUserError = (c: Context) => {
+  return sendError(c, 400, 'Failed to get Misskey user');
+};
+
 export const send404 = (c: Context) => {
   return sendError(c, 404, 'Not Found');
 };

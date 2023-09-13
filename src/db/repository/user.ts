@@ -1,13 +1,15 @@
 import type { User } from '../models/user';
 
 export class UserRepository {
-  async create(db: D1Database, username: string, portalToken: string, misskeyToken: string) {
-    return db.prepare('INSERT INTO user (portal_token, misskey_token, username) VALUES (?, ?, ?)')
-      .bind(portalToken, misskeyToken, username)
+  async create(db: D1Database, data: {username: string, portalToken: string, misskeyToken: string}) {
+    const id = crypto.randomUUID();
+    await db.prepare('INSERT INTO user (id, portal_token, misskey_token, username) VALUES (?, ?, ?, ?)')
+      .bind(id, data.portalToken, data.misskeyToken, data.username)
       .run();
+    return id;
   }
 
-  async readById(db: D1Database, id: number) {
+  async readById(db: D1Database, id: string) {
     return db.prepare('SELECT * FROM user WHERE id = ? LIMIT 1')
       .bind(id)
       .first<User>();
@@ -25,13 +27,13 @@ export class UserRepository {
       .first<User>();
   }
 
-  async updateMisskeyToken(db: D1Database, id: number, token: string) {
+  async updateMisskeyToken(db: D1Database, id: string, token: string) {
     return db.prepare('UPDATE user SET misskey_token = ? WHERE id = ?')
       .bind(token, id)
       .run();
   }
 
-  async delete(db: D1Database, id: number) {
+  async delete(db: D1Database, id: string) {
     return db.prepare('DELETE FROM user WHERE id = ?')
       .bind(id)
       .run();

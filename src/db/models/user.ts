@@ -2,7 +2,7 @@
  * userテーブルの型定義。
  */
 export interface User {
-	id: number;
+	id: string;
 	username: string;
 	portal_token: string;
 	misskey_token: string;

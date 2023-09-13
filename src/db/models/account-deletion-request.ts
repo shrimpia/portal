@@ -1,6 +1,6 @@
 export interface AccountDeletionRequest {
-	id: number;
-	user_id: number;
+	id: string;
+	user_id: string;
 	comment: string;
 	is_completed: boolean;
 }

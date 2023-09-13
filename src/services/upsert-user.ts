@@ -4,16 +4,17 @@ import { generateToken } from './generate-token';
 
 import type { MisskeyUser } from '../types/user';
 
-export const upsertUser = async (db: D1Database, token: string, miUser: MisskeyUser) => {
+export const upsertUser = async (db: D1Database, misskeyToken: string, miUser: MisskeyUser) => {
   const user = await Users.readByName(db, miUser.username);
   let portalToken: string;
 
   if (user) {
     portalToken = user.portal_token as string;
-    await Users.updateMisskeyToken(db, user.id, token);
+    await Users.updateMisskeyToken(db, user.id, misskeyToken);
   } else {
     portalToken = generateToken();
-    await Users.create(db, miUser.username, portalToken, token);
+    const { username } = miUser;
+    await Users.create(db, { username, misskeyToken, portalToken });
   }
 
   const newUser = await Users.readByName(db, miUser.username);

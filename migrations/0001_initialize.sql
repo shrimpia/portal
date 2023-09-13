@@ -10,7 +10,7 @@ DROP TABLE IF EXISTS user;
 -- 2. user テーブルを作成
 CREATE TABLE user (
 	-- ユーザーID
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	id TEXT PRIMARY KEY,
 
 	-- ユーザー名
 	username TEXT NOT NULL UNIQUE,
@@ -32,16 +32,19 @@ DROP TABLE IF EXISTS emoji_request;
 -- 4. emoji_request テーブルを作成
 CREATE TABLE emoji_request (
 	-- リクエストID
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	id TEXT PRIMARY KEY,
 
 	-- 絵文字の名前
 	name TEXT NOT NULL,
 
-	-- 絵文字の画像URL
-	image_url TEXT NOT NULL,
+	-- コメント
+	comment TEXT NOT NULL,
+
+	-- 絵文字のR2 バケットキー
+	image_key TEXT NOT NULL,
 
 	-- リクエストしたユーザーのID
-	user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+	user_id TEXT NOT NULL REFERENCES user(id) ON DELETE CASCADE,
 
 	-- リクエスト作成年
 	created_year INT NOT NULL,
@@ -62,10 +65,10 @@ DROP TABLE IF EXISTS account_deletion_request;
 -- 6. account_deletion_request テーブルを作成
 CREATE TABLE account_deletion_request (
 	-- リクエストID
-	id INTEGER PRIMARY KEY AUTOINCREMENT,
+	id TEXT PRIMARY KEY,
 
 	-- 削除をリクエストしたユーザーのID
-	user_id INT NOT NULL UNIQUE REFERENCES users(id) ON DELETE CASCADE,
+	user_id TEXT NOT NULL UNIQUE REFERENCES user(id) ON DELETE CASCADE,
 
 	-- コメント
 	comment TEXT NOT NULL,
