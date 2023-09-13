@@ -9,5 +9,6 @@ export interface EmojiRequest {
 	user_id: string;
 	created_year: number;
 	created_month: number;
+	staff_comment: string;
 	status: 'pending' | 'approved' | 'rejected';
 }

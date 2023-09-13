@@ -1,4 +1,4 @@
-import { MENTION_MINISTRY_OF_EMOJIS, PORTAL_FRONTEND_URL } from '../const';
+import { PORTAL_FRONTEND_URL } from '../const';
 
 import { getMisskeyUser } from './misskey-api';
 
@@ -13,7 +13,7 @@ export const postNewEmojiRequestToDiscord = async (webhook: string, user: User, 
   const misskeyUser = await getMisskeyUser(user.misskey_token);
   if (!misskeyUser) throw new Error('Failed to get Misskey account.');
   const body = {
-    'content': `${MENTION_MINISTRY_OF_EMOJIS} 新しい絵文字申請 \`:${data.name}:\` が届いています！\n[**ポータルを開く**](${PORTAL_FRONTEND_URL}/admin/emoji-requests/${data.id})`,
+    'content': `新しい絵文字申請 \`:${data.name}:\` が届いています！\n[**ポータルを開く**](${PORTAL_FRONTEND_URL}/admin/emoji-requests/${data.id})`,
     'embeds': [
       {
         'color': 12140099,

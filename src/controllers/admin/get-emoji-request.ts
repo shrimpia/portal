@@ -24,6 +24,7 @@ export const adminGetEmojiRequestController: Controller = async (c) => {
     url: new URL(c.req.url).origin + '/uploaded/' + r.image_key,
     status: r.status,
     comment: r.comment,
+    staffComment: r.staff_comment,
     createdYear: r.created_year,
     createdMonth: r.created_month,
     userId: r.user_id,

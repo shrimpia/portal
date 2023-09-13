@@ -9,14 +9,22 @@ export const getMisskeyUser = async (misskeyToken: string) => {
 };
 
 
-export const callMisskeyApi = async <T>(endpoint: string, params: Record<string, unknown>) => {
+export const callMisskeyApi = async <T>(endpoint: string, params: FormData | Record<string, unknown>) => {
+  const headers: HeadersInit = {};
+  if (!(params instanceof FormData)) {
+    headers['Content-Type'] = 'application/json';
+  }
   const res = await fetch(`${URL_EMPIRE}/api/${endpoint}`, {
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    headers,
     method: 'POST',
-    body: JSON.stringify(params),
-  }).then(res => res.json());
+    body: params instanceof FormData ? params : JSON.stringify(params),
+  });
 
-  return res as T;
+  const json: any = await res.json();
+
+  if (!res.ok) {
+    throw new Error(json.error);
+  }
+
+  return json as T;
 };

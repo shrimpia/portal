@@ -70,6 +70,12 @@ export class EmojiRequestRepository {
       .run();
   }
 
+  async updateStaffComment(db: D1Database, id: string, comment: string) {
+    return db.prepare('UPDATE emoji_request SET staff_comment = ? WHERE id = ?')
+      .bind(comment, id)
+      .run();
+  }
+
   async delete(db: D1Database, id: string) {
     return db.prepare('DELETE FROM emoji_request WHERE id = ?')
       .bind(id)

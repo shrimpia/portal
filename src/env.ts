@@ -5,5 +5,6 @@ export interface PortalEnv extends Env {
 		DB: D1Database;
 		BUCKET: R2Bucket;
 		DISCORD_WEBHOOK_URL: string;
+		MISSKEY_ADMIN_TOKEN: string;
 	};
 }
