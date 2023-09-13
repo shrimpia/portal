@@ -1,7 +1,7 @@
 export const URL_EMPIRE = 'https://mk.shrimpia.network';
 export const PORTAL_FRONTEND_URL = 'https://portal.shrimpia.network';
 export const URL_BUCKET = 'https://images.portal.shrimpia.network';
-export const MENTION_MINISTRY_OF_EMOJIS = '@&1085176103150305320';
+export const MENTION_MINISTRY_OF_EMOJIS = '<@&1085176103150305320>';
 
 /**
  * Shrimpia+のロール名。
