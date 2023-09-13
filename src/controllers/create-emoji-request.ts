@@ -52,7 +52,7 @@ export const createEmojiRequestController: Controller = async (c) => {
   await postNewEmojiRequestToDiscord(c.env.DISCORD_WEBHOOK_URL, c.portalUser!, {
     id,
     name,
-    comment,
+    comment: comment.trim(),
     imageUrl: PORTAL_FRONTEND_URL + 'admin/emoji-requests/' + key,
   });
 

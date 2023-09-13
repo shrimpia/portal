@@ -12,5 +12,6 @@ export const getUploadedFilesController: Controller = async (c) => {
     return c.body(null);
   }
 
+  c.header('Content-Type', obj.type);
   return c.body(await obj.arrayBuffer());
 };

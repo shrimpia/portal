@@ -1,4 +1,6 @@
 import type { EmojiRequest } from '../models/emoji-request';
+import type { User } from '../models/user';
+
 
 export class EmojiRequestRepository {
   async create(db: D1Database, data: {name: string, comment: string, imageKey: string, userId: string, createdYear: number, createdMonth: number}) {
@@ -46,6 +48,12 @@ export class EmojiRequestRepository {
     return db.prepare('SELECT * FROM emoji_request WHERE status = ? ORDER BY id DESC')
       .bind(status)
       .all<EmojiRequest>()
+      .then(e => e.results);
+  }
+
+  async readAllPendings(db: D1Database) {
+    return db.prepare('SELECT e.*, u.username FROM emoji_request e LEFT JOIN user u on e.user_id = u.id WHERE status = \'pending\' ORDER BY id DESC')
+      .all<EmojiRequest & Pick<User, 'username'>>()
       .then(e => e.results);
   }
 
