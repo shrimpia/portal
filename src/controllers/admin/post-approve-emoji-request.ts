@@ -41,7 +41,7 @@ export const adminPostApproveEmojiRequestController: Controller = async (c) => {
       fileId: driveFile.id,
       name: emojiRequest.name,
       category: CATEGORY_NAME_NEW,
-      tags,
+      aliases: tags,
       license: `(C) @${author.username}`,
     });
 
