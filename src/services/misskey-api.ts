@@ -23,7 +23,7 @@ export const callMisskeyApi = async <T>(endpoint: string, params: FormData | Rec
   const json: any = await res.json();
 
   if (!res.ok) {
-    throw new Error(json.error);
+    throw new Error(JSON.stringify(json.error));
   }
 
   return json as T;
