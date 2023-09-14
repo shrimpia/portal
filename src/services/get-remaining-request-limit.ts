@@ -12,6 +12,8 @@ export const getRemainingRequestLimit = async (db: D1Database, portalUser: User)
     throw new Error('Failed to get misskey user');
   }
 
+  if (misskeyUser.policies.canManageCustomEmojis) return Number.MAX_SAFE_INTEGER;
+
   const shrimpiaPlus = getShrimpiaPlus(misskeyUser);
   if (shrimpiaPlus === 'not-member') return 0;
 
