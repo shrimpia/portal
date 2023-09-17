@@ -13,7 +13,7 @@ export const moeStaffGuard: MiddlewareHandler = async (c, next) => {
 
   c.portalUser = await Users.readByPortalToken(c.env.DB, token);
 
-  const misskeyUser = await getMisskeyUser(token);
+  const misskeyUser = await getMisskeyUser(c.portalUser!.misskey_token);
   if (misskeyUser?.policies.canManageCustomEmojis !== true) return sendNotMoeStaffError(c);
 
   await next();

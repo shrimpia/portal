@@ -17,6 +17,7 @@ export const adminGetEmojiRequestController: Controller = async (c) => {
   if (!u) {
     return send404(c);
   }
+  const p = r.processer_id === null ? null : await Users.readById(c.env.DB, r.processer_id);
 
   return c.json({
     id: r.id,
@@ -29,5 +30,9 @@ export const adminGetEmojiRequestController: Controller = async (c) => {
     createdMonth: r.created_month,
     userId: r.user_id,
     username: u.username,
+    createdAt: r.created_at,
+    processerId: r.processer_id,
+    processedAt: r.processed_at,
+    processerName: p?.username ?? null,
   });
 };

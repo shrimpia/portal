@@ -18,5 +18,6 @@ export const getEmojiRequestsController: Controller = async (c) => {
     createdYear: r.created_year,
     createdMonth: r.created_month,
     staffComment: r.staff_comment,
+    createdAt: r.created_at,
   })));
 };

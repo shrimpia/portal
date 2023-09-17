@@ -15,6 +15,7 @@ export const adminPostRejectEmojiRequestController: Controller = async (c) => {
   try {
     await EmojiRequests.updateStatus(c.env.DB, id, 'rejected');
     await EmojiRequests.updateStaffComment(c.env.DB, id, reason);
+    await EmojiRequests.updateProcessor(c.env.DB, id, c.portalUser!.id);
   } catch (e) {
     return sendError(c, 500, e instanceof Error ? e.message : `${e}`);
   }

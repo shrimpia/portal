@@ -11,6 +11,7 @@ import { getRemainingRequestLimitController } from './controllers/get-remaining-
 import { getSessionController } from './controllers/get-session';
 import { getUploadedFilesController } from './controllers/get-uploaded-files';
 import { miauthController } from './controllers/miauth';
+import { moeStaffGuard } from './middlewares/moe-staff-guard';
 import { sessionGuard } from './middlewares/session-guard';
 
 import type { PortalEnv } from './env';
@@ -22,15 +23,16 @@ app.use('*', cors());
 app.get('/', c => {
   return c.text('Portal API');
 });
+
+app.get('/uploaded/:key', getUploadedFilesController);
 app.post('/miauth', miauthController);
 app.get('/session', sessionGuard, getSessionController);
 app.post('/emoji-requests', sessionGuard, createEmojiRequestController);
 app.get('/emoji-requests/remaining', sessionGuard, getRemainingRequestLimitController);
 app.get('/emoji-requests', sessionGuard, getEmojiRequestsController);
-app.get('/admin/emoji-requests', sessionGuard, adminGetAllPendingEmojiRequestsController);
-app.get('/admin/emoji-requests/:id', sessionGuard, adminGetEmojiRequestController);
-app.post('/admin/emoji-requests/:id/approve', sessionGuard, adminPostApproveEmojiRequestController);
-app.post('/admin/emoji-requests/:id/reject', sessionGuard, adminPostRejectEmojiRequestController);
-app.get('/uploaded/:key', getUploadedFilesController);
+app.get('/admin/emoji-requests', moeStaffGuard, adminGetAllPendingEmojiRequestsController);
+app.get('/admin/emoji-requests/:id', moeStaffGuard, adminGetEmojiRequestController);
+app.post('/admin/emoji-requests/:id/approve', moeStaffGuard, adminPostApproveEmojiRequestController);
+app.post('/admin/emoji-requests/:id/reject', moeStaffGuard, adminPostRejectEmojiRequestController);
 
 export default app;

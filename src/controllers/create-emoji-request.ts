@@ -38,21 +38,18 @@ export const createEmojiRequestController: Controller = async (c) => {
     return sendError(c, 400, 'Invalid image MIME type: ' + image.type);
   }
 
-  const key = await Bucket.upload(c.env.BUCKET, image);
-
-  const now = new Date();
-  const createdYear = now.getUTCFullYear();
-  const createdMonth = now.getUTCMonth() + 1;
+  const imageKey = await Bucket.upload(c.env.BUCKET, image);
+  const createdAt = new Date();
 
   const id = await EmojiRequests.create(c.env.DB, {
-    name, comment, imageKey: key, userId: c.portalUser!.id, createdYear, createdMonth,
+    name, comment, imageKey, userId: c.portalUser!.id, createdAt,
   });
 
   await postNewEmojiRequestToDiscord(c.env.DISCORD_WEBHOOK_URL, c.portalUser!, {
     id,
     name,
     comment: comment.trim(),
-    imageUrl: new URL(c.req.url).origin + '/uploaded/' + key,
+    imageUrl: new URL(c.req.url).origin + '/uploaded/' + imageKey,
   });
 
   return c.json({

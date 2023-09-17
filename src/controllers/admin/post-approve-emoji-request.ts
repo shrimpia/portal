@@ -46,6 +46,7 @@ export const adminPostApproveEmojiRequestController: Controller = async (c) => {
     });
 
     await EmojiRequests.updateStatus(c.env.DB, id, 'approved');
+    await EmojiRequests.updateProcessor(c.env.DB, id, c.portalUser!.id);
   } catch (e) {
     return sendError(c, 500, e instanceof Error ? e.message : `${e}`);
   }

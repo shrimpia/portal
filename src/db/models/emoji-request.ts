@@ -11,4 +11,7 @@ export interface EmojiRequest {
 	created_month: number;
 	staff_comment: string;
 	status: 'pending' | 'approved' | 'rejected';
+	created_at: number;
+	processed_at: number;
+	processer_id: string;
 }
