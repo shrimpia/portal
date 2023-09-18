@@ -98,8 +98,8 @@ export class EmojiRequestRepository {
       .then(e => e.results);
   }
 
-  async countByUserIdAndCreatedYearAndCreatedMonth(db: D1Database, userId: string, createdYear: number, createdMonth: number) {
-    return db.prepare('SELECT COUNT(*) as count FROM emoji_request WHERE user_id = ? AND created_year = ? AND created_month = ?')
+  async countByUserIdAndCreatedYearAndCreatedMonthWithoutRejected(db: D1Database, userId: string, createdYear: number, createdMonth: number) {
+    return db.prepare('SELECT COUNT(*) as count FROM emoji_request WHERE user_id = ? AND created_year = ? AND created_month = ? AND status <> \'rejected\'')
       .bind(userId, createdYear, createdMonth)
       .first<{count: number}>()
       .then(it => it?.count ?? null);
