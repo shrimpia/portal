@@ -17,7 +17,7 @@ export const getRemainingRequestLimit = async (db: D1Database, portalUser: User)
   const shrimpiaPlus = getShrimpiaPlus(misskeyUser);
   if (shrimpiaPlus === 'not-member') return 0;
 
-  const requestCount = await EmojiRequests.countByUserIdAndCreatedYearAndCreatedMonth(db, portalUser.id, new Date().getUTCFullYear(), new Date().getUTCMonth() + 1);
+  const requestCount = await EmojiRequests.countByUserIdAndCreatedYearAndCreatedMonthWithoutRejected(db, portalUser.id, new Date().getUTCFullYear(), new Date().getUTCMonth() + 1);
   if (requestCount === null) {
     throw new Error('Request count is null');
   }
