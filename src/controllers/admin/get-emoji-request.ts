@@ -1,5 +1,5 @@
 
-import { EmojiRequests, Users } from '../../db/repository';
+import { EmojiRequests } from '../../db/repository';
 import { send400, send404 } from '../../services/error';
 
 import type { Controller } from '../base';
@@ -13,11 +13,6 @@ export const adminGetEmojiRequestController: Controller = async (c) => {
   if (!r) {
     return send404(c);
   }
-  const u = await Users.readById(c.env.DB, r.user_id);
-  if (!u) {
-    return send404(c);
-  }
-  const p = r.processer_id === null ? null : await Users.readById(c.env.DB, r.processer_id);
 
   return c.json({
     id: r.id,
@@ -29,10 +24,10 @@ export const adminGetEmojiRequestController: Controller = async (c) => {
     createdYear: r.created_year,
     createdMonth: r.created_month,
     userId: r.user_id,
-    username: u.username,
+    username: r.username,
     createdAt: r.created_at,
     processerId: r.processer_id,
     processedAt: r.processed_at,
-    processerName: p?.username ?? null,
+    processerName: r.processer_name,
   });
 };

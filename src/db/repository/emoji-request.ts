@@ -1,6 +1,10 @@
 import type { EmojiRequest } from '../models/emoji-request';
 import type { User } from '../models/user';
 
+type EmojiRequestWithUserName = EmojiRequest & Pick<User, 'username'> & {
+	processer_name: string | null;
+};
+
 
 export class EmojiRequestRepository {
   async create(db: D1Database, data: {name: string, comment: string, imageKey: string, userId: string, createdAt: Date}) {
@@ -14,48 +18,83 @@ export class EmojiRequestRepository {
   }
 
   async readById(db: D1Database, id: string) {
-    return db.prepare('SELECT * FROM emoji_request WHERE id = ? LIMIT 1')
+    return db.prepare(`
+			SELECT e.*, u1.username, u2.username as processer_name FROM emoji_request e
+				LEFT JOIN user u1 on e.user_id = u1.id
+				LEFT JOIN user u2 on e.processer_id = u2.id
+				WHERE e.id = ? LIMIT 1
+		`)
       .bind(id)
-      .first<EmojiRequest>();
+      .first<EmojiRequestWithUserName>();
   }
 
   async readAll(db: D1Database) {
-    return db.prepare('SELECT * FROM emoji_request ORDER BY "created_at" DESC NULLS LAST')
-      .all<EmojiRequest>()
+    return db.prepare(`
+			SELECT e.*, u1.username, u2.username as processer_name FROM emoji_request e
+				LEFT JOIN user u1 on e.user_id = u1.id
+				LEFT JOIN user u2 on e.processer_id = u2.id
+				ORDER BY e.created_at DESC NULLS LAST
+		`)
+      .all<EmojiRequestWithUserName>()
       .then(e => e.results);
   }
 
   async readAllByUserId(db: D1Database, userId: string) {
-    return db.prepare('SELECT * FROM emoji_request WHERE user_id = ? ORDER BY "created_at" DESC NULLS LAST')
+    return db.prepare(`
+			SELECT e.*, u1.username, u2.username as processer_name FROM emoji_request e
+				LEFT JOIN user u1 on e.user_id = u1.id
+				LEFT JOIN user u2 on e.processer_id = u2.id
+				WHERE e.user_id = ? ORDER BY e.created_at DESC NULLS LAST
+		`)
       .bind(userId)
-      .all<EmojiRequest>()
+      .all<EmojiRequestWithUserName>()
       .then(e => e.results);
   }
 
   async readAllByUserIdAndCreatedYearAndCreatedMonth(db: D1Database, userId: string, createdYear: number, createdMonth: number) {
-    return db.prepare('SELECT * FROM emoji_request WHERE user_id = ? AND created_year = ? AND created_month = ? ORDER BY "created_at" DESC NULLS LAST')
+    return db.prepare(`
+			SELECT e.*, u1.username, u2.username as processer_name FROM emoji_request e
+				LEFT JOIN user u1 on e.user_id = u1.id
+				LEFT JOIN user u2 on e.processer_id = u2.id
+    		WHERE e.user_id = ? AND e.created_year = ? AND e.created_month = ? ORDER BY e.created_at DESC NULLS LAST'
+			`)
       .bind(userId, createdYear, createdMonth)
-      .all<EmojiRequest>()
+      .all<EmojiRequestWithUserName>()
       .then(e => e.results);
   }
 
   async readAllByUserIdAndStatus(db: D1Database, userId: string, status: EmojiRequest['status']) {
-    return db.prepare('SELECT * FROM emoji_request WHERE user_id = ? AND status = ? ORDER BY "created_at" DESC NULLS LAST')
+    return db.prepare(`
+			SELECT e.*, u1.username, u2.username as processer_name FROM emoji_request e
+				LEFT JOIN user u1 on e.user_id = u1.id
+				LEFT JOIN user u2 on e.processer_id = u2.id
+				WHERE e.user_id = ? AND e.status = ? ORDER BY e.created_at DESC NULLS LAST
+		`)
       .bind(userId, status)
-      .all<EmojiRequest>()
+      .all<EmojiRequestWithUserName>()
       .then(e => e.results);
   }
 
   async readAllByStatus(db: D1Database, status: EmojiRequest['status']) {
-    return db.prepare('SELECT * FROM emoji_request WHERE status = ? ORDER BY "created_at" DESC NULLS LAST')
+    return db.prepare(`
+			SELECT e.*, u1.username, u2.username as processer_name FROM emoji_request e
+				LEFT JOIN user u1 on e.user_id = u1.id
+				LEFT JOIN user u2 on e.processer_id = u2.id
+				WHERE e.status = ? ORDER BY e.created_at DESC NULLS LAST'
+		`)
       .bind(status)
-      .all<EmojiRequest>()
+      .all<EmojiRequestWithUserName>()
       .then(e => e.results);
   }
 
   async readAllPendings(db: D1Database) {
-    return db.prepare('SELECT e.*, u.username FROM emoji_request e LEFT JOIN user u on e.user_id = u.id WHERE status = \'pending\' ORDER BY "created_at" DESC NULLS LAST')
-      .all<EmojiRequest & Pick<User, 'username'>>()
+    return db.prepare(`
+			SELECT e.*, u1.username, u2.username as processer_name FROM emoji_request e
+				LEFT JOIN user u1 on e.user_id = u1.id
+				LEFT JOIN user u2 on e.processer_id = u2.id
+				WHERE e.status = 'pending' ORDER BY e.created_at DESC NULLS LAST
+		`)
+      .all<EmojiRequestWithUserName>()
       .then(e => e.results);
   }
 

@@ -18,5 +18,6 @@ export const adminGetAllPendingEmojiRequestsController: Controller = async (c) =
     createdAt: r.created_at,
     processerId: r.processer_id,
     processedAt: r.processed_at,
+    processerName: r.processer_name,
   })));
 };
