@@ -1,27 +1,16 @@
 {
   "name": "shrimpia-portal",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
-    "deploy": "wrangler deploy",
-    "dev": "wrangler dev",
-    "migrate:create": "wrangler d1 migrations create portal",
-    "migrate:run:local": "wrangler d1 migrations apply portal --local",
-    "migrate:run:production": "wrangler d1 migrations apply portal",
-    "lint": "eslint . --ext ts --report-unused-disable-directives --max-warnings 0 --fix"
+    "build": "turbo build",
+    "dev": "turbo dev",
+    "start": "turbo start",
+    "test": "turbo test",
+    "lint": "turbo lint",
+    "deploy": "turbo deploy"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20230821.0",
-    "@typescript-eslint/eslint-plugin": "^6.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "eslint": "^8.45.0",
-    "eslint-plugin-import": "^2.28.1",
-    "eslint-plugin-unused-imports": "^3.0.0",
-    "typescript": "^5.0.4",
-    "wrangler": "^3.7.0"
-  },
-  "dependencies": {
-    "hono": "^3.5.6"
-  },
-  "packageManager": "pnpm@8.7.1"
+    "turbo": "^1.10.14"
+  }
 }
