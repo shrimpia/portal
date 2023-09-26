@@ -19,7 +19,7 @@ export const RequestsList: React.FC<RequestsListProp> = ({ children }) => {
     <Container>
       <Row>
         {requests.map(r => (
-          <Col key={r.id} xs={12} sm={6} md={4} lg={3} className="g-3">
+          <Col key={r.id} xs={12} sm={6} md={4} lg={4} xl={3} className="g-3">
             <Card>
               <Card.Body className="overflow-hidden">
                 <Card.Title>:{r.name}:</Card.Title>
