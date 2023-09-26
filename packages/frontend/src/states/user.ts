@@ -8,10 +8,10 @@ import { tokenAtom } from './sessions';
 import type { ShrimpiaPlus } from '../types/shrimpia-plus';
 
 export const [userAtom, userStatusAtom] = atomsWithQuery((get) => ({
-  queryKey: [get(tokenAtom), get(shrimpiaPlusEmulationAtom)],
+  queryKey: ['user', get(tokenAtom), get(shrimpiaPlusEmulationAtom)],
   queryFn: async ({ queryKey }) => {
-    const token = queryKey[0] as string | null;
-    const emulatedPlus = queryKey[1] as ShrimpiaPlus | 'default';
+    const token = queryKey[1] as string | null;
+    const emulatedPlus = queryKey[2] as ShrimpiaPlus | 'default';
     if (!token) return null;
     const session = await api(token).getSession();
     if (emulatedPlus !== 'default') {
@@ -22,9 +22,9 @@ export const [userAtom, userStatusAtom] = atomsWithQuery((get) => ({
 }));
 
 export const [remainingEmojiRequestLimitAtom, remainingEmojiRequestLimitStatusAtom] = atomsWithQuery((get) => ({
-  queryKey: [get(tokenAtom)],
+  queryKey: ['remainingEmojiRequestLimit', get(tokenAtom)],
   queryFn: async ({ queryKey }) => {
-    const token = queryKey[0] as string | null;
+    const token = queryKey[1] as string | null;
     if (!token) return 0;
     const { limit } = await api(token).getRemainingEmojiRequestLimit();
     return limit;
