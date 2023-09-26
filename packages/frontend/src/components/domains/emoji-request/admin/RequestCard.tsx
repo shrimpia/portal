@@ -53,7 +53,9 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
   const withSpinner = useWithSpinner();
 
   const comment = useMemo(() => parseComment(r.comment), [r.comment]);
-  const staffComment = useMemo(() => r.staffComment?.trim() || 'なし', [r.staffComment]);
+  const staffComment = useMemo(() => r.staffComment?.trim(), [r.staffComment]);
+
+  const noText = useMemo(() => <span className="text-muted">未記入</span>, []);
 
   const approve = () => {
     const tag = prompt(`絵文字の申請 :${r.name}: を承認し、Misskeyに追加します。本当によろしいですか？\n\n問題なければ、この絵文字用のタグを記入してください。`);
@@ -143,7 +145,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
                     </tr>
                     <tr>
                       <th><i className="bi bi-pie-chart-fill" /> ファイルサイズ</th>
-                      <td>{fileSizeInKB != null ? `${fileSizeInKB}KB` : <Spinner size="sm" />}</td>
+                      <td>{fileSizeInKB != null ? `${fileSizeInKB} KB` : <Spinner size="sm" />}</td>
                     </tr>
                     <tr>
                       <th><i className="bi bi-aspect-ratio-fill" /> 画像の大きさ</th>
@@ -152,25 +154,25 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
                   </>
                   <tr>
                     <th><i className="bi bi-person-circle" /> 申請者</th>
-                    <td>{r.username ? <UserLinkView username={r.username} /> : '不明'}</td>
+                    <td>{<UserLinkView username={r.username} />}</td>
                   </tr>
                   {comment && (
                     <>
                       {comment.fontName && (
                         <tr>
                           <th><i className="bi bi-fonts" /> 使用フォント</th>
-                          <td>{comment.fontName || '未記入'}</td>
+                          <td>{comment.fontName || noText}</td>
                         </tr>
                       )}
                       {comment.kana && (
                         <tr>
                           <th><i className="bi bi-type" /> ふりがな</th>
-                          <td>{comment.kana || '未記入'}</td>
+                          <td>{comment.kana || noText}</td>
                         </tr>
                       )}
                       <tr>
                         <th><i className="bi bi-chat-left-heart-fill" /> コメント</th>
-                        <td>{<RichText>{comment.description || '未記入'}</RichText>}</td>
+                        <td>{comment.description ? <RichText>{comment.description}</RichText> : noText}</td>
                       </tr>
                     </>
                   )}
@@ -178,11 +180,11 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
                     <>
                       <tr>
                         <th><i className="bi bi-eye-fill" /> 作業スタッフ</th>
-                        <td>{r.processerName ? <UserLinkView username={r.processerName} /> : '不明'}</td>
+                        <td>{<UserLinkView username={r.processerName} />}</td>
                       </tr>
                       <tr>
                         <th><i className="bi bi-chat-right-heart-fill" /> スタッフからのコメント</th>
-                        <td>{<RichText>{staffComment || '未記入'}</RichText>}</td>
+                        <td>{staffComment ? <RichText>{staffComment}</RichText> : noText}</td>
                       </tr>
                     </>
                   )}
