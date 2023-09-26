@@ -1,6 +1,6 @@
 import { useAtomValue } from 'jotai';
-import React, { useEffect, useState } from 'react';
-import { Button, Card, Spinner, Stack } from 'react-bootstrap';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Button, Card, Spinner, Stack, Table } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { useWithSpinner } from '../../../../hooks/useWithSpinner';
@@ -19,7 +19,7 @@ export type RequestCardProps = {
 };
 
 export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details }) => {
-  // const [type, setType] = useState<string | null>(null);
+  const [type, setType] = useState<string | null>(null);
   const [imageSize, setImageSize] = useState<string | null>(null);
   const [fileSizeInKB, setFileSizeInKB] = useState<string | null>(null);
   
@@ -27,6 +27,9 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
   const api = useAPI();
   const navigate = useNavigate();
   const withSpinner = useWithSpinner();
+
+  const comment = useMemo(() => r.comment?.trim() || 'なし', [r.comment]);
+  const staffComment = useMemo(() => r.staffComment?.trim() || 'なし', [r.staffComment]);
 
   const approve = () => {
     const tag = prompt(`絵文字の申請 :${r.name}: を承認し、Misskeyに追加します。本当によろしいですか？\n\n問題なければ、この絵文字用のタグを記入してください。`);
@@ -69,17 +72,17 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
   };
 
   useEffect(() => {
-    // setType(null);
+    setType(null);
     setImageSize(null);
     setFileSizeInKB(null);
     if (!details) {
       return;
     }
     fetch(r.url).then(res => res.blob()).then(blob => {
-      // setType(blob.type);
+      setType(blob.type);
       setFileSizeInKB((blob.size / 1024).toPrecision(4));
       getImageSize(blob).then(({ width, height }) => {
-        setImageSize(`${width}px × ${height}px`);
+        setImageSize(`${width} × ${height} [px]`);
       });
     });
   }, [r.url, details]);
@@ -88,40 +91,76 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
     <Card>
       <Card.Body>
         <Card.Title>:{r.name}:</Card.Title>
-        <EmojiPreview className="mb-3" src={r.url} />
-        <Card.Text>
-          <h2 className="fs-6 fw-bold">申請者</h2>
-          <UserLinkView username={r.username} />
-        </Card.Text>
-        {details && (
-          <Card.Text>
-            <h2 className="fs-6 fw-bold">ファイル形式</h2>
-            {fileSizeInKB != null && imageSize != null ? (
-              <ul>
-                <li>ファイルサイズ: {fileSizeInKB}KB</li>
-                <li>画像の大きさ: {imageSize}</li>
-              </ul>
-            ) : (<Spinner size="sm" />)}
-          </Card.Text>
-        )}
-        <Card.Text>
-          <h2 className="fs-6 fw-bold">コメント</h2>
-          {r.comment.trim() ? (
-            <RichText className="text-muted border-start px-2 mb-0">{r.comment}</RichText>
-          ) : (
-            <div className="text-muted">なし</div>
-          )}
-        </Card.Text>
-        {!details && (
-          <div className="mb-3">
-            <Link to={`/admin/emoji-requests/${r.id}`}>
-              詳細を見る
-            </Link>
+        <Stack gap={3}>
+          <EmojiPreview src={r.url} />
+          <div>
+            {!details ? (
+              <Stack gap={3}>
+                <div>
+                  <h2 className="fs-6 fw-bold">申請者</h2>
+                  <UserLinkView username={r.username} />
+                </div>
+                <div>
+                  <h2 className="fs-6 fw-bold">コメント</h2>
+                  {r.comment.trim() ? (
+                    <RichText className="text-muted border-start px-2 mb-0">{r.comment}</RichText>
+                  ) : (
+                    <div className="text-muted">なし</div>
+                  )}
+                </div>
+              </Stack>
+            ) : (
+              <Table hover className="mb-0 w-auto" style={{ '--bs-table-bg': 'transparent' } as any}>
+                <tbody>
+                  <>
+                    <tr>
+                      <th><i className="bi bi-card-image" /> ファイル形式</th>
+                      <td>{type != null ? (type || <span className="text-muted">取得できませんでした。</span>) : <Spinner size="sm" />}</td>
+                    </tr>
+                    <tr>
+                      <th><i className="bi bi-pie-chart-fill" /> ファイルサイズ</th>
+                      <td>{fileSizeInKB != null ? `${fileSizeInKB}KB` : <Spinner size="sm" />}</td>
+                    </tr>
+                    <tr>
+                      <th><i className="bi bi-aspect-ratio-fill" /> 画像の大きさ</th>
+                      <td>{imageSize != null ? imageSize : <Spinner size="sm" />}</td>
+                    </tr>
+                  </>
+                  <tr>
+                    <th><i className="bi bi-person-circle" /> 申請者</th>
+                    <td>{r.username ? <UserLinkView username={r.username} /> : '不明'}</td>
+                  </tr>
+                  <tr>
+                    <th><i className="bi bi-chat-left-heart-fill" /> コメント</th>
+                    <td>{<RichText>{comment}</RichText>}</td>
+                  </tr>
+                  {r.status !== 'pending' && (
+                    <>
+                      <tr>
+                        <th><i className="bi bi-eye-fill" /> 作業スタッフ</th>
+                        <td>{r.processerName ? <UserLinkView username={r.processerName} /> : '不明'}</td>
+                      </tr>
+                      <tr>
+                        <th><i className="bi bi-chat-right-heart-fill" /> スタッフからのコメント</th>
+                        <td>{<RichText>{staffComment}</RichText>}</td>
+                      </tr>
+                    </>
+                  )}
+                </tbody>
+              </Table>
+            )}
           </div>
-        )}
-        <Stack direction="horizontal" gap={3}>
-          <Button variant="success" onClick={approve}><i className="bi bi-check2" /> 承認</Button>
-          <Button variant="primary" onClick={reject}><i className="bi bi-x-lg" /> 却下</Button>
+          {!details && (
+            <div>
+              <Link to={`/admin/emoji-requests/${r.id}`}>
+                詳細を見る
+              </Link>
+            </div>
+          )}
+          <Stack direction="horizontal" gap={3}>
+            <Button variant="success" onClick={approve}><i className="bi bi-check2" /> 承認</Button>
+            <Button variant="primary" onClick={reject}><i className="bi bi-x-lg" /> 却下</Button>
+          </Stack>
         </Stack>
       </Card.Body>
     </Card>
