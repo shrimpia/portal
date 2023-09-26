@@ -14,20 +14,5 @@ export const adminGetEmojiRequestController: Controller = async (c) => {
     return send404(c);
   }
 
-  return c.json({
-    id: r.id,
-    name: r.name,
-    url: new URL(c.req.url).origin + '/uploaded/' + r.image_key,
-    status: r.status,
-    comment: r.comment,
-    staffComment: r.staff_comment,
-    createdYear: r.created_year,
-    createdMonth: r.created_month,
-    userId: r.user_id,
-    username: r.username,
-    createdAt: r.created_at,
-    processerId: r.processer_id,
-    processedAt: r.processed_at,
-    processerName: r.processer_name,
-  });
+  return c.json(EmojiRequests.toDto(r, c));
 };

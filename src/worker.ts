@@ -25,11 +25,13 @@ app.get('/', c => {
 });
 
 app.get('/uploaded/:key', getUploadedFilesController);
-app.post('/miauth', miauthController);
 app.get('/session', sessionGuard, getSessionController);
+app.post('/miauth', miauthController);
+
 app.post('/emoji-requests', sessionGuard, createEmojiRequestController);
 app.get('/emoji-requests/remaining', sessionGuard, getRemainingRequestLimitController);
 app.get('/emoji-requests', sessionGuard, getEmojiRequestsController);
+
 app.get('/admin/emoji-requests', moeStaffGuard, adminGetAllPendingEmojiRequestsController);
 app.get('/admin/emoji-requests/:id', moeStaffGuard, adminGetEmojiRequestController);
 app.post('/admin/emoji-requests/:id/approve', moeStaffGuard, adminPostApproveEmojiRequestController);

@@ -1,10 +1,11 @@
+
 import type { EmojiRequest } from '../models/emoji-request';
 import type { User } from '../models/user';
+import type { Context } from 'hono';
 
 type EmojiRequestWithUserName = EmojiRequest & Pick<User, 'username'> & {
 	processer_name: string | null;
 };
-
 
 export class EmojiRequestRepository {
   async create(db: D1Database, data: {name: string, comment: string, imageKey: string, userId: string, createdAt: Date}) {
@@ -127,5 +128,24 @@ export class EmojiRequestRepository {
     return db.prepare('DELETE FROM emoji_request WHERE id = ?')
       .bind(id)
       .run();
+  }
+
+  async toDto(r: EmojiRequestWithUserName, c: Context) {
+    return {
+      id: r.id,
+      name: r.name,
+      url: new URL(c.req.url).origin + '/uploaded/' + r.image_key,
+      status: r.status,
+      comment: r.comment,
+      staffComment: r.staff_comment,
+      createdYear: r.created_year,
+      createdMonth: r.created_month,
+      userId: r.user_id,
+      username: r.username,
+      createdAt: r.created_at,
+      processerId: r.processer_id,
+      processedAt: r.processed_at,
+      processerName: r.processer_name,
+    };
   }
 }
