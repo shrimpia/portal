@@ -8,7 +8,10 @@
       "dev": {
         "dependsOn": ["^dev"]
       },
-      "deploy": {},
+      "deploy": {
+        "dependsOn": ["^build"],
+        "outputs": ["dist/**"]
+      },
       "test": {
         "dependsOn": ["^test"]
       },
