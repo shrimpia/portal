@@ -9,7 +9,7 @@ export const EmojiRequestAdminIndex = () => {
   const pendingList = useAtomValue(adminPendingEmojiRequestsAtom);
   return (
     <div>
-      <h1 className="fs-3 mb-5">カスタム絵文字の追加申請</h1>
+      <h1 className="fs-3 mb-5">絵文字申請の管理</h1>
       
       <Row>
         {pendingList.map(r => (
