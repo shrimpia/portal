@@ -47,3 +47,11 @@ body {
 .fs-small {
     font-size: 0.8rem;
 }
+
+.sh-card-hover {
+    transition: all 0.2s ease-out;
+    &:hover {
+      transform: scale(1.01);
+      box-shadow: var(--bs-box-shadow-lg) !important;
+    }
+}
