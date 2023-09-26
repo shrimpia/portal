@@ -1,0 +1,49 @@
+// Shrimpia Color Set
+$shrimpiaForeground: #F4F7F3;
+$shrimpiaBackground: #211520;
+$shrimpiaPrimary: #B93E43;
+$shrimpiaPrimaryDark: #651622;
+$shrimpiaLink: #b46fde;
+$shrimpiaDimmed: #8995A8;
+$shrimpiaWarning: #ecbd15;
+$shrimpiaSuccess: #6f8e4d;
+$shrimpiaDanger: #f44336;
+
+
+// Bootstrap Customize
+$font-family-sans-serif: "Koruri", sans-serif;
+$body-color: $shrimpiaForeground;
+$body-bg: $shrimpiaBackground;
+
+$card-bg: $shrimpiaPrimaryDark;
+
+$primary:       $shrimpiaPrimary !default;
+$secondary:     $shrimpiaDimmed !default;
+$success:       $shrimpiaSuccess !default;
+$warning:       $shrimpiaWarning !default;
+$danger:        $shrimpiaDanger !default;
+
+// ...Finally, import Bootstrap
+@import "bootstrap/scss/bootstrap";
+
+// Custom Styles
+body {
+    background-image: url("./assets/shrimpia-river.png");
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+}
+
+.sh-container {
+    padding: 0 16px;
+    margin: 0 auto;
+    margin-top: 80px;
+    max-width: 1024px;
+    &.wide {
+        max-width: auto;
+    }
+}
+
+.fs-small {
+    font-size: 0.8rem;
+}
