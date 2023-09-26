@@ -10,7 +10,7 @@ const IndexPage = () => {
   const user = useAtomValue(userAtom);
   return user ? (
     <AdminContainer mode="staff">
-      <h1 className="fs-3 mb-5">帝国職員ページ</h1>
+      <h1 className="fs-3 mb-5">Staff Portal</h1>
       <Stack direction="vertical" gap={3}>
         <LinkCard
           title="絵文字申請の管理"
