@@ -1,9 +1,10 @@
 import { useAtomValue } from 'jotai';
-import { Container, Stack } from 'react-bootstrap';
+import { Col, Container, Row, Stack } from 'react-bootstrap';
 
 import { isStaff } from '../../../services/is-staff';
 import { userAtom } from '../../../states/user';
 import { LinkCard } from '../../views/LinkCard';
+import { LinkCardExternal } from '../../views/LinkCardExternal';
 
 export const SessionPage = () => {
   const user = useAtomValue(userAtom);
@@ -38,6 +39,47 @@ export const SessionPage = () => {
             管理機能を備えた、帝国職員向けのページです。
           </LinkCard>
         )}
+        <h2 className="fs-4 mt-5">
+          その他のリンク
+        </h2>
+        <Row>
+          <Col xs={12} md={6}>
+            <LinkCardExternal
+              title="シュリンピア帝国"
+              to="https://mk.shrimpia.network"
+              icon="bi bi-globe">
+          シュリンピア帝国 Misskeyサーバー。
+            </LinkCardExternal>
+          </Col>
+          <Col xs={12} md={6}>
+            <LinkCardExternal
+              title="国立図書館 (Wiki)"
+              to="https://wiki.shrimpia.network"
+              icon="bi bi-book">
+              人気ネタから便利な情報まで、みんなで編集しよう。
+            </LinkCardExternal>
+          </Col>
+        </Row>
+        <Row>
+          <Col xs={12} md={6}>
+            <LinkCardExternal
+              title="国立公園 (Discord)"
+              to="https://discord.gg/zBq2acPPKC"
+              icon="bi bi-discord">
+          メンバー同士で、通話やチャットを楽しもう。<br/>
+          緊急メンテナンス時のお知らせとしても利用しています。
+            </LinkCardExternal>
+          </Col>
+          <Col xs={12} md={6}>
+            <LinkCardExternal
+              title="Shrimpia+"
+              to="https://shrimpia.fanbox.cc/"
+              icon="bi bi-patch-plus-fill">
+          Shrimpia+に参加しませんか？<br/>
+          様々な便利機能を手に入れ、運営を支援しましょう。
+            </LinkCardExternal>
+          </Col>
+        </Row>
       </Stack>
     </Container>
   ) : null;
