@@ -14,5 +14,5 @@ export const adminGetEmojiRequestController: Controller = async (c) => {
     return send404(c);
   }
 
-  return c.json(EmojiRequests.toDto(r, c));
+  return c.json(EmojiRequests.toAdminDto(r, c));
 };

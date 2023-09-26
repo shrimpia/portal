@@ -143,6 +143,12 @@ export class EmojiRequestRepository {
       userId: r.user_id,
       username: r.username,
       createdAt: r.created_at,
+    };
+  }
+
+  toAdminDto(r: EmojiRequestWithUserName, c: Context) {
+    return {
+      ...this.toDto(r, c),
       processerId: r.processer_id,
       processedAt: r.processed_at,
       processerName: r.processer_name,
