@@ -130,7 +130,7 @@ export class EmojiRequestRepository {
       .run();
   }
 
-  async toDto(r: EmojiRequestWithUserName, c: Context) {
+  toDto(r: EmojiRequestWithUserName, c: Context) {
     return {
       id: r.id,
       name: r.name,
