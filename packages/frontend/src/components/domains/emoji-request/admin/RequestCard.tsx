@@ -13,6 +13,30 @@ import { UserLinkView } from '../../../views/UserLinkView';
 
 import type { EmojiRequest } from '../../../../types/emoji-request';
 
+const parseComment = (comment: string | null) => {
+  if (!comment?.trim()) return null;
+
+  const data = {
+    fontName: null as string | null,
+    kana: null as string | null,
+    description: '',
+  };
+
+  const lines = comment.trim().split('\n');
+
+  for (const line of lines) {
+    if (line.startsWith('フォント名: ')) {
+      data.fontName = line.slice('フォント名: '.length);
+    } else if (line.startsWith('よみがな: ')) {
+      data.kana = line.slice('よみがな: '.length);
+    } else {
+      data.description += line + '\n';
+    }
+  }
+
+  return data;
+};
+
 export type RequestCardProps = {
     request: EmojiRequest;
     details?: boolean;
@@ -28,7 +52,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
   const navigate = useNavigate();
   const withSpinner = useWithSpinner();
 
-  const comment = useMemo(() => r.comment?.trim() || 'なし', [r.comment]);
+  const comment = useMemo(() => parseComment(r.comment), [r.comment]);
   const staffComment = useMemo(() => r.staffComment?.trim() || 'なし', [r.staffComment]);
 
   const approve = () => {
@@ -110,7 +134,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
                 </div>
               </Stack>
             ) : (
-              <Table hover className="mb-0 w-auto" style={{ '--bs-table-bg': 'transparent' } as any}>
+              <Table striped hover borderless className="mb-0 w-auto" style={{ '--bs-table-bg': 'transparent' } as any}>
                 <tbody>
                   <>
                     <tr>
@@ -130,10 +154,26 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
                     <th><i className="bi bi-person-circle" /> 申請者</th>
                     <td>{r.username ? <UserLinkView username={r.username} /> : '不明'}</td>
                   </tr>
-                  <tr>
-                    <th><i className="bi bi-chat-left-heart-fill" /> コメント</th>
-                    <td>{<RichText>{comment}</RichText>}</td>
-                  </tr>
+                  {comment && (
+                    <>
+                      {comment.fontName && (
+                        <tr>
+                          <th><i className="bi bi-fonts" /> 使用フォント</th>
+                          <td>{comment.fontName || '未記入'}</td>
+                        </tr>
+                      )}
+                      {comment.kana && (
+                        <tr>
+                          <th><i className="bi bi-type" /> ふりがな</th>
+                          <td>{comment.kana || '未記入'}</td>
+                        </tr>
+                      )}
+                      <tr>
+                        <th><i className="bi bi-chat-left-heart-fill" /> コメント</th>
+                        <td>{<RichText>{comment.description || '未記入'}</RichText>}</td>
+                      </tr>
+                    </>
+                  )}
                   {r.status !== 'pending' && (
                     <>
                       <tr>
@@ -142,7 +182,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
                       </tr>
                       <tr>
                         <th><i className="bi bi-chat-right-heart-fill" /> スタッフからのコメント</th>
-                        <td>{<RichText>{staffComment}</RichText>}</td>
+                        <td>{<RichText>{staffComment || '未記入'}</RichText>}</td>
                       </tr>
                     </>
                   )}
