@@ -21,6 +21,19 @@ const EmojiRequestPage = () => {
       <h1 className="fs-3 mb-4">
         カスタム絵文字の追加申請
       </h1>
+      <p>
+        シュリンピア帝国で利用できるカスタム絵文字を、あなたも作って申請しましょう！<br/>
+        厳正な審査がありますが、好きな言葉や自分の絵をカスタム絵文字として使えるようになるチャンスです！
+      </p>
+      <p>
+        絵文字を作成・申請する前に、必ずガイドラインをお読みください！<br/>
+        <a href="https://docs.shrimpia.network/a6fe11f1441f4a51912069a218dbc9e9" target="_blank" rel="noopener noreferrer">
+          <b>絵文字申請ガイドライン</b>
+        </a>
+      </p>
+      {!isShrimpiaPlus && (
+        <OnlyShrimpiaPlus>絵文字申請機能</OnlyShrimpiaPlus>
+      )}
       <Stack className="mb-3" direction="horizontal" gap={3}>
         {user && isShrimpiaPlus ? (
           <Button as={Link as any} to="/emoji-request/new" className="fw-bold">
@@ -37,9 +50,6 @@ const EmojiRequestPage = () => {
           </Button>
         )}
       </Stack>
-      {!isShrimpiaPlus && (
-        <OnlyShrimpiaPlus>絵文字申請機能</OnlyShrimpiaPlus>
-      )}
       <Nav variant="underline" className="mb-3" activeKey={filter} onSelect={key => setFilter(key as 'mine' | 'all')}>
         <Nav.Item>
           <Nav.Link eventKey="mine">
