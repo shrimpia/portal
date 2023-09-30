@@ -25,6 +25,7 @@ export const RequestsList: React.FC<RequestsListProp> = ({ children }) => {
         <>
           <Row className="mt-5" key={key}>
             <h3>{grouped[key][0].createdYear}年{grouped[key][0].createdMonth}月</h3>
+            <p className="text-muted">{grouped[key].length}件の申請</p>
             {grouped[key].map(r => (
               <Col key={r.id} xs={12} sm={6} md={4} lg={4} xl={3} className="g-3">
                 <Card>
