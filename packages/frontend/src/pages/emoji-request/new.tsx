@@ -52,6 +52,11 @@ const EmojiRequestNewPage = () => {
     `フォント名: ${fontName}\nよみがな: ${yomigana}\n\n${comment}`
   ) : comment, [isDecoMoji, fontName, yomigana, comment]);
 
+  const onClickButtonFileName = useCallback(() => {
+    if (!file) return;
+    setName(file.name.replace(/\.[^/.]+$/, '').toLowerCase().replace(/[\s-]/g, '_'));
+  }, [file]);
+
   const uploadFile = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -87,15 +92,20 @@ const EmojiRequestNewPage = () => {
         <Stack direction="vertical" gap={3}>
           <Alert variant={limit > 0 ? 'info' : 'danger'}>
             <Alert.Heading>{limitMessage}</Alert.Heading>
-            <div>
-              申請は毎月1日にリセットされます。<br/>
-              月ごとに申請できる絵文字の数は、加入しているShrimpia+のプランによって異なります。<br/>
-              申請できる絵文字の数は、
-              <a href="https://docs.shrimpia.network/Shrimpia-ca2cb8697df5405393d9167cd98835ee" target="_blank" rel="noreferrer noopener">
-                Shrimpia+のプラン一覧
-              </a>
-              をご覧ください。
-            </div>
+            <ul className="mb-0">
+              <li>申請可能な枠の数は毎月1日にリセットされます</li>
+              <li>枠の数は、加入しているShrimpia+のプランによって異なります
+                <ul>
+                  <li>
+                    詳しくは
+                    <a href="https://docs.shrimpia.network/Shrimpia-ca2cb8697df5405393d9167cd98835ee" target="_blank" rel="noreferrer noopener">
+                      Shrimpia+のプラン一覧
+                    </a>
+                    をご覧ください
+                  </li>
+                </ul>
+              </li>
+            </ul>
           </Alert>
           {limit > 0 ? (
             <>
@@ -122,7 +132,8 @@ const EmojiRequestNewPage = () => {
                 <Card.Body>
                   <Form.Group controlId="name">
                     <Form.Label className="fw-bold">絵文字の名前</Form.Label>
-                    <Form.Control type="text" value={name} placeholder="例: lutica_dadakone" onChange={e => setName(e.target.value)} />
+                    {file && <Button size="sm" className="ms-2" onClick={onClickButtonFileName}>ファイル名を反映する</Button>}
+                    <Form.Control className="mt-2" type="text" value={name} placeholder="例: lutica_dadakone" onChange={e => setName(e.target.value)} />
                     <Form.Text className={name == '' || isNameValid ? 'text-muted' : 'text-danger'}>
                       絵文字の入力時に用いる名前です。<br/>小文字の英数字およびアンダースコア（_）のみが利用できます。
                     </Form.Text>
@@ -147,7 +158,8 @@ const EmojiRequestNewPage = () => {
                           <Form.Control type="text" value={fontName} placeholder="例: M PLUS Rounded 1c" onChange={e => setFontName(e.target.value)} />
                           <Form.Text muted>
                             正確に記載してください。不備がある場合、却下される可能性があります。<br />
-                            MEGAMOJI等のツールを用いて作成した場合は、ツール名と選択したフォント名をご記入ください。
+                            MEGAMOJI等のツールを用いて作成した場合は、ツール名と選択したフォント名をご記入ください。<br/>
+                            手描きの場合は、その旨を記載してください。
                           </Form.Text>
                         </Form.Group>
                         <Form.Group controlId="yomigana">
@@ -166,7 +178,8 @@ const EmojiRequestNewPage = () => {
                     <Form.Label className="fw-bold">コメント</Form.Label>
                     <Form.Control as="textarea" rows={6} value={comment} onChange={e => setComment(e.target.value)} />
                     <Form.Text muted>
-                      画像に何らかの元ネタがある場合など、スタッフが知っておくべき背景がある場合は、その旨を詳細に記入してください。<br/>
+                      <strong>代理申請の場合は、必ず作成者のユーザー名を明記してください。</strong><br/>
+                      その他、画像に何らかの元ネタがある場合など、スタッフが知っておくべき背景がある場合は、その旨を詳細に記入してください。
                     </Form.Text>
                   </Form.Group>
                 </Card.Body>
