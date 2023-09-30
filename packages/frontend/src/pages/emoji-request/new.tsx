@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import { EmojiPreview } from '../../components/views/EmojiPreview';
 import { useWithSpinner } from '../../hooks/useWithSpinner';
 import { useAPI } from '../../services/api';
-import { remainingEmojiRequestLimitAtom } from '../../states/user';
+import { remainingEmojiRequestLimitAtom, userAtom } from '../../states/user';
 
 import type { ChangeEvent } from 'react';
 
@@ -27,10 +27,22 @@ const EmojiRequestNewPage = () => {
   const [isAgreeToGuideline, setAgreeToGuideline] = useState(false);
 
   const limit = useAtomValue(remainingEmojiRequestLimitAtom);
+  const user = useAtomValue(userAtom);
 
   const withSpinner = useWithSpinner();
   const api = useAPI();
   const navigate = useNavigate();
+
+  const limitMessage = useMemo(() => {
+    if (user?.canManageCustomEmojis || user?.isEmperor) {
+      return 'スタッフのため、無制限に申請できます。';
+    }
+    if (limit > 0) {
+      return `今月はあと${limit}つ申請できます。`;
+    } else {
+      return '今月はこれ以上申請できません。';
+    }
+  }, [limit, user?.canManageCustomEmojis, user?.isEmperor]);
 
   const fileSizeInKB = useMemo(() => (file ? (file.size / 1024).toPrecision(4) : 0), [file]);
   const isFileSizeValid = useMemo(() => (file && file.size <= 200 * 1024), [file]);
@@ -74,7 +86,7 @@ const EmojiRequestNewPage = () => {
       <Form>
         <Stack direction="vertical" gap={3}>
           <Alert variant={limit > 0 ? 'info' : 'danger'}>
-            <Alert.Heading>{limit > 0 ? `今月はあと${limit}つ申請できます。` : '今月はこれ以上申請できません。'}</Alert.Heading>
+            <Alert.Heading>{limitMessage}</Alert.Heading>
             <div>
               申請は毎月1日にリセットされます。<br/>
               月ごとに申請できる絵文字の数は、加入しているShrimpia+のプランによって異なります。<br/>
