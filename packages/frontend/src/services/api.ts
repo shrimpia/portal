@@ -1,11 +1,12 @@
 import { useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 
-import { URL_PORTAL_BACKEND } from '../consts';
-import { tokenAtom } from '../states/sessions';
+import type { EmojiRequest } from '@/types/emoji-request';
+import type { Session } from '@/types/session';
 
-import type { EmojiRequest } from '../types/emoji-request';
-import type { Session } from '../types/session';
+import { URL_PORTAL_BACKEND } from '@/consts';
+import { tokenAtom } from '@/states/sessions';
+
 
 
 export const $get = async <T>(endpoint: string, args: Record<string, unknown>, token: string | null): Promise<T> => {

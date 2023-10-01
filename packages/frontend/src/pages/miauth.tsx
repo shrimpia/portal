@@ -2,9 +2,9 @@ import { useSetAtom } from 'jotai';
 import { useEffect, useState } from 'react';
 import { Card, Container, Spinner } from 'react-bootstrap';
 
-import { useQuery } from '../hooks/useQuery';
-import { useAPI } from '../services/api';
-import { tokenAtom } from '../states/sessions';
+import { useQuery } from '@/hooks/useQuery';
+import { useAPI } from '@/services/api';
+import { tokenAtom } from '@/states/sessions';
 
 const MiAuthPage = () => {
   const q = useQuery();

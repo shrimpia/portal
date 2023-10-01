@@ -2,8 +2,7 @@ import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-
-import App from './App.tsx';
+import App from '@/App.tsx';
 
 const queryClient = new QueryClient();
 

@@ -1,10 +1,9 @@
 import { useAtomValue } from 'jotai';
 import { Stack } from 'react-bootstrap';
 
-import { AdminContainer } from '../../components/domains/admin/AdminContainer';
-import { LinkCard } from '../../components/views/LinkCard';
-import { userAtom } from '../../states/user';
-
+import { LinkCard } from '@/components/common/LinkCard';
+import { AdminContainer } from '@/components/domains/admin/AdminContainer';
+import { userAtom } from '@/states/user';
 
 const IndexPage = () => {
   const user = useAtomValue(userAtom);

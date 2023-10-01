@@ -1,6 +1,6 @@
 import { useSetAtom } from 'jotai';
 
-import { isShowingGlobalSpinnerAtom } from '../states/screen';
+import { isShowingGlobalSpinnerAtom } from '@/states/screen';
 
 export const useWithSpinner = () => {
   const setIsShowingGlobalSpinner = useSetAtom(isShowingGlobalSpinnerAtom);

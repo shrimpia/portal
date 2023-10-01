@@ -1,21 +1,20 @@
 import { Suspense } from 'react';
 import { useRoutes } from 'react-router-dom';
 
-import { AppHeader } from './components/domains/global/AppHeader';
-import { GlobalSpinner } from './components/domains/global/GlobalSpinner';
-import { LoadingView } from './components/views/LoadingView';
-
+import { AppHeader } from '@/components/common/AppHeader';
+import { LoadingView } from '@/components/common/LoadingView';
+import { ModalSpinner } from '@/components/common/ModalSpinner';
 import routes from '~react-pages';
 
 import 'bootstrap-icons/font/bootstrap-icons.min.css';
-import './fonts.scss';
-import './App.scss';
+import '@/fonts.scss';
+import '@/App.scss';
 
 function App() {
   return (
     <Suspense fallback={<LoadingView/>}>
       <AppHeader />
-      <GlobalSpinner />
+      <ModalSpinner />
       <Suspense fallback={<LoadingView/>}>
         {useRoutes(routes)}
         <footer className="text-center text-muted" style={{ marginTop: 128, fontFamily: 'serif' }}>

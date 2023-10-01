@@ -1,9 +1,9 @@
 import { useAtomValue } from 'jotai';
 import { Modal, Spinner } from 'react-bootstrap';
 
-import { isShowingGlobalSpinnerAtom } from '../../../states/screen';
+import { isShowingGlobalSpinnerAtom } from '@/states/screen';
 
-export const GlobalSpinner: React.FC = () => {
+export const ModalSpinner: React.FC = () => {
   const show = useAtomValue(isShowingGlobalSpinnerAtom);
 
   return show ? (

@@ -1,20 +1,8 @@
 import { Placeholder, Stack } from 'react-bootstrap';
 import { useQuery } from 'react-query';
 
-import { URL_EMPIRE } from '../../consts';
-
-import type { MisskeyUser } from '../../types/misskey-user';
-
-const fetchUser = async (username: string) => {
-  const res = await fetch(`${URL_EMPIRE}/api/users/show`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ username }),
-  });
-  return await res.json() as MisskeyUser | { error: any };
-};
+import { URL_EMPIRE } from '@/consts';
+import { fetchUser } from '@/services/fetch-user';
 
 export const UserLinkView: React.FC<{ username?: string | null }> = ({ username }) => {
   const { data } = useQuery({

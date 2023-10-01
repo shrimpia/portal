@@ -3,15 +3,16 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Card, Spinner, Stack, Table } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 
-import { useWithSpinner } from '../../../../hooks/useWithSpinner';
-import { useAPI } from '../../../../services/api';
-import { getImageSize } from '../../../../services/get-image-size';
-import { adminPendingEmojiRequestsStatusAtom } from '../../../../states/emoji-request';
-import { EmojiPreview } from '../../../views/EmojiPreview';
-import { RichText } from '../../../views/RichText';
-import { UserLinkView } from '../../../views/UserLinkView';
+import type { EmojiRequest } from '@/types/emoji-request';
 
-import type { EmojiRequest } from '../../../../types/emoji-request';
+import { RichText } from '@/components/common/RichText';
+import { UserLinkView } from '@/components/common/UserLinkView';
+import { EmojiPreview } from '@/components/domains/emoji-request/EmojiPreview';
+import { useWithSpinner } from '@/hooks/useWithSpinner';
+import { useAPI } from '@/services/api';
+import { getImageSize } from '@/services/get-image-size';
+import { adminPendingEmojiRequestsStatusAtom } from '@/states/emoji-request';
+
 
 const parseComment = (comment: string | null) => {
   if (!comment?.trim()) return null;

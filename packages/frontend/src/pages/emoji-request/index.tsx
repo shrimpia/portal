@@ -4,11 +4,11 @@ import { Suspense } from 'react';
 import { Button, Container, Nav, Stack } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import { RequestsList } from '../../components/domains/emoji-request/RequestsList';
-import { LoadingView } from '../../components/views/LoadingView';
-import { OnlyShrimpiaPlus } from '../../components/views/OnlyShrimpiaPlus';
-import { filterAtom } from '../../states/emoji-request';
-import { userAtom } from '../../states/user';
+import { LoadingView } from '@/components/common/LoadingView';
+import { OnlyShrimpiaPlus } from '@/components/common/OnlyShrimpiaPlus';
+import { RequestsList } from '@/components/domains/emoji-request/RequestsList';
+import { filterAtom } from '@/states/emoji-request';
+import { userAtom } from '@/states/user';
 
 const EmojiRequestPage = () => {
   const user = useAtomValue(userAtom);

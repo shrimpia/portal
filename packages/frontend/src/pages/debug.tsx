@@ -1,10 +1,10 @@
 import { useAtom } from 'jotai';
 import { Container, Form, Stack } from 'react-bootstrap';
 
-import { shrimpiaPlusEmulationAtom } from '../states/debug';
+import { shrimpiaPlusEmulationAtom } from '@/states/debug';
 
 const DebugPage = () => {
-  const [ shrimpiaPlusEmulation, setShrimpiaPlusEmulation ] = useAtom(shrimpiaPlusEmulationAtom);
+  const [shrimpiaPlusEmulation, setShrimpiaPlusEmulation] = useAtom(shrimpiaPlusEmulationAtom);
 
   if (import.meta.env.PROD) {
     return (

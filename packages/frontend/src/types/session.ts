@@ -1,4 +1,4 @@
-import type { ShrimpiaPlus } from './shrimpia-plus';
+import type { ShrimpiaPlus } from '@/types/shrimpia-plus';
 
 export interface Session {
     username: string;

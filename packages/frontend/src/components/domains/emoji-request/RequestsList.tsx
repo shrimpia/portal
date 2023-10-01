@@ -3,13 +3,10 @@ import groupBy from 'lodash.groupby';
 import { useMemo, type PropsWithChildren } from 'react';
 import { Card, Col, Container, Image, Row, Stack } from 'react-bootstrap';
 
-
-import { emojiRequestsAtom } from '../../../states/emoji-request';
-import { RichText } from '../../views/RichText';
-import { UserLinkView } from '../../views/UserLinkView';
-
-import { StatusBadge } from './StatusBadge';
-
+import { RichText } from '@/components/common/RichText';
+import { UserLinkView } from '@/components/common/UserLinkView';
+import { StatusBadge } from '@/components/domains/emoji-request/StatusBadge';
+import { emojiRequestsAtom } from '@/states/emoji-request';
 
 export type RequestsListProp = PropsWithChildren;
 

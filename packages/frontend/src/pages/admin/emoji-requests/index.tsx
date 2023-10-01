@@ -1,11 +1,11 @@
 
 import { AdminContainer } from '../../../components/domains/admin/AdminContainer';
-import { EmojiRequestAdminIndex } from '../../../components/domains/emoji-request/admin/Index';
+import { IndexPage } from '../../../components/subpages/admin/emoji-requests/IndexPage';
 
 const AdminEmojiRequestsIndexPage = () => {
   return (
     <AdminContainer mode="emoji">
-      <EmojiRequestAdminIndex />
+      <IndexPage />
     </AdminContainer>
   );
 };

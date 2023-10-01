@@ -1,11 +1,10 @@
 import { useAtomValue } from 'jotai';
 import { Alert, Col, Row } from 'react-bootstrap';
 
-import { adminPendingEmojiRequestsAtom } from '../../../../states/emoji-request';
+import { RequestCard } from '@/components/domains/emoji-request/admin/RequestCard';
+import { adminPendingEmojiRequestsAtom } from '@/states/emoji-request';
 
-import { RequestCard } from './RequestCard';
-
-export const EmojiRequestAdminIndex = () => {
+export const IndexPage = () => {
   const pendingList = useAtomValue(adminPendingEmojiRequestsAtom);
   return (
     <div>

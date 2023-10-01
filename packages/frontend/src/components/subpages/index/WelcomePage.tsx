@@ -4,10 +4,10 @@ import { v4 as uuid } from 'uuid';
 
 import './WelcomePage.scss';
 
-import shrimpia from '../../../assets/shrimpia.svg';
-import { URL_EMPIRE } from '../../../consts';
+import shrimpia from '@/assets/shrimpia.svg';
+import { URL_EMPIRE } from '@/consts';
 
-export const WelcomePage = () => {
+export const IndexWelcomePage = () => {
   const login = useCallback(() => {
     const sessionId = uuid();
     const query = new URLSearchParams();

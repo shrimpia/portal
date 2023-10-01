@@ -2,11 +2,10 @@ import { useAtomValue } from 'jotai';
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import { adminCurrentEmojiRequestAtom } from '../../../../states/emoji-request';
+import { RequestCard } from '@/components/domains/emoji-request/admin/RequestCard';
+import { adminCurrentEmojiRequestAtom } from '@/states/emoji-request';
 
-import { RequestCard } from './RequestCard';
-
-export const EmojiRequestAdminId = () => {
+export const DetailsPage = () => {
   const item = useAtomValue(adminCurrentEmojiRequestAtom);
   return item ? (
     <>

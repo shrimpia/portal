@@ -1,12 +1,12 @@
 import { useAtomValue } from 'jotai';
 import { Col, Container, Row } from 'react-bootstrap';
 
-import { isStaff } from '../../../services/is-staff';
-import { userAtom } from '../../../states/user';
-import { LinkCard } from '../../views/LinkCard';
-import { LinkCardExternal } from '../../views/LinkCardExternal';
+import { LinkCard } from '@/components/common/LinkCard';
+import { LinkCardExternal } from '@/components/common/LinkCardExternal';
+import { isStaff } from '@/services/is-staff';
+import { userAtom } from '@/states/user';
 
-export const SessionPage = () => {
+export const IndexSessionPage = () => {
   const user = useAtomValue(userAtom);
   return user ? (
     <Container>

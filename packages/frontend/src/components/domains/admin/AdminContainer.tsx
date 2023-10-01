@@ -3,10 +3,10 @@ import { useAtomValue } from 'jotai';
 import React from 'react';
 import { Container, Image } from 'react-bootstrap';
 
-import ebifurai from '../../../assets/ebifurai.jpg';
-import { userAtom } from '../../../states/user';
-
 import type { PropsWithChildren } from 'react';
+
+import ebifurai from '@/assets/ebifurai.jpg';
+import { userAtom } from '@/states/user';
 
 export type AdminContainerProps = PropsWithChildren<{
   mode: 'emoji' | 'police' | 'emperor' | 'staff';
@@ -16,7 +16,6 @@ export const AdminContainer: React.FC<AdminContainerProps> = ({ mode, children }
   const user = useAtomValue(userAtom);
 
   const allowedRoleName = mode === 'emperor' ? '皇帝': mode === 'emoji' ? '絵文字庁職員' : mode === 'police' ? '警察' : '職員';
-
   const isAllowed = user && (user.isEmperor || (mode === 'emoji' && user.canManageCustomEmojis) || (mode === 'staff' && (user.canManageCustomEmojis /* || user.isModerator */)));
 
   return (

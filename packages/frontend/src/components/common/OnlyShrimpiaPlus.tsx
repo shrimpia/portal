@@ -1,8 +1,8 @@
 import { Alert, Button } from 'react-bootstrap';
 
-import { URL_SHRIMPIA_PLUS } from '../../consts';
-
 import type { PropsWithChildren } from 'react';
+
+import { URL_SHRIMPIA_PLUS } from '@/consts';
 
 export const OnlyShrimpiaPlus: React.FC<PropsWithChildren> = ({ children }) => {
   return (

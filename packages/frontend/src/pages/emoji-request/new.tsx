@@ -5,12 +5,12 @@ import { Alert, Button, Card, Container, Form, Stack } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 
-import { EmojiPreview } from '../../components/views/EmojiPreview';
-import { useWithSpinner } from '../../hooks/useWithSpinner';
-import { useAPI } from '../../services/api';
-import { remainingEmojiRequestLimitAtom, userAtom } from '../../states/user';
-
 import type { ChangeEvent } from 'react';
+
+import { EmojiPreview } from '@/components/domains/emoji-request/EmojiPreview';
+import { useWithSpinner } from '@/hooks/useWithSpinner';
+import { useAPI } from '@/services/api';
+import { remainingEmojiRequestLimitAtom, userAtom } from '@/states/user';
 
 import './new.scss';
 

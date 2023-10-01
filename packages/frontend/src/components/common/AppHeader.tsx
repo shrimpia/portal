@@ -3,10 +3,10 @@ import React, { Suspense } from 'react';
 import { Container, Dropdown, Navbar, Spinner, Stack } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
-import shrimpia from '../../../assets/shrimpia.svg';
-import { SHRIMPIA_PLUS_PLAN_NAMES, URL_SHRIMPIA_PLUS } from '../../../consts';
-import { tokenAtom } from '../../../states/sessions';
-import { userAtom } from '../../../states/user';
+import shrimpia from '@/assets/shrimpia.svg';
+import { SHRIMPIA_PLUS_PLAN_NAMES, URL_SHRIMPIA_PLUS } from '@/consts';
+import { tokenAtom } from '@/states/sessions';
+import { userAtom } from '@/states/user';
 
 import './AppHeader.scss';
 
