@@ -143,6 +143,18 @@ importers:
         specifier: ^4.2.1
         version: 4.2.1(typescript@5.2.2)(vite@4.4.9)
 
+  packages/worker-emojis-cacher:
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: ^4.20230419.0
+        version: 4.20230922.0
+      typescript:
+        specifier: ^5.0.4
+        version: 5.2.2
+      wrangler:
+        specifier: ^3.0.0
+        version: 3.9.1
+
 packages:
 
   /@aashutoshrathi/word-wrap@1.2.6:
