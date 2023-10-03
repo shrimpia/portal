@@ -9,5 +9,5 @@ compatibility_date = "2023-05-15"
 crons = ["* * * * *"] # * * * * * = run every minute
 
 [[kv_namespaces]]
-binding = "portal"
+binding = "KV"
 id = "bf1cf7ae214c4855a1fecd3e67926455"

@@ -1,5 +1,5 @@
 export interface Env {
-	portal: KVNamespace;
+	KV: KVNamespace;
 }
 
 export default {
@@ -21,7 +21,7 @@ export default {
 
 		const emojis = await res.json();
 
-		await env.portal.put('emojis', JSON.stringify(emojis));
+		await env.KV.put('emojis', JSON.stringify(emojis));
 		console.info('絵文字キャッシュを更新しました。');
 	},
 };
