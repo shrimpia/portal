@@ -40,8 +40,8 @@ importers:
         specifier: ^5.0.4
         version: 5.2.2
       wrangler:
-        specifier: ^3.7.0
-        version: 3.9.1
+        specifier: ^3.10.1
+        version: 3.10.1
 
   packages/frontend:
     dependencies:
@@ -66,6 +66,9 @@ importers:
       lodash.groupby:
         specifier: ^4.6.0
         version: 4.6.0
+      mfm-js:
+        specifier: ^0.23.3
+        version: 0.23.3
       react:
         specifier: ^18.2.0
         version: 18.2.0
@@ -152,8 +155,8 @@ importers:
         specifier: ^5.0.4
         version: 5.2.2
       wrangler:
-        specifier: ^3.0.0
-        version: 3.9.1
+        specifier: ^3.10.1
+        version: 3.10.1
 
 packages:
 
@@ -2524,6 +2527,12 @@ packages:
     engines: {node: '>= 8'}
     dev: true
 
+  /mfm-js@0.23.3:
+    resolution: {integrity: sha512-o8scYmbey6rMUmWAlT3k3ntt6khaCLdxlmHhAWV5wTTMj2OK1atQvZfRUq0SIVm1Jig08qlZg/ps71xUqrScNA==}
+    dependencies:
+      twemoji-parser: 14.0.0
+    dev: false
+
   /micromatch@4.0.5:
     resolution: {integrity: sha512-DMy+ERcEW2q8Z2Po+WNXuw3c5YaUSFjAO5GsJqfEl7UjvtIuFKO6ZrKvcItdy98dwFI2N1tg3zNIdKaQT+aNdA==}
     engines: {node: '>=8.6'}
@@ -3326,6 +3335,10 @@ packages:
       turbo-windows-arm64: 1.10.14
     dev: true
 
+  /twemoji-parser@14.0.0:
+    resolution: {integrity: sha512-9DUOTGLOWs0pFWnh1p6NF+C3CkQ96PWmEFwhOVmT3WbecRC+68AIqpsnJXygfkFcp4aXbOp8Dwbhh/HQgvoRxA==}
+    dev: false
+
   /type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
     engines: {node: '>= 0.8.0'}
@@ -3587,8 +3600,8 @@ packages:
       '@cloudflare/workerd-windows-64': 1.20230922.0
     dev: true
 
-  /wrangler@3.9.1:
-    resolution: {integrity: sha512-8fDyJM5pK/8NqgtYyO1RScuizEZsf5Kx3IeH8hKV1oQXLSftm/bq4mXoC9WV/hO4ikFbYQujNaWxKLGiPjghrw==}
+  /wrangler@3.10.1:
+    resolution: {integrity: sha512-k7BUIinKVYFHJYo8HVeVjDncjTQIu6Z6/CNnTB9WcsGlJ0MFTsFWdWspWSPgef1vOTrzkfbweZpZCY3YXIew3g==}
     engines: {node: '>=16.13.0'}
     hasBin: true
     dependencies:

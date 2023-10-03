@@ -63,4 +63,4 @@ database_id = "0b88e3d6-5323-45d2-9f6a-8927777ec537"
 [[kv_namespaces]]
 binding = "KV"
 id = "bf1cf7ae214c4855a1fecd3e67926455"
-preview_id = "b1499e95be194da983cb0f65aa41c4a8"
+preview_id = "b4dde27e66c449018a18e51b00e4e6a2"
