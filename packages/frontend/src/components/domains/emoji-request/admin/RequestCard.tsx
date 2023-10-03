@@ -19,6 +19,7 @@ const parseComment = (comment: string | null) => {
 
   const data = {
     fontName: null as string | null,
+    fontSource: null as string | null,
     kana: null as string | null,
     description: '',
   };
@@ -30,6 +31,8 @@ const parseComment = (comment: string | null) => {
       data.fontName = line.slice('フォント名: '.length);
     } else if (line.startsWith('よみがな: ')) {
       data.kana = line.slice('よみがな: '.length);
+    } else if (line.startsWith('フォント入手元: ')) {
+      data.fontSource = line.slice('フォント入手元: '.length);
     } else {
       data.description += line + '\n';
     }
@@ -79,7 +82,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
   };
 
   const reject = () => {
-    const reason = prompt(`絵文字の申請 :${r.name}: を却下します。本当によろしいですか？\n\n問題なければ、却下の理由を記入してください。`);
+    const reason = prompt(`絵文字の申請 :${r.name}: を却下します。本当によろしいですか？\n\n問題なければ、却下の理由を記入してください。\n（一部のMFMが利用できます。）`);
     if (reason == null) return;
 
     withSpinner(async () => {
@@ -163,6 +166,12 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
                         <tr>
                           <th><i className="bi bi-fonts" /> 使用フォント</th>
                           <td>{comment.fontName || noText}</td>
+                        </tr>
+                      )}
+                      {comment.fontSource && (
+                        <tr>
+                          <th><i className="bi bi-link-45deg" /> フォント入手元</th>
+                          <td>{comment.fontSource || noText}</td>
                         </tr>
                       )}
                       {comment.kana && (

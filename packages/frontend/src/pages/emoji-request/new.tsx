@@ -22,6 +22,7 @@ const EmojiRequestNewPage = () => {
   const [name, setName] = useState('');
   const [isDecoMoji, setDecoMoji] = useState(false);
   const [fontName, setFontName] = useState('');
+  const [fontSource, setFontSource] = useState('');
   const [yomigana, setYomigana] = useState('');
   const [comment, setComment] = useState('');
   const [isAgreeToGuideline, setAgreeToGuideline] = useState(false);
@@ -53,8 +54,8 @@ const EmojiRequestNewPage = () => {
     [emojiNameState, isAgreeToGuideline, isFileSizeValid, isNameValid],
   );
   const composedComment = useMemo(() => isDecoMoji ? (
-    `フォント名: ${fontName}\nよみがな: ${yomigana}\n\n${comment}`
-  ) : comment, [isDecoMoji, fontName, yomigana, comment]);
+    `フォント名: ${fontName}\nフォント入手元: ${fontSource}\nよみがな: ${yomigana}\n\n${comment}`
+  ) : comment, [isDecoMoji, fontName, fontSource, yomigana, comment]);
 
   const onClickButtonFileName = useCallback(() => {
     if (!file) return;
@@ -105,7 +106,8 @@ const EmojiRequestNewPage = () => {
             <Alert.Heading>{limitMessage}</Alert.Heading>
             <ul className="mb-0">
               <li>申請可能な枠の数は毎月1日にリセットされます</li>
-              <li>枠の数は、加入しているShrimpia+のプランによって異なります
+              <li>
+                枠の数は、加入しているShrimpia+のプランによって異なります
                 <ul>
                   <li>
                     詳しくは
@@ -177,19 +179,29 @@ const EmojiRequestNewPage = () => {
                     <>
                       <hr />
                       <Stack direction="vertical" gap={3}>
+                        <div className="text-muted">
+                          フォントの権利関係をスタッフが審査するため、追加の質問にご回答ください。<br/>
+                          不備がある場合、却下される可能性があります。
+                        </div>
                         <Form.Group controlId="fontName">
                           <Form.Label className="fw-bold">フォントの名前</Form.Label>
                           <Form.Control type="text" value={fontName} placeholder="例: M PLUS Rounded 1c" onChange={e => setFontName(e.target.value)} />
                           <Form.Text muted>
-                            正確に記載してください。不備がある場合、却下される可能性があります。<br />
                             MEGAMOJI等のツールを用いて作成した場合は、ツール名と選択したフォント名をご記入ください。<br/>
                             手描きの場合は、その旨を記載してください。
+                          </Form.Text>
+                        </Form.Group>
+                        <Form.Group controlId="fontSource">
+                          <Form.Label className="fw-bold">フォントの入手元</Form.Label>
+                          <Form.Control type="text" value={fontSource} placeholder="例: Adobe Fonts" onChange={e => setFontSource(e.target.value)} />
+                          <Form.Text muted>
+                            自分が所有する、あるいはサブスク等を用いて利用しているフォントの場合、入手元をご記入ください。
                           </Form.Text>
                         </Form.Group>
                         <Form.Group controlId="yomigana">
                           <Form.Label className="fw-bold">読み仮名</Form.Label>
                           <Form.Control type="text" value={yomigana} placeholder="例: かいしゃくちがい" onChange={e => setYomigana(e.target.value)} />
-                          <Form.Text muted>漢字を含む場合は、できればご記入ください。意図する通りの読み方でタグを設定するために使用されます。</Form.Text>
+                          <Form.Text muted>漢字を含む場合、できればご記入ください。スタッフがひらがなタグを振るために使用します。</Form.Text>
                         </Form.Group>
                       </Stack>
                     </>
@@ -203,7 +215,8 @@ const EmojiRequestNewPage = () => {
                     <Form.Control as="textarea" rows={6} value={comment} onChange={e => setComment(e.target.value)} />
                     <Form.Text muted>
                       <strong>代理申請の場合は、必ず作成者のユーザー名を明記してください。</strong><br/>
-                      その他、画像に何らかの元ネタがある場合など、スタッフが知っておくべき背景がある場合は、その旨を詳細に記入してください。
+                      その他、画像に何らかの元ネタがある場合など、スタッフが知っておくべき背景がある場合は、その旨を詳細に記入してください。<br/>
+                      （一部のMFMが利用できます。）
                     </Form.Text>
                   </Form.Group>
                 </Card.Body>
