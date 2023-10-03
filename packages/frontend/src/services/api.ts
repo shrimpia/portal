@@ -1,13 +1,12 @@
 import { useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 
+import type { Emoji } from '@/types/emoji';
 import type { EmojiRequest } from '@/types/emoji-request';
 import type { Session } from '@/types/session';
 
 import { URL_PORTAL_BACKEND } from '@/consts';
 import { tokenAtom } from '@/states/sessions';
-
-
 
 export const $get = async <T>(endpoint: string, args: Record<string, unknown>, token: string | null): Promise<T> => {
   const url = new URL(`${URL_PORTAL_BACKEND}/${endpoint}`);
@@ -57,6 +56,7 @@ export const useAPI = () => {
 
 export const api = (token: string | null) => ({
   miauth: (sessionId: string) => $post<{ token: string }>('miauth', { sessionId }, token),
+  getEmojis: () => $get<Emoji[]>('emojis', {}, token),
   getSession: () => $get<Session>('session', {}, token),
   getRemainingEmojiRequestLimit: () => $get<{ limit: number }>('emoji-requests/remaining', {}, token),
   createEmojiRequest: (image: Blob, name: string, comment: string) => {
