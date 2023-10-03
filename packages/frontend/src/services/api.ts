@@ -59,6 +59,7 @@ export const api = (token: string | null) => ({
   getEmojis: () => $get<Emoji[]>('emojis', {}, token),
   getSession: () => $get<Session>('session', {}, token),
   getRemainingEmojiRequestLimit: () => $get<{ limit: number }>('emoji-requests/remaining', {}, token),
+  isDuplicatedEmojiName: (name: string) => $get<boolean>(`emojis/is-duplicated/${encodeURIComponent(name)}`, {}, token),
   createEmojiRequest: (image: Blob, name: string, comment: string) => {
     const formData = new FormData();
     formData.append('image', image);
