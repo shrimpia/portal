@@ -4,7 +4,7 @@ $shrimpianDarkBackground: #211520;
 $shrimpianDarkPrimary: #B93E43;
 $shrimpianDarkPanel: #392437;
 $shrimpianDarkLink: #b46fde;
-$shrimpianDarkDimmed: #8995A8;
+$shrimpianDarkDimmed: #868084;
 $shrimpianDarkWarning: #ecbd15;
 $shrimpianDarkSuccess: #57b809;
 $shrimpianDarkDanger: #f44336;
@@ -14,7 +14,7 @@ $shrimpianLightBackground: #A5CAEF;
 $shrimpianLightPrimary: #B93E43;
 $shrimpianLightPanel: #D0E3F7;
 $shrimpianLightLink: #b46fde;
-$shrimpianLightDimmed: #8995A8;
+$shrimpianLightDimmed: #495a6b;
 $shrimpianLightWarning: #9A8300;
 $shrimpianLightSuccess: #abe300;
 $shrimpianLightDanger: #D93737;
@@ -26,14 +26,15 @@ $body-color: $shrimpianLightForeground;
 $body-bg: $shrimpianLightBackground;
 $body-color-dark: $shrimpianDarkForeground;
 $body-bg-dark: $shrimpianDarkBackground;
+$body-secondary-color:      $shrimpianLightDimmed !default;
+$body-secondary-color-dark: $shrimpianDarkDimmed !default;
 
 $card-bg: var(--sh-card-bg);
 
-$primary:       $shrimpianDarkPrimary !default;
-$secondary:     $shrimpianDarkDimmed !default;
-$success:       $shrimpianDarkSuccess !default;
-$warning:       $shrimpianDarkWarning !default;
-$danger:        $shrimpianDarkDanger !default;
+$primary:        $shrimpianDarkPrimary !default;
+$success:        $shrimpianDarkSuccess !default;
+$warning:        $shrimpianDarkWarning !default;
+$danger:         $shrimpianDarkDanger !default;
 
 // ...Finally, import Bootstrap
 @import "bootstrap/scss/bootstrap";
