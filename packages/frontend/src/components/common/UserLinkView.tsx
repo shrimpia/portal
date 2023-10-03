@@ -1,10 +1,12 @@
+import { Suspense } from 'react';
 import { Placeholder, Stack } from 'react-bootstrap';
 import { useQuery } from 'react-query';
 
 import { URL_EMPIRE } from '@/consts';
 import { fetchUser } from '@/services/fetch-user';
 
-export const UserLinkView: React.FC<{ username?: string | null }> = ({ username }) => {
+const Inner: React.FC<{ username?: string | null, host?: string | null }> = ({ username }) => {
+  // TODO: リモートユーザーに対応させる
   const { data } = useQuery({
     queryKey: [username],
     queryFn: async ({ queryKey }) => {
@@ -26,4 +28,19 @@ export const UserLinkView: React.FC<{ username?: string | null }> = ({ username 
       </div>
     </Stack>
   ) : null;
+};
+
+const loading = (
+  <Stack className="text-muted d-inline-flex" direction="horizontal" gap={2}>
+    <Placeholder animation="glow" style={{ width: 24, height: 24 }} className="rounded-circle" />
+    <div className="text-start">......</div>
+  </Stack>
+);
+
+export const UserLinkView: React.FC<{ username?: string | null, host?: string | null }> = (p) => {
+  return (
+    <Suspense fallback={loading}>
+      <Inner {...p} />
+    </Suspense>
+  );
 };

@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import type { EmojiRequest } from '@/types/emoji-request';
 
-import { RichText } from '@/components/common/RichText';
+import { MfmView } from '@/components/common/MfmView';
 import { UserLinkView } from '@/components/common/UserLinkView';
 import { EmojiPreview } from '@/components/domains/emoji-request/EmojiPreview';
 import { useWithSpinner } from '@/hooks/useWithSpinner';
@@ -130,7 +130,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
                 <div>
                   <h2 className="fs-6 fw-bold">コメント</h2>
                   {r.comment.trim() ? (
-                    <RichText className="text-muted border-start px-2 mb-0">{r.comment}</RichText>
+                    <div className="text-muted border-start px-2 mb-0"><MfmView>{r.comment}</MfmView></div>
                   ) : (
                     <div className="text-muted">なし</div>
                   )}
@@ -173,7 +173,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
                       )}
                       <tr>
                         <th><i className="bi bi-chat-left-heart-fill" /> コメント</th>
-                        <td>{comment.description ? <RichText>{comment.description}</RichText> : noText}</td>
+                        <td>{comment.description ? <MfmView>{comment.description}</MfmView> : noText}</td>
                       </tr>
                     </>
                   )}
@@ -185,7 +185,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
                       </tr>
                       <tr>
                         <th><i className="bi bi-chat-right-heart-fill" /> スタッフからのコメント</th>
-                        <td>{staffComment ? <RichText>{staffComment}</RichText> : noText}</td>
+                        <td>{staffComment ? <MfmView>{staffComment}</MfmView> : noText}</td>
                       </tr>
                     </>
                   )}

@@ -3,7 +3,7 @@ import groupBy from 'lodash.groupby';
 import { useMemo, type PropsWithChildren } from 'react';
 import { Card, Col, Container, Image, Row, Stack } from 'react-bootstrap';
 
-import { RichText } from '@/components/common/RichText';
+import { MfmView } from '@/components/common/MfmView';
 import { UserLinkView } from '@/components/common/UserLinkView';
 import { StatusBadge } from '@/components/domains/emoji-request/StatusBadge';
 import { emojiRequestsAtom } from '@/states/emoji-request';
@@ -38,7 +38,7 @@ export const RequestsList: React.FC<RequestsListProp> = ({ children }) => {
                       <div>
                         <h2 className="fs-6 fw-bold">申請コメント</h2>
                         {r.comment.trim() ? (
-                          <RichText className="text-muted border-start px-2 mb-0">{r.comment}</RichText>
+                          <div className="text-muted border-start px-2 mb-0"><MfmView>{r.comment}</MfmView></div>
                         ) : (
                           <div className="text-muted">なし</div>
                         )}
@@ -46,7 +46,7 @@ export const RequestsList: React.FC<RequestsListProp> = ({ children }) => {
                       {r.staffComment && (
                         <div>
                           <h2 className="fs-6 fw-bold">スタッフからのコメント</h2>
-                          <RichText className="text-muted border-start px-2 mb-0">{r.staffComment}</RichText>
+                          <div className="text-muted border-start px-2 mb-0"><MfmView>{r.staffComment}</MfmView></div>
                         </div>
                       )}
                     </Stack>
