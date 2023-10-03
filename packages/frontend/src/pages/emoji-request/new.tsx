@@ -1,7 +1,7 @@
 
 import { useAtomValue } from 'jotai';
 import { useCallback, useMemo, useState } from 'react';
-import { Alert, Button, Card, Container, Form, Stack } from 'react-bootstrap';
+import { Alert, Button, Card, Container, Form, Spinner, Stack } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 
@@ -25,6 +25,7 @@ const EmojiRequestNewPage = () => {
   const [yomigana, setYomigana] = useState('');
   const [comment, setComment] = useState('');
   const [isAgreeToGuideline, setAgreeToGuideline] = useState(false);
+  const [emojiNameState, setEmojiNameState] = useState<'initial' | 'valid' | 'invalid' | 'loading'>('initial');
 
   const limit = useAtomValue(remainingEmojiRequestLimitAtom);
   const user = useAtomValue(userAtom);
@@ -47,7 +48,10 @@ const EmojiRequestNewPage = () => {
   const fileSizeInKB = useMemo(() => (file ? (file.size / 1024).toPrecision(4) : 0), [file]);
   const isFileSizeValid = useMemo(() => (file && file.size <= 200 * 1024), [file]);
   const isNameValid = useMemo(() => namePattern.test(name), [name]);
-  const isCompleted = useMemo(() => isFileSizeValid && isNameValid && isAgreeToGuideline, [isAgreeToGuideline, isFileSizeValid, isNameValid]);
+  const isCompleted = useMemo(
+    () => isFileSizeValid && isNameValid && isAgreeToGuideline && emojiNameState === 'valid',
+    [emojiNameState, isAgreeToGuideline, isFileSizeValid, isNameValid],
+  );
   const composedComment = useMemo(() => isDecoMoji ? (
     `フォント名: ${fontName}\nよみがな: ${yomigana}\n\n${comment}`
   ) : comment, [isDecoMoji, fontName, yomigana, comment]);
@@ -85,6 +89,13 @@ const EmojiRequestNewPage = () => {
     }
   }, [api, composedComment, file, name, navigate, withSpinner]);
 
+  const checkEmojiNameDuplicated = useCallback(async () => {
+    if (!isNameValid) return;
+    setEmojiNameState('loading');
+    const isDuplicated = await api.isDuplicatedEmojiName(name);
+    setEmojiNameState(isDuplicated ? 'invalid' : 'valid');
+  }, [api, isNameValid, name]);
+
   return (
     <Container>
       <h1 className="fs-3 mb-5">カスタム絵文字の追加申請</h1>
@@ -98,7 +109,7 @@ const EmojiRequestNewPage = () => {
                 <ul>
                   <li>
                     詳しくは
-                    <a href="https://docs.shrimpia.network/Shrimpia-ca2cb8697df5405393d9167cd98835ee" target="_blank" rel="noreferrer noopener">
+                    <a href="https://docs.shrimpia.network/Shrimpia-ca2cb8697df5405393d9167cd98835ee" target="_blank" rel="noreferrer noopener" style={{ color: 'inherit' }}>
                       Shrimpia+のプラン一覧
                     </a>
                     をご覧ください
@@ -109,7 +120,7 @@ const EmojiRequestNewPage = () => {
           </Alert>
           {limit > 0 ? (
             <>
-              <Card bg="dark">
+              <Card>
                 <Card.Body>
                   <Form.Group controlId="image">
                     <Form.Label className="fw-bold">絵文字に使用する画像</Form.Label>
@@ -128,19 +139,32 @@ const EmojiRequestNewPage = () => {
                   </Form.Group>
                 </Card.Body>
               </Card>
-              <Card bg="dark">
+              <Card>
                 <Card.Body>
                   <Form.Group controlId="name">
                     <Form.Label className="fw-bold">絵文字の名前</Form.Label>
                     {file && <Button size="sm" className="ms-2" onClick={onClickButtonFileName}>ファイル名を反映する</Button>}
-                    <Form.Control className="mt-2" type="text" value={name} placeholder="例: lutica_dadakone" onChange={e => setName(e.target.value)} />
-                    <Form.Text className={name == '' || isNameValid ? 'text-muted' : 'text-danger'}>
-                      絵文字の入力時に用いる名前です。<br/>小文字の英数字およびアンダースコア（_）のみが利用できます。
+                    <Form.Text className="text-muted">
+                      <br/>絵文字の入力時に用いる名前です。小文字の英数字およびアンダースコア（_）のみが利用できます。
                     </Form.Text>
+                    <Form.Control autoComplete="off" className="mt-2" type="text" value={name} placeholder="例: lutica_dadakone" onChange={e => setName(e.target.value)} onBlur={checkEmojiNameDuplicated} />
+                    {(!isNameValid || emojiNameState !== 'initial') && (
+                      <Form.Text>
+                        {!isNameValid && !!name ? (
+                          <span className="text-danger">絵文字の名前が不正です。</span>
+                        ) : emojiNameState === 'loading' ? (
+                          <Spinner size="sm" variant="primary" />
+                        ) : emojiNameState === 'invalid' ? (
+                          <span className="text-danger"><i className="bi bi-x " /> この名前は既に使われています。</span>
+                        ) : emojiNameState === 'valid' ? (
+                          <span className="text-success"><i className="bi bi-check2 " /> OKです！</span>
+                        ) : null}
+                      </Form.Text>
+                    )}
                   </Form.Group>
                 </Card.Body>
               </Card>
-              <Card bg="dark">
+              <Card>
                 <Card.Body>
                   <Form.Switch>
                     <Form.Check.Input id="isDecoMoji" type="checkbox" checked={isDecoMoji} onChange={e => setDecoMoji(e.target.checked)} />
@@ -172,7 +196,7 @@ const EmojiRequestNewPage = () => {
                   )}
                 </Card.Body>
               </Card>
-              <Card bg="dark">
+              <Card>
                 <Card.Body>
                   <Form.Group className="mb-3" controlId="comment">
                     <Form.Label className="fw-bold">コメント</Form.Label>
@@ -187,8 +211,8 @@ const EmojiRequestNewPage = () => {
               <Form.Group controlId="agreeToGuideline">
                 <Alert variant="warning">
                   投稿する絵文字は、必ず
-                  <a href="https://docs.shrimpia.network/a6fe11f1441f4a51912069a218dbc9e9" target="_blank" rel="noreferrer noopener">
-                  絵文字ガイドライン
+                  <a href="https://docs.shrimpia.network/a6fe11f1441f4a51912069a218dbc9e9" target="_blank" rel="noreferrer noopener" style={{ color: 'inherit' }}>
+                    絵文字ガイドライン
                   </a>
                   を遵守する必要があります！
                   <Form.Check className="mt-2" type="checkbox" checked={isAgreeToGuideline} label="絵文字ガイドラインに同意する" onChange={e => setAgreeToGuideline(e.target.checked)} />

@@ -8,6 +8,7 @@ import { adminPostRejectEmojiRequestController } from './controllers/admin/post-
 import { createEmojiRequestController } from './controllers/create-emoji-request';
 import { getEmojiRequestsController } from './controllers/get-emoji-requests';
 import { getEmojisController } from './controllers/get-emojis';
+import { getIsDuplicatedNameController } from './controllers/get-is-duplicated-name';
 import { getRemainingRequestLimitController } from './controllers/get-remaining-request-limit';
 import { getSessionController } from './controllers/get-session';
 import { getUploadedFilesController } from './controllers/get-uploaded-files';
@@ -28,6 +29,7 @@ app.get('/', c => {
 app.get('/uploaded/:key', getUploadedFilesController);
 app.get('/session', sessionGuard, getSessionController);
 app.get('/emojis', getEmojisController);
+app.get('/emojis/is-duplicated/:name', getIsDuplicatedNameController);
 app.post('/miauth', miauthController);
 
 app.post('/emoji-requests', sessionGuard, createEmojiRequestController);

@@ -2,6 +2,7 @@ import { Bucket, EmojiRequests } from '../db/repository';
 import { postNewEmojiRequestToDiscord } from '../services/discord';
 import { sendError, sendFailedToGetMisskeyUserError } from '../services/error';
 import { getRemainingRequestLimit } from '../services/get-remaining-request-limit';
+import { isDuplicatedEmojiName } from '../services/is-duplicated-emoji-name';
 import { getMisskeyUser } from '../services/misskey-api';
 
 
@@ -36,6 +37,11 @@ export const createEmojiRequestController: Controller = async (c) => {
   }
   if (!['image/png', 'image/apng', 'image/gif', 'image/webp'].includes(image.type)) {
     return sendError(c, 400, 'Invalid image MIME type: ' + image.type);
+  }
+
+  const isDuplicated = await isDuplicatedEmojiName(name, c.env.KV, c.env.DB);
+  if (isDuplicated) {
+    return sendError(c, 400, 'Duplicated emoji name');
   }
 
   const imageKey = await Bucket.upload(c.env.BUCKET, image);
