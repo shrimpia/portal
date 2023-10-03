@@ -209,10 +209,13 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
               </Link>
             </div>
           )}
-          <Stack direction="horizontal" gap={3}>
-            <Button variant="success" onClick={approve}><i className="bi bi-check2" /> 承認</Button>
-            <Button variant="primary" onClick={reject}><i className="bi bi-x-lg" /> 却下</Button>
-          </Stack>
+          
+          {r.status === 'pending' && (
+            <Stack direction="horizontal" gap={3}>
+              <Button variant="success" onClick={approve}><i className="bi bi-check2" /> 承認</Button>
+              <Button variant="primary" onClick={reject}><i className="bi bi-x-lg" /> 却下</Button>
+            </Stack>
+          )}
         </Stack>
       </Card.Body>
     </Card>
