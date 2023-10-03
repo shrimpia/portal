@@ -3,6 +3,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 
 import { LinkCard } from '@/components/common/LinkCard';
 import { LinkCardExternal } from '@/components/common/LinkCardExternal';
+import { MfmView } from '@/components/common/MfmView';
 import { isStaff } from '@/services/is-staff';
 import { userAtom } from '@/states/user';
 
@@ -10,7 +11,7 @@ export const IndexSessionPage = () => {
   const user = useAtomValue(userAtom);
   return user ? (
     <Container>
-      <h1 className="fs-3 mb-5">おかえりなさい、{`${user.username}`}さん。</h1>
+      <h1 className="fs-3 mb-5">おかえりなさい、<MfmView>{user.name || user.username}</MfmView>さん。</h1>
       <Row className="gx-3 gy-3">
         <Col xs={12} xl={6}>
           <LinkCard
