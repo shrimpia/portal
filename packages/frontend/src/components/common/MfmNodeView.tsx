@@ -10,7 +10,7 @@ export type MfmNodeProp = {
 export const MfmNodeView = ({ node }: MfmNodeProp) => {
   switch (node.type) {
     case 'text': {
-      return node.props.text.split(/\n/g).map((t, i) => <span key={i}>{t}<br /></span>);
+      return node.props.text.split(/\n/g).map((t, i, a) => <span key={i}>{t}{i === a.length - 1 ? null : <br/>}</span>);
     }
     case 'bold': {
       return <strong>{node.children.map((child) => <MfmNodeView node={child} />)}</strong>;

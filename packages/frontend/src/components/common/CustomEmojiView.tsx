@@ -3,6 +3,8 @@ import { useMemo } from 'react';
 
 import { emojisAtom } from '@/states/emojis';
 
+import './CustomEmojiView.scss';
+
 export type CustomEmojiViewProp = {
     name: string;
 };
