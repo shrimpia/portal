@@ -8,6 +8,9 @@ export default {
 
 		const res = await fetch('https://mk.shrimpia.network/api/emojis', {
 			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
 			body: '{}',
 		});
 
