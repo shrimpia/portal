@@ -12,16 +12,6 @@ const DebugPage = () => {
 
   const [mfm, setMfm] = useState('**Hello, world!**');
 
-
-  if (import.meta.env.PROD) {
-    return (
-      <Container>
-        <h1 className="fs-3 mb-5">デバッグ</h1>
-        <p>開発環境でのみ有効です。</p>
-      </Container>
-    );
-  }
-
   return (
     <Container>
       <h1 className="fs-3 mb-5">デバッグ</h1>
