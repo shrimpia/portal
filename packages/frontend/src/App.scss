@@ -1,37 +1,66 @@
 // Shrimpia Color Set
-$shrimpiaForeground: #F4F7F3;
-$shrimpiaBackground: #211520;
-$shrimpiaPrimary: #B93E43;
-$shrimpiaPrimaryDark: #651622;
-$shrimpiaLink: #b46fde;
-$shrimpiaDimmed: #8995A8;
-$shrimpiaWarning: #ecbd15;
-$shrimpiaSuccess: #6f8e4d;
-$shrimpiaDanger: #f44336;
+$shrimpianDarkForeground: #F4F7F3;
+$shrimpianDarkBackground: #211520;
+$shrimpianDarkPrimary: #B93E43;
+$shrimpianDarkPanel: #392437;
+$shrimpianDarkLink: #b46fde;
+$shrimpianDarkDimmed: #8995A8;
+$shrimpianDarkWarning: #ecbd15;
+$shrimpianDarkSuccess: #6f8e4d;
+$shrimpianDarkDanger: #f44336;
+
+$shrimpianLightForeground: #000000;
+$shrimpianLightBackground: #A5CAEF;
+$shrimpianLightPrimary: #B93E43;
+$shrimpianLightPanel: #D0E3F7;
+$shrimpianLightLink: #b46fde;
+$shrimpianLightDimmed: #8995A8;
+$shrimpianLightWarning: #9A8300;
+$shrimpianLightSuccess: #86b300;
+$shrimpianLightDanger: #D93737;
 
 
 // Bootstrap Customize
 $font-family-sans-serif: "Koruri", sans-serif;
-$body-color: $shrimpiaForeground;
-$body-bg: $shrimpiaBackground;
+$body-color: $shrimpianLightForeground;
+$body-bg: $shrimpianLightBackground;
+$body-color-dark: $shrimpianDarkForeground;
+$body-bg-dark: $shrimpianDarkBackground;
 
-$card-bg: $shrimpiaPrimaryDark;
+$card-bg: var(--sh-card-bg);
 
-$primary:       $shrimpiaPrimary !default;
-$secondary:     $shrimpiaDimmed !default;
-$success:       $shrimpiaSuccess !default;
-$warning:       $shrimpiaWarning !default;
-$danger:        $shrimpiaDanger !default;
+$primary:       $shrimpianDarkPrimary !default;
+$secondary:     $shrimpianDarkDimmed !default;
+$success:       $shrimpianDarkSuccess !default;
+$warning:       $shrimpianDarkWarning !default;
+$danger:        $shrimpianDarkDanger !default;
 
 // ...Finally, import Bootstrap
 @import "bootstrap/scss/bootstrap";
 
 // Custom Styles
 body {
-    background-image: url("./assets/shrimpia-river.png");
     background-attachment: fixed;
     background-size: cover;
     background-position: center;
+    background-image: none;
+}
+
+html {
+    --sh-card-bg: #{$shrimpianLightPanel};
+    --sh-app-icon-color: #{$shrimpianLightPrimary};
+
+    body {
+        background-image: url("./assets/bg-light.png");
+    }
+
+    &[data-bs-theme="dark"] {
+        --sh-card-bg: #{$shrimpianDarkPanel};
+
+        body {
+            background-image: url("./assets/bg-dark.png");
+        }
+    }
 }
 
 .sh-container {
@@ -54,4 +83,8 @@ body {
       transform: scale(1.01);
       box-shadow: var(--bs-box-shadow-lg) !important;
     }
+}
+
+.sh-app-icon-color {
+    color: var(--sh-app-icon-color);
 }

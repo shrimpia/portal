@@ -4,6 +4,7 @@ import { useRoutes } from 'react-router-dom';
 import { AppHeader } from '@/components/common/AppHeader';
 import { LoadingView } from '@/components/common/LoadingView';
 import { ModalSpinner } from '@/components/common/ModalSpinner';
+import { useApplyTheme } from '@/hooks/useApplyTheme';
 import routes from '~react-pages';
 
 import 'bootstrap-icons/font/bootstrap-icons.min.css';
@@ -11,6 +12,8 @@ import '@/fonts.scss';
 import '@/App.scss';
 
 function App() {
+  useApplyTheme();
+
   return (
     <Suspense fallback={<LoadingView/>}>
       <AppHeader />

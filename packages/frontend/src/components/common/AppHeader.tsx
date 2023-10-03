@@ -9,10 +9,12 @@ import { tokenAtom } from '@/states/sessions';
 import { userAtom } from '@/states/user';
 
 import './AppHeader.scss';
+import { currentThemeAtom } from '@/states/screen';
 
 export const UserMenuButton: React.FC = () => {
   const user = useAtomValue(userAtom);
   const setToken = useSetAtom(tokenAtom);
+  const currentTheme = useAtomValue(currentThemeAtom);
 
   const logout = () => {
     setToken(null);
@@ -20,7 +22,7 @@ export const UserMenuButton: React.FC = () => {
 
   return user && (
     <Dropdown>
-      <Dropdown.Toggle variant="dark" className="d-flex align-items-center" data-bs-display="static">
+      <Dropdown.Toggle variant={currentTheme} className="d-flex align-items-center sh-app-header-toggle" data-bs-display="static">
         <Stack className="d-inline-flex px-1" direction="horizontal" gap={3}>
           <img src={user.avatarUrl} alt={user.username} width="32" height="32" className="rounded-circle" />
           <div className="text-start fw-bold">
@@ -60,7 +62,7 @@ export const UserMenuButton: React.FC = () => {
 export const AppHeader: React.FC = () => {
   const token = useAtomValue(tokenAtom);
   return token ? (
-    <Navbar bg="dark" data-bs-theme="dark" expand="lg" sticky="top" className="mb-5">
+    <Navbar expand="lg" sticky="top" className="mb-5 sh-app-header">
       <Container>
         <Navbar.Brand as={Link} to="/">
           <img src={shrimpia} alt="Shrimpia" width="32" height="32" className="d-inline-block align-top" />
