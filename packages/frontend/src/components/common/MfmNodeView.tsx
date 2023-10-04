@@ -1,5 +1,4 @@
 import { CustomEmojiView } from './CustomEmojiView';
-import { UserLinkView } from './UserLinkView';
 
 import type { MfmNode } from 'mfm-js';
 
@@ -23,13 +22,13 @@ export const MfmNodeView = ({ node }: MfmNodeProp) => {
     }
     case 'link': {
       return (
-        <a href={node.props.url} target="_blank" rel="noopener noreferrer">
+        <a href={node.props.url} target="_blank" rel="noopener noreferrer nofollow">
           {node.children.map((child) => <MfmNodeView node={child} />)}
         </a>
       );
     }
     case 'mention': {
-      return <UserLinkView username={node.props.username} />;
+      return node.props.host ? `@${node.props.username}@${node.props.host}` : `@${node.props.username}`;
     }
     case 'unicodeEmoji': {
       return <span>{node.props.emoji}</span>;
@@ -50,7 +49,19 @@ export const MfmNodeView = ({ node }: MfmNodeProp) => {
       return <pre><code>{node.props.code}</code></pre>;
     }
     case 'url': {
-      return <a href={node.props.url} target="_blank" rel="noopener noreferrer">{node.props.url}</a>;
+      return <a href={node.props.url} target="_blank" rel="noopener noreferrer nofollow">{node.props.url}</a>;
+    }
+    case 'small': {
+      return <small style={{ opacity: 0.7 }}>{node.children.map((child) => <MfmNodeView node={child} />)}</small>;
+    }
+    case 'center': {
+      return <div style={{ textAlign: 'center' }}>{node.children.map((child) => <MfmNodeView node={child} />)}</div>;
+    }
+    case 'quote': {
+      return <blockquote>{node.children.map((child) => <MfmNodeView node={child} />)}</blockquote>;
+    }
+    case 'search': {
+      return <a href={`https://google.com/search?q=${encodeURIComponent(node.props.query)}`} target="_blank" rel="noopener noreferrer nofollow">{node.props.query} 検索</a>;
     }
     default: {
       return <span>{node.children?.map((child, i) => <MfmNodeView key={i} node={child} />)}</span>;
