@@ -49,9 +49,9 @@ const EmojiRequestNewPage = () => {
   const fileSizeInKB = useMemo(() => (file ? (file.size / 1024).toPrecision(4) : 0), [file]);
   const isFileSizeValid = useMemo(() => (file && file.size <= 200 * 1024), [file]);
   const isNameValid = useMemo(() => namePattern.test(name), [name]);
-  const isCompleted = useMemo(
-    () => isFileSizeValid && isNameValid && isAgreeToGuideline && emojiNameState === 'valid',
-    [emojiNameState, isAgreeToGuideline, isFileSizeValid, isNameValid],
+  const canSubmit = useMemo(
+    () => isFileSizeValid && isNameValid && isAgreeToGuideline && emojiNameState === 'valid' && comment.length <= 500,
+    [comment.length, emojiNameState, isAgreeToGuideline, isFileSizeValid, isNameValid],
   );
   const composedComment = useMemo(() => isDecoMoji ? (
     `フォント名: ${fontName}\nフォント入手元: ${fontSource}\nよみがな: ${yomigana}\n\n${comment}`
@@ -212,11 +212,14 @@ const EmojiRequestNewPage = () => {
                 <Card.Body>
                   <Form.Group className="mb-3" controlId="comment">
                     <Form.Label className="fw-bold">コメント</Form.Label>
-                    <Form.Control as="textarea" rows={6} value={comment} onChange={e => setComment(e.target.value)} />
-                    <Form.Text muted>
-                      <strong>代理申請の場合は、必ず作成者のユーザー名を明記してください。</strong><br/>
+                    <Form.Text>
+                      <br/><strong>代理申請の場合は、必ず作成者のユーザー名を明記してください。</strong><br/>
                       その他、画像に何らかの元ネタがある場合など、スタッフが知っておくべき背景がある場合は、その旨を詳細に記入してください。<br/>
                       （一部のMFMが利用できます。）
+                    </Form.Text>
+                    <Form.Control as="textarea" rows={6} value={comment} onChange={e => setComment(e.target.value)} />
+                    <Form.Text className={comment.length > 500 ? 'text-danger' : 'text-muted'}>
+                      {comment.length} / 500
                     </Form.Text>
                   </Form.Group>
                 </Card.Body>
@@ -231,7 +234,7 @@ const EmojiRequestNewPage = () => {
                   <Form.Check className="mt-2" type="checkbox" checked={isAgreeToGuideline} label="絵文字ガイドラインに同意する" onChange={e => setAgreeToGuideline(e.target.checked)} />
                 </Alert>
               </Form.Group>
-              <Button size="lg" className="mx-auto mt-5 px-5 fw-bold" disabled={!isCompleted} onClick={post}>この内容で申請する</Button>
+              <Button size="lg" className="mx-auto mt-5 px-5 fw-bold" disabled={!canSubmit} onClick={post}>この内容で申請する</Button>
             </>
           ) : (
             <Button as={Link as any} to="/emoji-request" size="lg" variant="outline-primary" className="mx-auto px-5 fw-bold">もどる</Button>

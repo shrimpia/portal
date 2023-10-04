@@ -32,6 +32,9 @@ export const createEmojiRequestController: Controller = async (c) => {
   if (typeof comment !== 'string') {
     return sendError(c, 400, 'invalid param: comment');
   }
+  if (comment.length > 500) {
+    return sendError(c, 400, 'Too long comment');
+  }
   if (image.size > 200 * 1024) {
     return sendError(c, 400, 'Too much file size');
   }
