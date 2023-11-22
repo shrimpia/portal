@@ -6,6 +6,10 @@ import { adminGetEmojiRequestController } from './controllers/admin/get-emoji-re
 import { adminPostApproveEmojiRequestController } from './controllers/admin/post-approve-emoji-request';
 import { adminPostRejectEmojiRequestController } from './controllers/admin/post-reject-emoji-request';
 import { createEmojiRequestController } from './controllers/create-emoji-request';
+import { createEventController } from './controllers/events/create-event';
+import { deleteEventController } from './controllers/events/delete-event';
+import { getAllEventsController } from './controllers/events/get-all-events';
+import { getEventByIdController } from './controllers/events/get-event';
 import { getEmojiRequestsController } from './controllers/get-emoji-requests';
 import { getEmojisController } from './controllers/get-emojis';
 import { getIsDuplicatedNameController } from './controllers/get-is-duplicated-name';
@@ -27,18 +31,32 @@ app.get('/', c => {
   return c.text('Portal API');
 });
 
-app.get('/uploaded/:key', getUploadedFilesController);
+// -- Auth API
 app.get('/session', sessionGuard, getSessionController);
-app.get('/emojis', getEmojisController);
-app.get('/emojis/is-duplicated/:name', getIsDuplicatedNameController);
 app.post('/miauth', miauthController);
 
+// -- Note Embed API
 app.get('/note-embed', getMisskeyNoteEmbedController);
 
+// -- Storage API
+app.get('/uploaded/:key', getUploadedFilesController);
+
+// -- Misskey Emojis API
+app.get('/emojis', getEmojisController);
+app.get('/emojis/is-duplicated/:name', getIsDuplicatedNameController);
+
+// -- Emoji Requests API
 app.post('/emoji-requests', sessionGuard, createEmojiRequestController);
 app.get('/emoji-requests/remaining', sessionGuard, getRemainingRequestLimitController);
 app.get('/emoji-requests', sessionGuard, getEmojiRequestsController);
 
+// -- Event Calendar API
+app.get('/events', getAllEventsController);
+app.get('/events/:id', getEventByIdController);
+app.post('/events', sessionGuard, createEventController);
+app.delete('/events/:id', sessionGuard, deleteEventController);
+
+// -- Admin API
 app.get('/admin/emoji-requests', moeStaffGuard, adminGetAllPendingEmojiRequestsController);
 app.get('/admin/emoji-requests/:id', moeStaffGuard, adminGetEmojiRequestController);
 app.post('/admin/emoji-requests/:id/approve', moeStaffGuard, adminPostApproveEmojiRequestController);

@@ -14,9 +14,15 @@ importers:
 
   packages/backend:
     dependencies:
+      dayjs:
+        specifier: ^1.11.10
+        version: 1.11.10
       hono:
         specifier: ^3.11.9
         version: 3.11.9
+      zod:
+        specifier: ^3.22.4
+        version: 3.22.4
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20230821.0
@@ -1397,6 +1403,10 @@ packages:
     resolution: {integrity: sha512-ND9qDTLc6diwj+Xe5cdAgVTbLVdXbtxTJRXRhli8Mowuaan+0EJOtdqJ0QCHNSSPyoXGx9HX2/VMnKeC34AChA==}
     dev: true
 
+  /dayjs@1.11.10:
+    resolution: {integrity: sha512-vjAczensTgRcqDERK0SR2XMwsF/tSvnvlv6VcF2GIhg6Sx4yOIt/irsr1RDJsKiIyBzJDpCoXiWWq28MqH2cnQ==}
+    dev: false
+
   /debug@3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}
     peerDependencies:
@@ -2566,7 +2576,7 @@ packages:
       workerd: 1.20230922.0
       ws: 8.14.2
       youch: 3.3.2
-      zod: 3.22.2
+      zod: 3.22.4
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -3668,6 +3678,5 @@ packages:
       stacktracey: 2.1.8
     dev: true
 
-  /zod@3.22.2:
-    resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
-    dev: true
+  /zod@3.22.4:
+    resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
