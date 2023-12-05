@@ -1,6 +1,5 @@
 
-import groupBy from 'lodash.groupby';
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
 import { sliceByCount } from '@/util/slice-by-count';
 
@@ -20,6 +19,16 @@ export type CalendarViewProp = {
   events?: CalendarEvent[];
 }
 
+type CalendarEventViewModel = {
+  id: string;
+  index: 0;
+  title: string;
+  time: string | null;
+  isAllDay: boolean;
+  isStart: boolean;
+  isEnd: boolean;
+};
+
 const weekdays = '日月火水木金土'.split('');
 
 export const CalendarView: React.FC<CalendarViewProp> = ({ year, month, events }) => {
@@ -36,12 +45,56 @@ export const CalendarView: React.FC<CalendarViewProp> = ({ year, month, events }
     return cell;
   }, [month, year]);
 
-  const groupedEvents = useMemo(() => groupBy(events?.filter(e => e.startDate.getFullYear() === year && e.startDate.getMonth() === month), event => event.startDate.getDate()), [events, month, year]);
+  // const groupedEvents = useMemo(() => groupBy(events?.filter(e => e.startDate.getFullYear() === year && e.startDate.getMonth() === month), event => event.startDate.getDate()), [events, month, year]);
 
-  const isToday = (day: number) => {
+  const eventViewModels = useMemo(() => {
+    if (!events) return [];
+    const vms: CalendarEventViewModel[][] = [];
+
+    events.forEach(event => {
+      if (event.startDate.getFullYear() !== year || event.startDate.getMonth() !== month) return;
+      const endDayOfMonth = new Date(year, month + 1, 0).getDate(); 
+
+      const startDayOfEvent = event.startDate.getDate();
+      let endDayOfEvent = event.endDate?.getDate() ?? startDayOfEvent;
+      if (endDayOfEvent < startDayOfEvent) endDayOfEvent = endDayOfMonth;
+
+      const days = Array.from({ length: endDayOfEvent - startDayOfEvent + 1 }, (_, i) => startDayOfEvent + i);
+
+      days.forEach(day => {
+        const isStart = day === startDayOfEvent;
+        const isEnd = day === endDayOfEvent;
+
+        const vm: CalendarEventViewModel = {
+          id: event.id,
+          index: 0,
+          title: event.title,
+          time: event.isAllDay ? null : isStart ? `${event.startDate.getHours()}:${event.startDate.getMinutes()}` : isEnd ? `${event.endDate?.getHours()}:${event.endDate?.getMinutes()}` : null,
+          isAllDay: event.isAllDay,
+          isStart,
+          isEnd,
+        };
+
+        if (!vms[day]) vms[day] = [];
+        vms[day].push(vm);
+      });
+    });
+
+    return vms;
+  }, [events, month, year]);
+
+  const isToday = useCallback((day: number) => {
     const today = new Date();
     return year === today.getFullYear() && month === today.getMonth() && day === today.getDate();
-  };
+  }, [month, year]);
+
+  const getClassName = useCallback((event: CalendarEventViewModel) => {
+    const classNames: string[] = [];
+    if (event.isStart) classNames.push('start');
+    if (event.isEnd) classNames.push('end');
+    if (event.isAllDay) classNames.push('all-day');
+    return classNames.join(' ');
+  }, []);
 
   return (
     <div className="calendar rounded shadow">
@@ -56,8 +109,8 @@ export const CalendarView: React.FC<CalendarViewProp> = ({ year, month, events }
           >
             <div>{day}</div>
             <ul className="events">
-              {day && groupedEvents[day]?.map(event => (
-                <li key={event.id}>{event.title}</li>
+              {day && eventViewModels[day]?.map(e => (
+                <li className={getClassName(e)} key={e.id}>{`${e.time ?? ''} ${e.title}`.trim()}</li>
               ))}
             </ul>
           </div>
