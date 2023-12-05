@@ -1,18 +1,15 @@
-import { z } from 'zod';
 
 import type { Event } from '../models/event';
 
-export const eventCreateDataSchema = z.object({
-  name: z.string().min(1).max(120),
-  description: z.string().max(1024),
-  startDate: z.date(),
-  endDate: z.date().optional().nullable(),
-  isAllDay: z.boolean(),
-  isOfficial: z.boolean().optional(),
-  authorId: z.string().uuid(),
-});
-
-export type EventCreateData = z.infer<typeof eventCreateDataSchema>;
+export type EventCreateData = {
+	name: string;
+	description: string;
+	startDate: Date;
+	endDate?: Date | null;
+	isAllDay: boolean;
+	isOfficial?: boolean;
+	authorId: string;
+};
 
 export type EventDto = {
 	id: string;
@@ -23,46 +20,41 @@ export type EventDto = {
 	isAllDay: boolean;
 	isOfficial: boolean;
 	authorId: string;
+	authorName: string | null;
 	createdAt: Date;
 };
 
 export class EventRepository {
   async create(db: D1Database, data: EventCreateData) {
     const id = crypto.randomUUID();
-    const year = data.startDate.getFullYear();
-    const month = data.startDate.getMonth() + 1;
-    await db
-      .prepare(
-        'INSERT INTO event (id, name, description, start_date, end_date, is_all_day, is_official, author_id, created_year, created_month, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-      )
-      .bind(
-        id,
-        data.name,
-        data.description,
-        data.startDate,
-        data.endDate ?? null,
-        data.isAllDay,
-        data.isOfficial ?? false,
-        data.authorId,
-        year,
-        month,
-        new Date(),
-      )
-      .run();
+    await db.prepare(
+      'INSERT INTO event (id, name, description, start_date, end_date, is_all_day, is_official, author_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+    ).bind(
+      id,
+      data.name,
+      data.description,
+      data.startDate.toISOString(),
+      data.endDate?.toISOString() ?? null,
+      data.isAllDay ? 1 : 0,
+      data.isOfficial ? 1 : 0,
+      data.authorId,
+      new Date().toISOString(),
+    ).run();
     return id;
   }
 
   async readAll(db: D1Database): Promise<EventDto[]> {
     return await db
-      .prepare('SELECT * FROM event ORDER BY start_date ASC')
-      .all<Event>().then(events => events.results.map(event => this.toDto(event)).filter(e => e !== null) as EventDto[]);
+      .prepare('SELECT *, u.username as author_name FROM event e JOIN user u ON u.id = e.author_id ORDER BY e.start_date ASC')
+      .all<Event & { author_name: string | null }>()
+      .then(events => events.results.map(event => this.toDto(event)).filter(e => e !== null) as EventDto[]);
   }
 
   async readById(db: D1Database, id: string): Promise<EventDto | null> {
     return await db
-      .prepare('SELECT * FROM event WHERE id = ?')
+      .prepare('SELECT *, u.username as author_name FROM event e JOIN user u ON u.id = e.author_id WHERE id = ?')
       .bind(id)
-      .first<Event>()
+      .first<Event & { author_name: string | null }>()
       .then(event => this.toDto(event));
   }
 
@@ -70,7 +62,7 @@ export class EventRepository {
     await db.prepare('DELETE FROM event WHERE id = ?').bind(id).run();
   }
 
-  toDto(event?: Event | null): EventDto | null {
+  toDto(event?: (Event & { author_name: string | null }) | null): EventDto | null {
     return event ? {
       id: event.id,
       name: event.name,
@@ -81,6 +73,7 @@ export class EventRepository {
       isAllDay: event.is_all_day,
       isOfficial: event.is_official,
       authorId: event.author_id,
+      authorName: event.author_name,
     } : null;
   }
 }

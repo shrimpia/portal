@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 
 import type { Emoji } from '@/types/emoji';
 import type { EmojiRequest } from '@/types/emoji-request';
+import type { EventDraft, EventDto } from '@/types/event';
 import type { Session } from '@/types/session';
 
 import { URL_PORTAL_BACKEND } from '@/consts';
@@ -68,6 +69,10 @@ export const api = (token: string | null) => ({
     return $post<void>('emoji-requests', formData, token);
   },
   getAllEmojiRequests: (filter: 'mine' | 'all') => $get<EmojiRequest[]>('emoji-requests', { filter }, token),
+  getAllEvents: () => $get<EventDto[]>('events', {}, token),
+  getEvent: (id: string) => $get<EventDto>(`events/${id}`, {}, token),
+  createEvent: (data: EventDraft) => $post<void>('events', data, token),
+  deleteEvent: (id: string) => $post<void>(`events/${id}`, {}, token),
   admin: {
     getAllPendingEmojiRequests: () => $get<EmojiRequest[]>('admin/emoji-requests', {}, token),
     getEmojiRequest: (id: string) => $get<EmojiRequest>(`admin/emoji-requests/${id}`, {}, token),
