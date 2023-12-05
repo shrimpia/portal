@@ -68,7 +68,7 @@ export const AppHeader: React.FC = () => {
           <img src={shrimpia} alt="Shrimpia" width="32" height="32" className="d-inline-block align-top" />
           <span className="sh-portal-text">
             {' '}
-            Portal
+            Portal {import.meta.env.DEV ? '(開発版)' : ''}
           </span>
         </Navbar.Brand>
         <Suspense fallback={<Spinner variant="primary" size="sm" />}>
