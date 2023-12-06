@@ -45,14 +45,14 @@ export class EventRepository {
 
   async readAll(db: D1Database): Promise<EventDto[]> {
     return await db
-      .prepare('SELECT *, u.username as author_name FROM event e JOIN user u ON u.id = e.author_id ORDER BY e.start_date ASC')
+      .prepare('SELECT *, e.id as id, u.username as author_name FROM event e JOIN user u ON u.id = e.author_id ORDER BY e.start_date ASC')
       .all<Event & { author_name: string | null }>()
       .then(events => events.results.map(event => this.toDto(event)).filter(e => e !== null) as EventDto[]);
   }
 
   async readById(db: D1Database, id: string): Promise<EventDto | null> {
     return await db
-      .prepare('SELECT *, u.username as author_name FROM event e JOIN user u ON u.id = e.author_id WHERE id = ?')
+      .prepare('SELECT *, u.username, e.id as id as author_name FROM event e JOIN user u ON u.id = e.author_id WHERE id = ?')
       .bind(id)
       .first<Event & { author_name: string | null }>()
       .then(event => this.toDto(event));
