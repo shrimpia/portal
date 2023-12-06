@@ -1,4 +1,5 @@
 
+import { format } from 'date-fns';
 import React, { useCallback, useMemo } from 'react';
 
 import { sliceByCount } from '@/util/slice-by-count';
@@ -45,8 +46,6 @@ export const CalendarView: React.FC<CalendarViewProp> = ({ year, month, events }
     return cell;
   }, [month, year]);
 
-  // const groupedEvents = useMemo(() => groupBy(events?.filter(e => e.startDate.getFullYear() === year && e.startDate.getMonth() === month), event => event.startDate.getDate()), [events, month, year]);
-
   const eventViewModels = useMemo(() => {
     if (!events) return [];
     const vms: CalendarEventViewModel[][] = [];
@@ -69,7 +68,7 @@ export const CalendarView: React.FC<CalendarViewProp> = ({ year, month, events }
           id: event.id,
           index: 0,
           title: event.title,
-          time: event.isAllDay ? null : isStart ? `${event.startDate.getHours()}:${event.startDate.getMinutes()}` : isEnd ? `${event.endDate?.getHours()}:${event.endDate?.getMinutes()}` : null,
+          time: event.isAllDay ? null : isStart ? format(event.startDate, 'HH:mm') : isEnd && event.endDate ? format(event.endDate, 'HH:mm') : null,
           isAllDay: event.isAllDay,
           isStart,
           isEnd,
