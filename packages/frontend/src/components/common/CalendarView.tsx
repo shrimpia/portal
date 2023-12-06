@@ -18,11 +18,12 @@ export type CalendarViewProp = {
   year: number;
   month: number;
   events?: CalendarEvent[];
+  onClick?: (day: number) => void;
 }
 
 type CalendarEventViewModel = {
   id: string;
-  index: 0;
+  index: number;
   title: string;
   time: string | null;
   isAllDay: boolean;
@@ -32,7 +33,7 @@ type CalendarEventViewModel = {
 
 const weekdays = '日月火水木金土'.split('');
 
-export const CalendarView: React.FC<CalendarViewProp> = ({ year, month, events }) => {
+export const CalendarView: React.FC<CalendarViewProp> = ({ year, month, events, onClick }) => {
   const cell = useMemo(() => {
     const daysCount = new Date(year, month + 1, 0).getDate();
     const firstDate = new Date(year, month, 1);
@@ -66,7 +67,7 @@ export const CalendarView: React.FC<CalendarViewProp> = ({ year, month, events }
 
         const vm: CalendarEventViewModel = {
           id: event.id,
-          index: 0,
+          index: day,
           title: event.title,
           time: event.isAllDay ? null : isStart ? format(event.startDate, 'HH:mm') : isEnd && event.endDate ? format(event.endDate, 'HH:mm') : null,
           isAllDay: event.isAllDay,
@@ -105,11 +106,13 @@ export const CalendarView: React.FC<CalendarViewProp> = ({ year, month, events }
           <div
             key={day === null ? `empty-${i}` : `day-${day}`}
             className={`cell ${i === 0 || i === 6 ? 'holiday' : ''} ${day === null ? 'empty' : ''} ${isToday(day ?? 0) ? 'today' : ''}`}
+            onClick={() => onClick?.(day ?? 0)}
+            role="button"
           >
             <div>{day}</div>
             <ul className="events">
               {day && eventViewModels[day]?.map(e => (
-                <li className={getClassName(e)} key={e.id}>{`${e.time ?? ''} ${e.title}`.trim()}</li>
+                <li className={getClassName(e)} key={e.id + '-' + e.index}>{`${e.time ?? ''} ${e.title}`.trim()}</li>
               ))}
             </ul>
           </div>
