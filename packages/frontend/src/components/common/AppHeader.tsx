@@ -62,7 +62,7 @@ export const UserMenuButton: React.FC = () => {
 export const AppHeader: React.FC = () => {
   const token = useAtomValue(tokenAtom);
   return token ? (
-    <Navbar expand="lg" sticky="top" className="mb-5 sh-app-header">
+    <Navbar expand="lg" sticky="top" className="mb-5 sh-app-header shadow">
       <Container>
         <Navbar.Brand as={Link} to="/">
           <img src={shrimpia} alt="Shrimpia" width="32" height="32" className="d-inline-block align-top" />
