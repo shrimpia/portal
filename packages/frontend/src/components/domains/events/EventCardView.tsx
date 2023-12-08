@@ -33,6 +33,7 @@ export const EventCardView: React.FC<EventCardViewProp> = ({ event }) => {
           <UserLinkView username={event.authorName} />
           <div className="mfm">
             <MfmView>{event.description}</MfmView>
+            {!event.description && <div className="text-muted">イベントの説明はありません</div>}
           </div>
         </div>
       </Card.Body>
