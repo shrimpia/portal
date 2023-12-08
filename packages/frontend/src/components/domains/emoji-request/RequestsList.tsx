@@ -1,7 +1,8 @@
 import { useAtomValue } from 'jotai';
 import groupBy from 'lodash.groupby';
 import { useMemo, type PropsWithChildren } from 'react';
-import { Card, Col, Container, Image, Row, Stack } from 'react-bootstrap';
+import { Card, Container, Image, Stack } from 'react-bootstrap';
+import Masonry from 'react-masonry-css';
 
 import { MfmView } from '@/components/common/MfmView';
 import { UserLinkView } from '@/components/common/UserLinkView';
@@ -20,41 +21,44 @@ export const RequestsList: React.FC<RequestsListProp> = ({ children }) => {
     <Container>
       {groupKeys.map(key => (
         <>
-          <Row className="mb-5" key={key}>
-            <h3>{grouped[key][0].createdYear}年{grouped[key][0].createdMonth}月</h3>
-            <p className="text-muted">{grouped[key].length}件の申請</p>
+          <h3>{grouped[key][0].createdYear}年{grouped[key][0].createdMonth}月</h3>
+          <p className="text-muted">{grouped[key].length}件の申請</p>
+          <Masonry breakpointCols={{
+            default: 4,
+            992: 2,
+            1200: 3,
+            768: 1,
+          }} className="d-flex gap-3 mb-3" columnClassName="d-flex flex-column gap-3">
             {grouped[key].map(r => (
-              <Col key={r.id} xs={12} sm={6} md={4} lg={4} xl={3} className="g-3">
-                <Card>
-                  <Card.Body className="overflow-hidden">
-                    <Card.Title>:{r.name}:</Card.Title>
-                    <Stack direction="vertical" className="align-items-start" gap={3}>
-                      <StatusBadge status={r.status} />
-                      <Image src={r.url} alt={r.name} className="bg-dark rounded p-2" style={{ height: 48 }} />
-                      <div>
-                        <h2 className="fs-6 fw-bold">申請者</h2>
-                        <UserLinkView username={r.username} />
-                      </div>
-                      <div>
-                        <h2 className="fs-6 fw-bold">申請コメント</h2>
-                        {r.comment.trim() ? (
-                          <div className="text-muted border-start px-2 mb-0"><MfmView>{r.comment}</MfmView></div>
-                        ) : (
-                          <div className="text-muted">なし</div>
-                        )}
-                      </div>
-                      {r.staffComment && (
-                        <div>
-                          <h2 className="fs-6 fw-bold">スタッフからのコメント</h2>
-                          <div className="text-muted border-start px-2 mb-0"><MfmView>{r.staffComment}</MfmView></div>
-                        </div>
+              <Card>
+                <Card.Body className="overflow-hidden">
+                  <Card.Title>:{r.name}:</Card.Title>
+                  <Stack direction="vertical" className="align-items-start position-relative" gap={3}>
+                    <StatusBadge status={r.status} />
+                    <Image src={r.url} alt={r.name} className="bg-dark rounded p-2" style={{ height: 48 }} />
+                    <div>
+                      <h2 className="fs-6 fw-bold">申請者</h2>
+                      <UserLinkView username={r.username} />
+                    </div>
+                    <div>
+                      <h2 className="fs-6 fw-bold">申請コメント</h2>
+                      {r.comment.trim() ? (
+                        <div className="text-muted border-start px-2 mb-0"><MfmView>{r.comment}</MfmView></div>
+                      ) : (
+                        <div className="text-muted">なし</div>
                       )}
-                    </Stack>
-                  </Card.Body>
-                </Card>
-              </Col>
+                    </div>
+                    {r.staffComment && (
+                      <div>
+                        <h2 className="fs-6 fw-bold">スタッフからのコメント</h2>
+                        <div className="text-muted border-start px-2 mb-0"><MfmView>{r.staffComment}</MfmView></div>
+                      </div>
+                    )}
+                  </Stack>
+                </Card.Body>
+              </Card>
             ))}
-          </Row>
+          </Masonry>
         </>
       ))}
     </Container>
