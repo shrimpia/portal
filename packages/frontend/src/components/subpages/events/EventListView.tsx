@@ -1,5 +1,5 @@
 import { useAtomValue } from 'jotai';
-import { Stack } from 'react-bootstrap';
+import Masonry from 'react-masonry-css';
 
 import { EventCardView } from '@/components/domains/events/EventCardView';
 import { allEventsAtom } from '@/states/events';
@@ -8,10 +8,14 @@ export const EventListView: React.FC = () => {
   const allEvents = useAtomValue(allEventsAtom);
 
   return (
-    <Stack gap={2}>
+    <Masonry breakpointCols={{
+      default: 3,
+      992: 2,
+      768: 1,
+    }} className="d-flex gap-3" columnClassName="d-flex flex-column gap-3">
       {allEvents.map((event) => (
-        <EventCardView event={event} key={event.id} />
+        <EventCardView key={event.id} event={event} />
       ))}
-    </Stack>
+    </Masonry>
   );
 };
