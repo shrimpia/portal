@@ -1,6 +1,6 @@
 import { useAtomValue } from 'jotai';
-import { useCallback, useEffect, useState } from 'react';
-import { Button, Form, Modal, Stack } from 'react-bootstrap';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Alert, Button, Form, Modal, Stack } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
 
 import type { EventDraft, EventDto } from '@/types/event';
@@ -28,6 +28,8 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
   const user = useAtomValue(userAtom);
 
   const isUpdateMode = p.initialEvent != null;
+
+  const canPost = useMemo(() => name.length > 0 && startDate.getTime() <= endDate.getTime(), [name, startDate, endDate]);
 
   const onClickSave = useCallback(() => {
     const data: EventDraft = {
@@ -67,6 +69,17 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
       </Modal.Header>
       <Modal.Body>
         <Stack gap={3}>
+          {!isUpdateMode && (
+            <Alert variant="warning">
+              <div className="d-flex gap-2">
+                <i className="bi bi-exclamation-triangle-fill" />
+                <div>
+                  イベントは帝国全体に公開されます。<br/>
+                  憲法に反する内容のイベントは削除またはアカウント停止の対象となる場合があります。
+                </div>
+              </div>
+            </Alert>
+          )}
           <div>
             <Form.Label htmlFor="name" className="fw-bold">イベント名</Form.Label>
             <Form.Control value={name} id="name" type="text" placeholder="例：第１回お絵描き大会" onChange={e => setName(e.target.value)} />
@@ -107,7 +120,7 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
         <Button variant="secondary" onClick={p.onHide}>
           キャンセル
         </Button>
-        <Button variant="primary" onClick={onClickSave}>
+        <Button variant="primary" disabled={!canPost} onClick={onClickSave}>
           {isUpdateMode ? '更新' : '登録'}
         </Button>
       </Modal.Footer>
