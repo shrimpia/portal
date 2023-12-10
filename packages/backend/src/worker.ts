@@ -62,4 +62,13 @@ app.get('/admin/emoji-requests/:id', moeStaffGuard, adminGetEmojiRequestControll
 app.post('/admin/emoji-requests/:id/approve', moeStaffGuard, adminPostApproveEmojiRequestController);
 app.post('/admin/emoji-requests/:id/reject', moeStaffGuard, adminPostRejectEmojiRequestController);
 
+app.onError((err, c) => {
+  console.error(err);
+  c.status(500);
+  return c.json({
+    ok: false,
+    error: err.message,
+  });
+});
+
 export default app;
