@@ -50,6 +50,28 @@ export const $post = async <T>(endpoint: string, args: FormData | Record<string,
   return response.json();
 };
 
+export const $delete = async <T>(endpoint: string, args: FormData | Record<string, unknown>, token: string | null): Promise<T> => {
+  const url = new URL(`${URL_PORTAL_BACKEND}/${endpoint}`);
+  const headers: HeadersInit = {
+  };
+  if (!(args instanceof FormData)) {
+    headers['Content-Type'] = 'application/json';
+  }
+  if (token) {
+    headers['X-Shrimpia-Token'] = token;
+  }
+  const response = await fetch(url.toString(), {
+    method: 'DELETE',
+    headers,
+    body: args instanceof FormData ? args : JSON.stringify(args),
+  });
+  if (!response.ok) {
+    const data = await response.json();
+    throw new Error(data?.error ?? response.statusText);
+  }
+  return response.json();
+};
+
 export const useAPI = () => {
   const token = useAtomValue(tokenAtom);
   return useMemo(() => api(token), [token]);
@@ -72,7 +94,7 @@ export const api = (token: string | null) => ({
   getAllEvents: () => $get<EventDto[]>('events', {}, token),
   getEvent: (id: string) => $get<EventDto>(`events/${id}`, {}, token),
   createEvent: (data: EventDraft) => $post<void>('events', data, token),
-  deleteEvent: (id: string) => $post<void>(`events/${id}`, {}, token),
+  deleteEvent: (id: string) => $delete<void>(`events/${id}`, {}, token),
   admin: {
     getAllPendingEmojiRequests: () => $get<EmojiRequest[]>('admin/emoji-requests', {}, token),
     getEmojiRequest: (id: string) => $get<EmojiRequest>(`admin/emoji-requests/${id}`, {}, token),

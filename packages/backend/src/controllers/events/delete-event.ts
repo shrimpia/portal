@@ -1,5 +1,6 @@
 import { Events } from '../../db/repository';
-import { send404, sendError } from '../../services/error';
+import { send404, sendError, sendFailedToGetMisskeyUserError } from '../../services/error';
+import { getMisskeyUser } from '../../services/misskey-api';
 
 import type { Controller } from '../base';
 
@@ -11,7 +12,13 @@ export const deleteEventController: Controller = async (c) => {
   if (!event) {
     return send404(c);
   }
-  if (event.authorId !== user.id)	{
+
+  const misskeyUser = await getMisskeyUser(user.misskey_token);
+  if (!misskeyUser) {
+    return sendFailedToGetMisskeyUserError(c);
+  }
+
+  if (event.authorId !== user.id && !misskeyUser.isModerator)	{
     return sendError(c, 403, 'You are not the author of this event');
   }
 

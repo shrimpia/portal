@@ -52,7 +52,7 @@ export class EventRepository {
 
   async readById(db: D1Database, id: string): Promise<EventDto | null> {
     return await db
-      .prepare('SELECT *, u.username, e.id as id as author_name FROM event e JOIN user u ON u.id = e.author_id WHERE id = ?')
+      .prepare('SELECT *, e.id as id, u.username as author_name FROM event e JOIN user u ON u.id = e.author_id WHERE e.id = ?')
       .bind(id)
       .first<Event & { author_name: string | null }>()
       .then(event => this.toDto(event));

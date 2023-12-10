@@ -1,13 +1,15 @@
 import { isWithinInterval } from 'date-fns';
 import { useAtomValue } from 'jotai';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Button, Offcanvas, Stack } from 'react-bootstrap';
 
 
-import type { EventDto } from '@/types/event';
+import type { EventDraft, EventDto } from '@/types/event';
 
 import { CalendarView } from '@/components/common/CalendarView';
+import { EditEventModal } from '@/components/domains/events/EditEventModal';
 import { EventCardView } from '@/components/domains/events/EventCardView';
+import { useAPI } from '@/services/api';
 import { allEventsAtom } from '@/states/events';
 
 export const EventCalendarView: React.FC = () => {
@@ -19,6 +21,9 @@ export const EventCalendarView: React.FC = () => {
     events: EventDto[];
   } | null>(null);
   const [isFlyoutShow, setFlyoutShow] = useState(false);
+  const [show, setShow] = useState(false);
+  
+  const api = useAPI();
 
   const events = useAtomValue(allEventsAtom);
 
@@ -29,6 +34,8 @@ export const EventCalendarView: React.FC = () => {
     endDate: e.endDate ? new Date(e.endDate) : null,
     isAllDay: e.isAllDay,
   })), [events]);
+
+  const flyoutToday = useMemo(() => flyoutData ? new Date(year, month, flyoutData.day) : null, [flyoutData, month, year]);
 
   const onClickBackMonth = () => {
     if (month === 0) {
@@ -91,6 +98,16 @@ export const EventCalendarView: React.FC = () => {
 
   const isToday = now.getFullYear() === year && now.getMonth() === month;
 
+  const onClickAddEvent = useCallback(() => {
+    setFlyoutShow(false);
+    setShow(true);
+  }, []);
+
+  const onSave = useCallback(async (event: EventDraft) => {
+    await api.createEvent(event);
+    setShow(false);
+  }, [api]);
+
   return (
     <>
       <header className="d-flex mb-2">
@@ -123,8 +140,17 @@ export const EventCalendarView: React.FC = () => {
               <EventCardView event={event} key={event.id} />
             ))}
           </Stack>
+          {flyoutData?.events.length === 0 && (
+            <div className="text-center text-muted">
+              イベントはありません
+            </div>
+          )}
+          <Button variant="primary" className="mt-3 d-block w-100" onClick={onClickAddEvent}>
+            <i className="bi bi-plus-lg" /> イベントを追加
+          </Button>
         </Offcanvas.Body>
       </Offcanvas>
+      <EditEventModal show={show} initialDate={flyoutToday} onHide={() => setShow(false)} onSave={onSave} />
     </>
   );
 };
