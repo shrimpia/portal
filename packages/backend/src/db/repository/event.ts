@@ -84,8 +84,8 @@ export class EventRepository {
       startDate: new Date(event.start_date),
       endDate: event.end_date ? new Date(event.end_date) : null,
       createdAt: new Date(event.created_at),
-      isAllDay: event.is_all_day,
-      isOfficial: event.is_official,
+      isAllDay: Boolean(event.is_all_day),
+      isOfficial: Boolean(event.is_official),
       authorId: event.author_id,
       authorName: event.author_name,
     } : null;
