@@ -61,6 +61,15 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
       setDescription(p.initialEvent.description);
     }
   }, [p.initialDate, p.initialEvent]);
+
+  useEffect(() => {
+    if (startDate.getTime() > endDate.getTime()) {
+      setEndDate(startDate);
+    }
+    if (endDate.getTime() < startDate.getTime()) {
+      setStartDate(endDate);
+    }
+  }, [endDate, startDate]);
   
   return (
     <Modal show={p.show} onHide={p.onHide}>
