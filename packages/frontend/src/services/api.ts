@@ -95,6 +95,7 @@ export const api = (token: string | null) => ({
   getEvent: (id: string) => $get<EventDto>(`events/${id}`, {}, token),
   createEvent: (data: EventDraft) => $post<void>('events', data, token),
   deleteEvent: (id: string) => $delete<void>(`events/${id}`, {}, token),
+  editEvent: (id: string, data: EventDraft) => $post<void>(`events/${id}`, data, token),
   admin: {
     getAllPendingEmojiRequests: () => $get<EmojiRequest[]>('admin/emoji-requests', {}, token),
     getEmojiRequest: (id: string) => $get<EmojiRequest>(`admin/emoji-requests/${id}`, {}, token),

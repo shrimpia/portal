@@ -8,6 +8,7 @@ import { adminPostRejectEmojiRequestController } from './controllers/admin/post-
 import { createEmojiRequestController } from './controllers/create-emoji-request';
 import { createEventController } from './controllers/events/create-event';
 import { deleteEventController } from './controllers/events/delete-event';
+import { editEventController } from './controllers/events/edit-event';
 import { getAllEventsController } from './controllers/events/get-all-events';
 import { getEventByIdController } from './controllers/events/get-event';
 import { getEmojiRequestsController } from './controllers/get-emoji-requests';
@@ -55,6 +56,7 @@ app.get('/events', getAllEventsController);
 app.get('/events/:id', getEventByIdController);
 app.post('/events', sessionGuard, createEventController);
 app.delete('/events/:id', sessionGuard, deleteEventController);
+app.post('/events/:id', sessionGuard, editEventController);
 
 // -- Admin API
 app.get('/admin/emoji-requests', moeStaffGuard, adminGetAllPendingEmojiRequestsController);
