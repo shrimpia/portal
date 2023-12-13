@@ -9,6 +9,7 @@ import type { EventDraft, EventDto } from '@/types/event';
 
 import { MfmView } from '@/components/common/MfmView';
 import { UserLinkView } from '@/components/common/UserLinkView';
+import { useWithSpinner } from '@/hooks/useWithSpinner';
 import { useAPI } from '@/services/api';
 import { userAtom } from '@/states/user';
 
@@ -23,6 +24,7 @@ const getFormat = (isAllDay: boolean) => isAllDay ? 'yyyy/MM/dd' : 'yyyy/MM/dd H
 export const EventCardView: React.FC<EventCardViewProp> = ({ event }) => {
   const user = useAtomValue(userAtom);
   const api = useAPI();
+  const withSpinner = useWithSpinner();
 
   const [isShowingEditModal, setShowingEditModal] = useState(false);
 
@@ -36,10 +38,17 @@ export const EventCardView: React.FC<EventCardViewProp> = ({ event }) => {
     api.deleteEvent(event.id);
   }, [api, event.id]);
 
-  const onSave = useCallback((data: EventDraft) => {
-    // TODO: Implement
-    // api.updateEvent(data);
-  }, []);
+  const onSave = useCallback((data: EventDraft) => withSpinner(async () => {
+    try {
+      await api.editEvent(event.id, data);
+      setShowingEditModal(false);
+    } catch (e) {
+      if (e instanceof Error) {
+        alert(e.message);
+        console.error(e);
+      }
+    }
+  }), [api, event.id, withSpinner]);
 
   return (
     <Card className={`card ${event.isOfficial ? 'official' : ''}`}>

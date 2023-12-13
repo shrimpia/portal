@@ -58,6 +58,20 @@ export class EventRepository {
       .then(event => this.toDto(event));
   }
 
+  async update(db: D1Database, id: string, data: Omit<EventCreateData, 'author_id'>): Promise<void> {
+    await db.prepare(
+      'UPDATE event SET name = ?, description = ?, start_date = ?, end_date = ?, is_all_day = ?, is_official = ? WHERE id = ?',
+    ).bind(
+      data.name,
+      data.description,
+      data.startDate.toISOString(),
+      data.endDate?.toISOString() ?? null,
+      data.isAllDay ? 1 : 0,
+      data.isOfficial ? 1 : 0,
+      id,
+    ).run();
+  }
+
   async delete(db: D1Database, id: string): Promise<void> {
     await db.prepare('DELETE FROM event WHERE id = ?').bind(id).run();
   }
