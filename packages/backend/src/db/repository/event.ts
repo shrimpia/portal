@@ -5,7 +5,7 @@ export type EventCreateData = {
 	name: string;
 	description: string;
 	startDate: Date;
-	endDate?: Date | null;
+	endDate: Date;
 	isAllDay: boolean;
 	isOfficial?: boolean;
 	authorId: string;

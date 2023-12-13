@@ -10,7 +10,7 @@ export const requestBodySchema = z.object({
   name: z.string().min(1).max(120),
   description: z.string().max(1024),
   startDate: z.string().datetime(),
-  endDate: z.string().datetime().optional().nullable(),
+  endDate: z.string().datetime(),
   isAllDay: z.boolean(),
   isOfficial: z.boolean().optional(),
 });
