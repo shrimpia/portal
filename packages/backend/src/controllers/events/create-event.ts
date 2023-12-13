@@ -40,10 +40,17 @@ export const createEventController: Controller = async (c) => {
     return send400(c, 'You are not admin and cannot create official event.');
   }
 
+  const startDate = new Date(data.startDate);
+  const endDate = new Date(data.endDate);
+
+  if (endDate < startDate) {
+    return send400(c, 'End date must be after start date');
+  }
+
   await Events.create(c.env.DB, {
     ...data,
-    startDate: new Date(data.startDate),
-    endDate: data.endDate ? new Date(data.endDate) : null,
+    startDate,
+    endDate,
     authorId: c.portalUser!.id,
   });
 

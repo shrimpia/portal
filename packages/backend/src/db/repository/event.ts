@@ -27,6 +27,11 @@ export type EventDto = {
 export class EventRepository {
   async create(db: D1Database, data: EventCreateData) {
     const id = crypto.randomUUID();
+
+    if (data.endDate < data.startDate) {
+      throw new Error('End date must be after start date');
+    }
+
     await db.prepare(
       'INSERT INTO event (id, name, description, start_date, end_date, is_all_day, is_official, author_id, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
     ).bind(
@@ -59,6 +64,10 @@ export class EventRepository {
   }
 
   async update(db: D1Database, id: string, data: Omit<EventCreateData, 'author_id'>): Promise<void> {
+    if (data.endDate < data.startDate) {
+      throw new Error('End date must be after start date');
+    }
+
     await db.prepare(
       'UPDATE event SET name = ?, description = ?, start_date = ?, end_date = ?, is_all_day = ?, is_official = ? WHERE id = ?',
     ).bind(
