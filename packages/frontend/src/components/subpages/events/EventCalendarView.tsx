@@ -9,6 +9,7 @@ import type { EventDraft, EventDto } from '@/types/event';
 import { CalendarView } from '@/components/common/CalendarView';
 import { EditEventModal } from '@/components/domains/events/EditEventModal';
 import { EventCardView } from '@/components/domains/events/EventCardView';
+import { useWithSpinner } from '@/hooks/useWithSpinner';
 import { useAPI } from '@/services/api';
 import { allEventsAtom } from '@/states/events';
 
@@ -24,6 +25,7 @@ export const EventCalendarView: React.FC = () => {
   const [show, setShow] = useState(false);
   
   const api = useAPI();
+  const withSpinner = useWithSpinner();
 
   const events = useAtomValue(allEventsAtom);
 
@@ -103,10 +105,17 @@ export const EventCalendarView: React.FC = () => {
     setShow(true);
   }, []);
 
-  const onSave = useCallback(async (event: EventDraft) => {
-    await api.createEvent(event);
-    setShow(false);
-  }, [api]);
+  const onSave = useCallback((event: EventDraft) => withSpinner(async () => {
+    try {
+      await api.createEvent(event);
+      setShow(false);
+    } catch (e) {
+      if (e instanceof Error) {
+        alert(e.message);
+        console.error(e);
+      }
+    }
+  }), [api, withSpinner]);
 
   return (
     <>
