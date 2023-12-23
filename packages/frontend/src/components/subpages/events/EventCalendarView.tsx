@@ -11,7 +11,7 @@ import { EditEventModal } from '@/components/domains/events/EditEventModal';
 import { EventCardView } from '@/components/domains/events/EventCardView';
 import { useWithSpinner } from '@/hooks/useWithSpinner';
 import { useAPI } from '@/services/api';
-import { allEventsAtom } from '@/states/events';
+import { allEventsAtom, allEventsStatusAtom } from '@/states/events';
 
 export const EventCalendarView: React.FC = () => {
   const now = new Date();
@@ -28,6 +28,7 @@ export const EventCalendarView: React.FC = () => {
   const withSpinner = useWithSpinner();
 
   const events = useAtomValue(allEventsAtom);
+  const { refetch } = useAtomValue(allEventsStatusAtom);
 
   const calendarEvents = useMemo(() => events.map((e) => ({
     id: e.id,
@@ -79,15 +80,6 @@ export const EventCalendarView: React.FC = () => {
 
       const isWithin = isWithinInterval(currentDay, { start: startDate, end: endDate });
 
-      if (e.id === 'd89b381a-13cb-4cf0-a75e-2e1a0830cd92') {
-        console.log(JSON.stringify({
-          title: e.name,
-          startDate,
-          endDate,
-          currentDay,
-        }, null, 2));
-      }
-
       return isWithin;
     });
 
@@ -109,13 +101,14 @@ export const EventCalendarView: React.FC = () => {
     try {
       await api.createEvent(event);
       setShow(false);
+      await refetch();
     } catch (e) {
       if (e instanceof Error) {
         alert(e.message);
         console.error(e);
       }
     }
-  }), [api, withSpinner]);
+  }), [api, refetch, withSpinner]);
 
   return (
     <>

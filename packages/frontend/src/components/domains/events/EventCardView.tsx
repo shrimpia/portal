@@ -14,6 +14,7 @@ import { useAPI } from '@/services/api';
 import { userAtom } from '@/states/user';
 
 import './EventCardView.scss';
+import { allEventsStatusAtom } from '@/states/events';
 
 export type EventCardViewProp = {
     event: EventDto;
@@ -23,6 +24,7 @@ const getFormat = (isAllDay: boolean) => isAllDay ? 'yyyy/MM/dd' : 'yyyy/MM/dd H
 
 export const EventCardView: React.FC<EventCardViewProp> = ({ event }) => {
   const user = useAtomValue(userAtom);
+  const { refetch } = useAtomValue(allEventsStatusAtom);
   const api = useAPI();
   const withSpinner = useWithSpinner();
 
@@ -42,13 +44,14 @@ export const EventCardView: React.FC<EventCardViewProp> = ({ event }) => {
     try {
       await api.editEvent(event.id, data);
       setShowingEditModal(false);
+      await refetch();
     } catch (e) {
       if (e instanceof Error) {
         alert(e.message);
         console.error(e);
       }
     }
-  }), [api, event.id, withSpinner]);
+  }), [api, event.id, refetch, withSpinner]);
 
   return (
     <Card className={`card ${event.isOfficial ? 'official' : ''}`}>
