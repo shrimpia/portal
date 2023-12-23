@@ -15,8 +15,8 @@ importers:
   packages/backend:
     dependencies:
       hono:
-        specifier: ^3.5.6
-        version: 3.7.2
+        specifier: ^3.11.9
+        version: 3.11.9
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20230821.0
@@ -2154,8 +2154,8 @@ packages:
       function-bind: 1.1.1
     dev: true
 
-  /hono@3.7.2:
-    resolution: {integrity: sha512-5SWYrAQJlfjHggcDTnmKZd5zlUEXmoUiBjnmL6C1W8MX39/bUw6ZIvfEJZgpo7d7Z/vCJ5FRfkjIQPRH5yV/dQ==}
+  /hono@3.11.9:
+    resolution: {integrity: sha512-vjwVHw/y9xXPf7a87XjAPE9d3NFLyDiDBHmTU5SsGiJoe4BSiU/Yiu5UB9orhP+YGkSwD7fzXmuG7lpvKnr15w==}
     engines: {node: '>=16.0.0'}
     dev: false
 

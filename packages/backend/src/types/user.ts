@@ -36,5 +36,12 @@ export interface MisskeyUser {
     userListLimit: number,
     userEachUserListsLimit: number,
     rateLimitFactor: number,
-	},
+	};
+
+	avatarDecorations: {
+		id: string;
+		url: string;
+		flipH?: boolean;
+		angle?: number;
+	}[];
 }

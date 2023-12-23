@@ -9,6 +9,7 @@ import { createEmojiRequestController } from './controllers/create-emoji-request
 import { getEmojiRequestsController } from './controllers/get-emoji-requests';
 import { getEmojisController } from './controllers/get-emojis';
 import { getIsDuplicatedNameController } from './controllers/get-is-duplicated-name';
+import { getMisskeyNoteEmbedController } from './controllers/get-misskey-note-embed';
 import { getRemainingRequestLimitController } from './controllers/get-remaining-request-limit';
 import { getSessionController } from './controllers/get-session';
 import { getUploadedFilesController } from './controllers/get-uploaded-files';
@@ -31,6 +32,8 @@ app.get('/session', sessionGuard, getSessionController);
 app.get('/emojis', getEmojisController);
 app.get('/emojis/is-duplicated/:name', getIsDuplicatedNameController);
 app.post('/miauth', miauthController);
+
+app.get('/note-embed', getMisskeyNoteEmbedController);
 
 app.post('/emoji-requests', sessionGuard, createEmojiRequestController);
 app.get('/emoji-requests/remaining', sessionGuard, getRemainingRequestLimitController);
