@@ -71,7 +71,7 @@ export const IndexSessionPage = () => {
         <Col xs={12} xl={6}>
           <LinkCardExternal
             title="国立公園 (Discord)"
-            to="https://discord.gg/zBq2acPPKC"
+            to="https://discord.gg/FDmw99jmdQ"
             icon="bi bi-discord">
           メンバー同士で、通話やチャットを楽しもう。<br/>
           緊急メンテナンス時のお知らせとしても利用しています。
