@@ -10,7 +10,7 @@ export const requestBodySchema = z.object({
   name: z.string().min(1).max(120),
   description: z.string().max(1024),
   startDate: z.string().datetime(),
-  endDate: z.string().datetime().optional().nullable(),
+  endDate: z.string().datetime(),
   isAllDay: z.boolean(),
   isOfficial: z.boolean().optional(),
 });
@@ -46,7 +46,7 @@ export const editEventController: Controller = async (c) => {
   await Events.update(c.env.DB, id, {
     ...data,
     startDate: new Date(data.startDate),
-    endDate: data.endDate ? new Date(data.endDate) : null,
+    endDate: new Date(data.endDate),
     authorId: c.portalUser!.id,
   });
 

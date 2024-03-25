@@ -111,7 +111,7 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
                 className="form-control"
                 onChange={(date: Date) => setEndDate(date)} />
             </div>
-            <Form.Check checked={isAllDay} type="checkbox" id="isAllDay" label="終日" className="mt-2 ms-2" onChange={e => setAllDay(e.target.checked)} />
+            <Form.Check checked={isAllDay} type="checkbox" id="isAllDay" label="終日予定にする" className="mt-2 ms-2" onChange={e => setAllDay(e.target.checked)} />
           </div>
           <div>
             <Form.Label htmlFor="description" className="fw-bold">説明</Form.Label>
@@ -120,7 +120,8 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
           </div>
           {user?.isEmperor && (
             <div>
-              <Form.Check type="checkbox" id="isOfficial" label="公式イベント" checked={isOfficial} onChange={e => setOfficial(e.target.checked)} />              
+              <Form.Label className="fw-bold">その他の設定</Form.Label>
+              <Form.Check type="checkbox" id="isOfficial" label="公式イベント（皇帝のみ設定可能）" checked={isOfficial} onChange={e => setOfficial(e.target.checked)} />              
             </div>
           )}
         </Stack>

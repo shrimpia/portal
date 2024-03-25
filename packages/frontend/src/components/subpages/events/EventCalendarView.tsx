@@ -3,15 +3,13 @@ import { useAtomValue } from 'jotai';
 import { useCallback, useMemo, useState } from 'react';
 import { Button, Offcanvas, Stack } from 'react-bootstrap';
 
-
 import type { EventDraft, EventDto } from '@/types/event';
 
 import { CalendarView } from '@/components/common/CalendarView';
 import { EditEventModal } from '@/components/domains/events/EditEventModal';
 import { EventCardView } from '@/components/domains/events/EventCardView';
-import { useWithSpinner } from '@/hooks/useWithSpinner';
-import { useAPI } from '@/services/api';
-import { allEventsAtom, allEventsStatusAtom } from '@/states/events';
+import { useSaveEvent } from '@/hooks/useRegisterEvent';
+import { allEventsAtom } from '@/states/events';
 
 export const EventCalendarView: React.FC = () => {
   const now = new Date();
@@ -24,11 +22,9 @@ export const EventCalendarView: React.FC = () => {
   const [isFlyoutShow, setFlyoutShow] = useState(false);
   const [show, setShow] = useState(false);
   
-  const api = useAPI();
-  const withSpinner = useWithSpinner();
+  const save = useSaveEvent();
 
   const events = useAtomValue(allEventsAtom);
-  const { refetch } = useAtomValue(allEventsStatusAtom);
 
   const calendarEvents = useMemo(() => events.map((e) => ({
     id: e.id,
@@ -97,18 +93,10 @@ export const EventCalendarView: React.FC = () => {
     setShow(true);
   }, []);
 
-  const onSave = useCallback((event: EventDraft) => withSpinner(async () => {
-    try {
-      await api.createEvent(event);
-      setShow(false);
-      await refetch();
-    } catch (e) {
-      if (e instanceof Error) {
-        alert(e.message);
-        console.error(e);
-      }
-    }
-  }), [api, refetch, withSpinner]);
+  const onSave = useCallback(async (event: EventDraft) => {
+    if (!await save(event)) return;
+    setShow(false);
+  }, [save]);
 
   return (
     <>

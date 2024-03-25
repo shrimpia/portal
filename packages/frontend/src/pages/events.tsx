@@ -6,27 +6,18 @@ import type { EventDraft } from '@/types/event';
 import { EditEventModal } from '@/components/domains/events/EditEventModal';
 import { EventCalendarView } from '@/components/subpages/events/EventCalendarView';
 import { EventListView } from '@/components/subpages/events/EventListView';
-import { useWithSpinner } from '@/hooks/useWithSpinner';
-import { useAPI } from '@/services/api';
+import { useSaveEvent } from '@/hooks/useRegisterEvent';
 
 const EventsPage: React.FC = () => {
   const [show, setShow] = useState(false);
   const [viewMode, setViewMode] = useState<'calendar' | 'list'>('calendar');
 
-  const api = useAPI();
-  const withSpinner = useWithSpinner();
+  const save = useSaveEvent();
 
-  const onSave = useCallback((event: EventDraft) => withSpinner(async () => {
-    try {
-      await api.createEvent(event);
-      setShow(false);
-    } catch (e) {
-      if (e instanceof Error) {
-        alert(e.message);
-        console.error(e);
-      }
-    }
-  }), [api, withSpinner]);
+  const onSave = useCallback(async (event: EventDraft) => {
+    if (!await save(event)) return;
+    setShow(false);
+  }, [save]);
 
   return (
     <Container>

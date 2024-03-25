@@ -11,10 +11,10 @@ import { MfmView } from '@/components/common/MfmView';
 import { UserLinkView } from '@/components/common/UserLinkView';
 import { useWithSpinner } from '@/hooks/useWithSpinner';
 import { useAPI } from '@/services/api';
+import { allEventsStatusAtom } from '@/states/events';
 import { userAtom } from '@/states/user';
 
 import './EventCardView.scss';
-import { allEventsStatusAtom } from '@/states/events';
 
 export type EventCardViewProp = {
     event: EventDto;
@@ -38,7 +38,8 @@ export const EventCardView: React.FC<EventCardViewProp> = ({ event }) => {
     if (!confirm('本当にこのイベントを削除しますか？')) return;
 
     api.deleteEvent(event.id);
-  }, [api, event.id]);
+    refetch();
+  }, [api, event.id, refetch]);
 
   const onSave = useCallback((data: EventDraft) => withSpinner(async () => {
     try {
