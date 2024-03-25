@@ -1,6 +1,6 @@
 
 import { useAtomValue } from 'jotai';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Container, Image } from 'react-bootstrap';
 
 import type { PropsWithChildren } from 'react';
@@ -17,6 +17,14 @@ export const AdminContainer: React.FC<AdminContainerProps> = ({ mode, children }
 
   const allowedRoleName = mode === 'emperor' ? '皇帝': mode === 'emoji' ? '絵文字庁職員' : mode === 'police' ? '警察' : '職員';
   const isAllowed = user && (user.isEmperor || (mode === 'emoji' && user.canManageCustomEmojis) || (mode === 'staff' && (user.canManageCustomEmojis /* || user.isModerator */)));
+
+  // ユーザーが非ログインであればトップページに飛ばす
+  useEffect(() => {
+    if (!user) {
+      const urlEncodedErrorMessage = encodeURIComponent('ログインが必要です。');
+      window.location.href = `/?error=${urlEncodedErrorMessage}`;
+    }
+  }, [user]);
 
   return (
     <Container>
