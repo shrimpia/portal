@@ -5,11 +5,11 @@ import { Link } from 'react-router-dom';
 
 import shrimpia from '@/assets/shrimpia.svg';
 import { SHRIMPIA_PLUS_PLAN_NAMES, URL_SHRIMPIA_PLUS } from '@/consts';
+import { currentThemeAtom } from '@/states/screen';
 import { tokenAtom } from '@/states/sessions';
 import { userAtom } from '@/states/user';
 
 import './AppHeader.scss';
-import { currentThemeAtom } from '@/states/screen';
 
 export const UserMenuButton: React.FC = () => {
   const user = useAtomValue(userAtom);

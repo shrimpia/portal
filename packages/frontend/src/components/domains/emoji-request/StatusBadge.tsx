@@ -5,27 +5,30 @@ export type StatusBadgeProps = {
   className?: string;
 };
 
+const statusMap = {
+  approved: {
+    variant: 'success',
+    icon: 'check2',
+    text: '承認',
+  },
+  rejected: {
+    variant: 'danger',
+    icon: 'x-lg',
+    text: '却下',
+  },
+  pending: {
+    variant: 'warning',
+    icon: 'clock',
+    text: '審査中',
+  },
+};
+
 export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) => {
-  switch (status) {
-    case 'approved':
-      return (
-        <Badge bg="success" className={`${className} text-dark`}>
-          <i className="bi bi-check2" /> 承認
-        </Badge>
-      );
-    case 'rejected':
-      return (
-        <Badge bg="danger" className={`${className} text-`}>
-          <i className="bi bi-x-lg" /> 却下
-        </Badge>
-      );
-    case 'pending':
-      return (
-        <Badge bg="warning" className={`${className} text-dark`}>
-          <i className="bi bi-clock" /> 審査中
-        </Badge>
-      );
-    default: 
-      return null;
-  }
+  const { variant, icon, text } = statusMap[status];
+
+  return (
+    <Badge bg={variant} className={className}>
+      <i className={`bi bi-${icon}`} /> {text}
+    </Badge>
+  );
 };
