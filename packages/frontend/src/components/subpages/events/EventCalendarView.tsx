@@ -21,6 +21,8 @@ export const EventCalendarView: React.FC = () => {
   } | null>(null);
   const [isFlyoutShow, setFlyoutShow] = useState(false);
   const [show, setShow] = useState(false);
+
+  const [isHelpShow, setHelpShow] = useState(false);
   
   const save = useSaveEvent();
 
@@ -98,12 +100,19 @@ export const EventCalendarView: React.FC = () => {
     setShow(false);
   }, [save]);
 
+  const showHelp = useCallback(() => {
+    setHelpShow(true);
+  }, []);
+
   return (
     <>
       <header className="d-flex mb-2">
         <h2 className="fs-4">
           {year}年{month + 1}月
         </h2>
+        <Button variant="outline-primary" className="border-0 ms-2" onClick={showHelp}>
+          <i className="bi bi-question-circle" />
+        </Button>
         <Stack direction="horizontal" className="ms-auto" gap={1}>
           <Button variant="outline-primary" className="border-0" onClick={onClickBackMonth}>
             <i className="bi bi-chevron-left" />
@@ -117,6 +126,25 @@ export const EventCalendarView: React.FC = () => {
         </Stack>
       </header>
       <CalendarView year={year} month={month} events={calendarEvents} onClick={onClickDayCell} />
+
+      <Offcanvas show={isHelpShow} onHide={() => setHelpShow(false)} placement="end">
+        <Offcanvas.Header closeButton>
+          <Offcanvas.Title>ヘルプ</Offcanvas.Title>
+        </Offcanvas.Header>
+        <Offcanvas.Body>
+          <Stack gap={3}>
+            <p>
+              カレンダー上の日付をクリックすると、その日のイベント一覧が表示されます。イベント一覧の下部にある「イベントを追加」ボタンをクリックすると、イベントを追加できます。
+            </p>
+            <p>
+              また、カレンダー上部の「<i className="bi bi-chevron-left" />」ボタンや「<i className="bi bi-chevron-right" />」ボタンをクリックすると、前月や翌月に移動できます。<br/>
+            </p>
+            <p>
+              なお、カレンダーには見かけ上前月・翌月の枠がありますが、前月・翌月のイベントは仕様上表示されません。ご了承ください。
+            </p>
+          </Stack>
+        </Offcanvas.Body>
+      </Offcanvas>
 
       <Offcanvas show={isFlyoutShow} onHide={() => setFlyoutShow(false)} placement="end">
         <Offcanvas.Header closeButton>
