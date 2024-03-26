@@ -1,16 +1,48 @@
+import { Hono } from 'hono';
+
 import { Bucket, EmojiRequests } from '../db/repository';
+import { sessionGuard } from '../middlewares/session-guard';
 import { postNewEmojiRequestToDiscord } from '../services/discord';
 import { sendError, sendFailedToGetMisskeyUserError } from '../services/error';
-import { getRemainingRequestLimit } from '../services/get-remaining-request-limit';
+import { getRemainingRequestLimit  } from '../services/get-remaining-request-limit';
 import { isDuplicatedEmojiName } from '../services/is-duplicated-emoji-name';
 import { getMisskeyUser } from '../services/misskey-api';
 
+import type { PortalEnv } from '../env';
 
-import type { Controller } from './base';
+const emojiNamePattern = /^[a-z0-9_]+$/;
 
-const namePattern = /^[a-z0-9_]+$/;
+const app = new Hono<PortalEnv>();
 
-export const createEmojiRequestController: Controller = async (c) => {
+/**
+ * 絵文字リクエスト一覧を取得する
+ */
+app.get('/', sessionGuard, async (c) => {
+  const requests = await (c.req.query('filter') === 'mine'
+    ? EmojiRequests.readAllByUserId(c.env.DB, c.portalUser!.id)
+    : EmojiRequests.readAll(c.env.DB)
+  );
+
+  return c.json(requests.map(r => EmojiRequests.toDto(r, c)));
+});
+
+/**
+ * 残りのリクエスト利用可能枠を取得する
+ */
+app.get('/remaining', sessionGuard, async (c) => {
+  try {
+    const limit = await getRemainingRequestLimit(c.env.DB, c.portalUser!);
+    return c.json({ limit });
+  } catch (error) {
+    if (!(error instanceof Error)) throw error;
+    return sendError(c, 500, error.message);
+  }
+});
+
+/**
+ * 絵文字リクエストを送信する
+ */
+app.post('/', sessionGuard, async (c) => {
   const user = await getMisskeyUser(c.portalUser!.misskey_token);
   if (!user) {
     return sendFailedToGetMisskeyUserError(c);
@@ -26,7 +58,7 @@ export const createEmojiRequestController: Controller = async (c) => {
   if (!(image instanceof File)) {
     return sendError(c, 400, 'invalid param: image');
   }
-  if (typeof name !== 'string' || !namePattern.test(name)) {
+  if (typeof name !== 'string' || !emojiNamePattern.test(name)) {
     return sendError(c, 400, 'invalid param: name');
   }
   if (typeof comment !== 'string') {
@@ -64,4 +96,6 @@ export const createEmojiRequestController: Controller = async (c) => {
   return c.json({
     ok: true,
   });
-};
+});
+
+export default app;
