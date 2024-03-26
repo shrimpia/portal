@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 
 import type { EmojiRequest } from '@/types/emoji-request';
 
+import { AutoCollapse } from '@/components/common/AutoCollapse';
 import { MfmView } from '@/components/common/MfmView';
 import { UserLinkView } from '@/components/common/UserLinkView';
 import { EmojiPreview } from '@/components/domains/emoji-request/EmojiPreview';
@@ -133,7 +134,9 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
                 <div>
                   <h2 className="fs-6 fw-bold">コメント</h2>
                   {r.comment.trim() ? (
-                    <div className="text-muted border-start px-2 mb-0"><MfmView>{r.comment}</MfmView></div>
+                    <AutoCollapse>
+                      <div className="text-muted border-start px-2 mb-0"><MfmView>{r.comment}</MfmView></div>
+                    </AutoCollapse>
                   ) : (
                     <div className="text-muted">なし</div>
                   )}

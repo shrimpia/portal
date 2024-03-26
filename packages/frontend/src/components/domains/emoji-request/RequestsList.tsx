@@ -1,13 +1,13 @@
 import { useAtomValue } from 'jotai';
 import groupBy from 'lodash.groupby';
 import { useMemo, type PropsWithChildren } from 'react';
-import { Card, Container, Image, Stack } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import Masonry from 'react-masonry-css';
 
-import { MfmView } from '@/components/common/MfmView';
-import { UserLinkView } from '@/components/common/UserLinkView';
-import { StatusBadge } from '@/components/domains/emoji-request/StatusBadge';
+import { RequestsListItem } from './RequestsListItem';
+
 import { emojiRequestsAtom } from '@/states/emoji-request';
+
 
 export type RequestsListProp = PropsWithChildren;
 
@@ -20,7 +20,7 @@ export const RequestsList: React.FC<RequestsListProp> = ({ children }) => {
   return groupKeys.length > 0 ? (
     <Container>
       {groupKeys.map(key => (
-        <>
+        <article key={key}>
           <h3>{grouped[key][0].createdYear}年{grouped[key][0].createdMonth}月</h3>
           <p className="text-muted">{grouped[key].length}件の申請</p>
           <Masonry breakpointCols={{
@@ -29,37 +29,9 @@ export const RequestsList: React.FC<RequestsListProp> = ({ children }) => {
             1200: 3,
             768: 1,
           }} className="d-flex gap-3 mb-3" columnClassName="d-flex flex-column gap-3">
-            {grouped[key].map(r => (
-              <Card>
-                <Card.Body className="overflow-hidden">
-                  <Card.Title>:{r.name}:</Card.Title>
-                  <Stack direction="vertical" className="align-items-start position-relative" gap={3}>
-                    <StatusBadge status={r.status} />
-                    <Image src={r.url} alt={r.name} className="bg-dark rounded p-2" style={{ height: 48 }} />
-                    <div>
-                      <h2 className="fs-6 fw-bold">申請者</h2>
-                      <UserLinkView username={r.username} />
-                    </div>
-                    <div>
-                      <h2 className="fs-6 fw-bold">申請コメント</h2>
-                      {r.comment.trim() ? (
-                        <div className="text-muted border-start px-2 mb-0"><MfmView>{r.comment}</MfmView></div>
-                      ) : (
-                        <div className="text-muted">なし</div>
-                      )}
-                    </div>
-                    {r.staffComment && (
-                      <div>
-                        <h2 className="fs-6 fw-bold">スタッフからのコメント</h2>
-                        <div className="text-muted border-start px-2 mb-0"><MfmView>{r.staffComment}</MfmView></div>
-                      </div>
-                    )}
-                  </Stack>
-                </Card.Body>
-              </Card>
-            ))}
+            {grouped[key].map(r => <RequestsListItem request={r} key={r.id} />)}
           </Masonry>
-        </>
+        </article>
       ))}
     </Container>
   ) : children;
