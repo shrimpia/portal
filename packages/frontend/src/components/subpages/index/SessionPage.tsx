@@ -22,7 +22,7 @@ export const IndexSessionPage = () => {
           </LinkCard>
         </Col>
         <Col xs={12} xl={6}>
-          <LinkCard
+          <LinkCard new
             title="イベントカレンダー"
             to="/events"
             icon="bi bi-calendar-event">
