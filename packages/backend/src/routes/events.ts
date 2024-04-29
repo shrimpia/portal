@@ -63,7 +63,7 @@ app.post('/', sessionGuard, async (c) => {
   }
 
   const { data } = validation;
-  if (data.isOfficial !== undefined && !user.isAdmin) {
+  if (data.isOfficial && !user.isAdmin) {
     return send400(c, 'You are not admin and cannot create official event.');
   }
 
@@ -141,7 +141,7 @@ app.post('/:id', sessionGuard, async (c) => {
   }
 
   const { data } = validation;
-  if (data.isOfficial !== undefined && !user.isAdmin) {
+  if (data.isOfficial && !user.isAdmin) {
     return send400(c, 'You are not admin and cannot create official event.');
   }
 
