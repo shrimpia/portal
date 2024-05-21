@@ -1,8 +1,9 @@
-import { useCallback, useState } from 'react';
+import { Suspense, useCallback, useState } from 'react';
 import { Button, Container, Nav } from 'react-bootstrap';
 
 import type { EventDraft } from '@/types/event';
 
+import { LoadingView } from '@/components/common/LoadingView';
 import { EditEventModal } from '@/components/domains/events/EditEventModal';
 import { EventCalendarView } from '@/components/subpages/events/EventCalendarView';
 import { EventListView } from '@/components/subpages/events/EventListView';
@@ -39,7 +40,9 @@ const EventsPage: React.FC = () => {
           <i className="bi bi-plus-lg"/> イベントを追加
         </Button>
       </div>
-      {viewMode === 'calendar' ? <EventCalendarView /> : <EventListView />}
+      <Suspense fallback={<LoadingView />}>
+        {viewMode === 'calendar' ? <EventCalendarView /> : <EventListView />}
+      </Suspense>
       <EditEventModal show={show} onHide={() => setShow(false)} onSave={onSave} />
     </Container>
   );

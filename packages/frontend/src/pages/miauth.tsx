@@ -36,7 +36,7 @@ const MiAuthPage = () => {
     return () => {
       ignore = true;
     };
-  }, []);
+  }, [api, session, setToken]);
 
   return (
     <Container className="my-4">
