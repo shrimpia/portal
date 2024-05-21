@@ -129,7 +129,7 @@ app.post('/:id', sessionGuard, async (c) => {
     return send404(c);
   }
 
-  if (event.authorId !== user.id && !user.isModerator)	{
+  if (event.authorId !== c.portalUser!.id && !user.isModerator)	{
     return sendError(c, 403, 'You are not the author of this event');
   }
 
