@@ -1,12 +1,12 @@
 import { atom } from 'jotai';
+import { atomWithStorage } from 'jotai/utils';
 import { atomsWithQuery } from 'jotai-tanstack-query';
 
 import { api } from '../services/api';
 
 import { tokenAtom } from './sessions';
 
-export const filterAtom = atom<'mine' | 'all'>('mine');
-
+export const filterAtom = atomWithStorage<'mine' | 'all'>('emojiRequest:filter', 'mine');
 export const currentRequestIdAtom = atom<string | null>(null);
 
 export const [emojiRequestsAtom, emojiRequestsStatusAtom] = atomsWithQuery((get) => ({
