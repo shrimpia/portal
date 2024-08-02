@@ -22,7 +22,7 @@ export const IndexSessionPage = () => {
           </LinkCard>
         </Col>
         <Col xs={12} xl={6}>
-          <LinkCard new
+          <LinkCard
             title="イベントカレンダー"
             to="/events"
             icon="bi bi-calendar-event">
@@ -34,14 +34,6 @@ export const IndexSessionPage = () => {
             title="サポート"
             to="#"
             icon="bi bi-question-circle">
-            coming soon!
-          </LinkCard>
-        </Col>
-        <Col xs={12} xl={6}>
-          <LinkCard
-            title="アカウント削除リクエスト"
-            to="#"
-            icon="bi bi-heartbreak-fill">
             coming soon!
           </LinkCard>
         </Col> */}
@@ -65,21 +57,14 @@ export const IndexSessionPage = () => {
             title="シュリンピア帝国"
             to="https://mk.shrimpia.network"
             icon="bi bi-globe">
-          シュリンピア帝国 Misskeyサーバー。
+          シュリンピア帝国 Misskeyサーバー。<br/>
+          入国者募集中！
           </LinkCardExternal>
         </Col>
         <Col xs={12} xl={6}>
           <LinkCardExternal
-            title="国立図書館 (Wiki)"
-            to="https://wiki.shrimpia.network"
-            icon="bi bi-book">
-              人気ネタから便利な情報まで、みんなで編集しよう。
-          </LinkCardExternal>
-        </Col>
-        <Col xs={12} xl={6}>
-          <LinkCardExternal
-            title="国立公園 (Discord)"
-            to="https://discord.gg/FDmw99jmdQ"
+            title="Shrimpia Park (Discord)"
+            to="https://go.shrimpia.network/discord"
             icon="bi bi-discord">
           メンバー同士で、通話やチャットを楽しもう。<br/>
           緊急メンテナンス時のお知らせとしても利用しています。
