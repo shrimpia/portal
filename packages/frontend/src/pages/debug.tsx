@@ -1,16 +1,20 @@
-import { useAtom, useAtomValue } from 'jotai';
-import { useState } from 'react';
-import { Container, Form, Stack } from 'react-bootstrap';
+import { useAtom } from 'jotai';
+import { useMemo, useState } from 'react';
+import { Button, Container, Form, Stack } from 'react-bootstrap';
 
 import { MfmView } from '@/components/common/MfmView';
+import { Stepper } from '@/components/common/Stepper';
 import { shrimpiaPlusEmulationAtom } from '@/states/debug';
-import { emojisAtom } from '@/states/emojis';
 
 const DebugPage = () => {
   const [shrimpiaPlusEmulation, setShrimpiaPlusEmulation] = useAtom(shrimpiaPlusEmulationAtom);
-  const emojis = useAtomValue(emojisAtom);
+
+  const [step, setStep] = useState(0);
+  const [maxStep, setMaxStep] = useState(3);
 
   const [mfm, setMfm] = useState('**Hello, world!**');
+
+  const steps = useMemo(() => Array.from({ length: maxStep }, (_, i) => `Step ${i + 1}`), [maxStep]);
 
   return (
     <Container>
@@ -26,10 +30,19 @@ const DebugPage = () => {
             <option value="pro">Shrimpia+ Pro</option>
           </Form.Select>
         </Form.Group>
-
-        <pre style={{ height: 256, overflow: 'auto' }}>
-          {JSON.stringify(emojis)}
-        </pre>
+        
+        <Stack gap={3}>
+          <h2 className="fs-4">Stepper</h2>
+          <Stepper activeStep={step} steps={steps} onChange={i => setStep(i)} />
+          <Stack direction="horizontal" gap={2}>
+            <Button variant="primary" onClick={() => setStep(step - 1)} disabled={step === 0}>←</Button>
+            <Button variant="primary" onClick={() => setStep(step + 1)} disabled={step === maxStep}>→</Button>
+          </Stack>
+          <Stack direction="horizontal" gap={2}>
+            <Button variant="primary" onClick={() => setMaxStep(maxStep - 1)} disabled={maxStep === 0}>maxStep--</Button>
+            <Button variant="primary" onClick={() => setMaxStep(maxStep + 1)}>maxStep++</Button>
+          </Stack>
+        </Stack>
 
         <Form.Group controlId="mfm">
           <Form.Label>MFM</Form.Label>

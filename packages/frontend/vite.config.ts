@@ -1,4 +1,5 @@
 import react from '@vitejs/plugin-react-swc';
+import wyw from '@wyw-in-js/vite';
 import { defineConfig } from 'vite';
 import pages from 'vite-plugin-pages';
 import tsconfigPaths from 'vite-tsconfig-paths';
@@ -9,5 +10,8 @@ export default defineConfig({
     react(),
     pages(),
     tsconfigPaths(),
+    wyw({
+      include: ['**/*.{ts,tsx}'],
+    }),
   ],
 });
