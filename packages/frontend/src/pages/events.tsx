@@ -1,3 +1,4 @@
+import { useAtom } from 'jotai';
 import { Suspense, useCallback, useState } from 'react';
 import { Button, Container, Nav } from 'react-bootstrap';
 
@@ -8,10 +9,11 @@ import { EditEventModal } from '@/components/domains/events/EditEventModal';
 import { EventCalendarView } from '@/components/subpages/events/EventCalendarView';
 import { EventListView } from '@/components/subpages/events/EventListView';
 import { useSaveEvent } from '@/hooks/useRegisterEvent';
+import { viewModeAtom } from '@/states/events';
 
 const EventsPage: React.FC = () => {
   const [show, setShow] = useState(false);
-  const [viewMode, setViewMode] = useState<'calendar' | 'list'>('calendar');
+  const [viewMode, setViewMode] = useAtom(viewModeAtom);
 
   const save = useSaveEvent();
 

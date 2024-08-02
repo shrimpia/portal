@@ -15,7 +15,7 @@ export const IndexSessionPage = () => {
       <Row className="gx-3 gy-3">
         <Col xs={12} xl={6}>
           <LinkCard
-            title="カスタム絵文字の追加申請"
+            title="カスタム絵文字のリクエスト"
             to="/emoji-request"
             icon="bi bi-magic">
               シュリンピア帝国に、新しくカスタム絵文字の追加を申請できます。<br/>申請にはShrimpia+への参加が必要です。

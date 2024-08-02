@@ -39,6 +39,10 @@ $danger:         $shrimpianDarkDanger !default;
 // ...Finally, import Bootstrap
 @import "bootstrap/scss/bootstrap";
 
+:root {
+    scroll-behavior: smooth;
+}
+
 // Custom Styles
 body {
     background-attachment: fixed;
@@ -50,6 +54,7 @@ body {
 html {
     --sh-card-bg: #{$shrimpianLightPanel};
     --sh-app-icon-color: #{$shrimpianLightPrimary};
+    --sh-primary: var(--bs-primary);
 
     body {
         background-image: url("./assets/bg-light.png");

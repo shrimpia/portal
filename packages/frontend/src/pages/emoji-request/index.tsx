@@ -19,11 +19,11 @@ const EmojiRequestPage = () => {
   return (
     <Container>
       <h1 className="fs-3 mb-4">
-        カスタム絵文字の追加申請
+        カスタム絵文字のリクエスト
       </h1>
       <p>
         シュリンピア帝国で利用できるカスタム絵文字を、あなたも作って申請しましょう！<br/>
-        厳正な審査がありますが、好きな言葉や自分の絵をカスタム絵文字として使えるようになるチャンスです！
+        スタッフによる審査がありますが、好きな言葉や自分の絵をカスタム絵文字として使えるようになるチャンスです！
       </p>
       <p>
         絵文字を作成・申請する前に、必ずガイドラインをお読みください！<br/>
@@ -32,7 +32,7 @@ const EmojiRequestPage = () => {
         </a>
       </p>
       {!isShrimpiaPlus && (
-        <OnlyShrimpiaPlus>絵文字申請機能</OnlyShrimpiaPlus>
+        <OnlyShrimpiaPlus>カスタム絵文字のリクエスト</OnlyShrimpiaPlus>
       )}
       <Stack className="mb-3" direction="horizontal" gap={3}>
         {user && isShrimpiaPlus ? (
