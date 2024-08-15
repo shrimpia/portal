@@ -19,3 +19,5 @@ export const EMOJI_REQUEST_MAX = {
   normal: 2,
   pro: 5,
 } as const;
+
+export const HINT_EDITOR_ROLE_ID = '9wyy6b6oiu';

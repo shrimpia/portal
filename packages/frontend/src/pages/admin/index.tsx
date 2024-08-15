@@ -17,6 +17,12 @@ const IndexPage = () => {
           icon="bi bi-magic">
           処理待ちの絵文字申請を一覧表示します。<br/>
         </LinkCard>
+        <LinkCard
+          title="ヒントの管理"
+          to="/admin/hints"
+          icon="bi bi-lightbulb">
+          ヒントの追加・編集・削除を行います。<br/>
+        </LinkCard>
       </Stack>
     </AdminContainer>
   ) : null;

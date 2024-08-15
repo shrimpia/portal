@@ -5,6 +5,7 @@ import admin from './routes/admin';
 import emojiRequests from './routes/emoji-requests';
 import emojis from './routes/emojis';
 import events from './routes/events';
+import hints from './routes/hints';
 import root from './routes/root';
 
 import type { PortalEnv } from './env';
@@ -18,6 +19,7 @@ app.route('/emojis', emojis);
 app.route('/events', events);
 app.route('/admin', admin);
 app.route('/emoji-requests', emojiRequests);
+app.route('/hints', hints);
 
 app.onError((err, c) => {
   console.error(err);

@@ -4,6 +4,7 @@ import { useMemo } from 'react';
 import type { Emoji } from '@/types/emoji';
 import type { EmojiRequest } from '@/types/emoji-request';
 import type { EventDraft, EventDto } from '@/types/event';
+import type { Hint } from '@/types/hint';
 import type { Session } from '@/types/session';
 
 import { URL_PORTAL_BACKEND } from '@/consts';
@@ -101,5 +102,10 @@ export const api = (token: string | null) => ({
     getEmojiRequest: (id: string) => $get<EmojiRequest>(`admin/emoji-requests/${id}`, {}, token),
     approveEmojiRequest: (id: string, tag: string) => $post<void>(`admin/emoji-requests/${id}/approve`, { tag }, token),
     rejectEmojiRequest: (id: string, reason: string) => $post<void>(`admin/emoji-requests/${id}/reject`, { reason }, token),
+    getAllHints: () => $get<Hint[]>('admin/hints', {}, token),
+    createHint: (content: string) => $post<void>('admin/hints', { content }, token),
+    deleteHint: (id: string) => $delete<void>(`admin/hints/${id}`, {}, token),
+    editHint: (id: string, content: string) => $post<void>(`admin/hints/${id}`, { content }, token),
+    changeHintVisibility: (id: string, isPublished: boolean) => $post<void>(`admin/hints/${id}/publication`, { isPublished }, token),
   },
 });

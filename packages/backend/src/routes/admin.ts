@@ -1,7 +1,10 @@
 import { Hono } from 'hono';
+import { z } from 'zod';
 
 import { CATEGORY_NAME_NEW } from '../const';
-import { Bucket, EmojiRequests, Users } from '../db/repository';
+import { Bucket, EmojiRequests, Hints, Users } from '../db/repository';
+import { emperorGuard } from '../middlewares/emperor-guard';
+import { hintStaffGuard } from '../middlewares/hint-staff-guard';
 import { moeStaffGuard } from '../middlewares/moe-staff-guard';
 import { send400, send404, sendError } from '../services/error';
 import { callMisskeyApi } from '../services/misskey-api';
@@ -105,6 +108,88 @@ app.post('/emoji-requests/:id/reject', moeStaffGuard, async (c) => {
   } catch (e) {
     return sendError(c, 500, e instanceof Error ? e.message : `${e}`);
   }
+
+  return c.json({
+    ok: true,
+  });
+});
+
+app.get('/hints', hintStaffGuard, async (c) => {
+  const hints = await Hints.readAll(c.env.DB);
+  return c.json(hints);
+});
+
+const hintRequestbodySchema = z.object({
+  content: z.string().min(1).max(80),
+});
+
+// ヒントを新規作成するAPI
+app.post('/hints', hintStaffGuard, async (c) => {
+  const validation = await hintRequestbodySchema.safeParseAsync(await c.req.json());
+  if (!validation.success) {
+    return send400(c, validation.error.message);
+  }
+
+  const { data } = validation;
+  const author = c.portalUser!;
+  await Hints.create(c.env.DB, {
+    content: data.content,
+    authorId: author.id,
+  });
+
+  return c.json({
+    ok: true,
+  });
+});
+
+// ヒントを削除するAPI
+app.delete('/hints/:id', hintStaffGuard, async (c) => {
+  const id = c.req.param('id');
+  await Hints.delete(c.env.DB, id);
+  return c.json({
+    ok: true,
+  });
+});
+
+// ヒントを更新するAPI
+app.post('/hints/:id', hintStaffGuard, async (c) => {
+  const validation = await hintRequestbodySchema.safeParseAsync(await c.req.json());
+  if (!validation.success) {
+    return send400(c, validation.error.message);
+  }
+
+  const { data } = validation;
+  const id = c.req.param('id');
+  await Hints.update(c.env.DB, id, {
+    content: data.content,
+  });
+
+  return c.json({
+    ok: true,
+  });
+});
+
+const hintPublicationRequestbodySchema = z.object({
+  isPublished: z.boolean(),
+});
+
+// ヒントの公開・非公開を切り替えるAPI（皇帝のみ）
+app.post('/hints/:id/publication', emperorGuard, async (c) => {
+  const validation = await hintPublicationRequestbodySchema.safeParseAsync(await c.req.json());
+  if (!validation.success) {
+    return send400(c, validation.error.message);
+  }
+
+  const isPublished = validation.data.isPublished;
+  const id = c.req.param('id');
+  const hint = await Hints.readById(c.env.DB, id);
+  if (!hint) {
+    return send404(c);
+  }
+
+  await Hints.update(c.env.DB, id, {
+    is_published: isPublished ? 1 : 0,
+  } as any);
 
   return c.json({
     ok: true,
