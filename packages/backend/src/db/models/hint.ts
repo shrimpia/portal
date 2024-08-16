@@ -4,4 +4,5 @@ export interface Hint {
 	created_at: Date;
 	author_id: string;
 	is_published: boolean;
+	url: string | null;
 }

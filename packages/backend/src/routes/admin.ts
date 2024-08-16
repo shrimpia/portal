@@ -121,6 +121,7 @@ app.get('/hints', hintStaffGuard, async (c) => {
 
 const hintRequestbodySchema = z.object({
   content: z.string().min(1).max(80),
+  url: z.string().url().nullable(),
 });
 
 // ヒントを新規作成するAPI
@@ -134,6 +135,7 @@ app.post('/hints', hintStaffGuard, async (c) => {
   const author = c.portalUser!;
   await Hints.create(c.env.DB, {
     content: data.content,
+    url: data.url,
     authorId: author.id,
   });
 
@@ -162,6 +164,7 @@ app.post('/hints/:id', hintStaffGuard, async (c) => {
   const id = c.req.param('id');
   await Hints.update(c.env.DB, id, {
     content: data.content,
+    url: data.url,
   });
 
   return c.json({

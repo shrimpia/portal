@@ -15,7 +15,6 @@ export const hintStaffGuard: MiddlewareHandler = async (c, next) => {
   c.portalUser = await Users.readByPortalToken(c.env.DB, token);
 
   const misskeyUser = await getMisskeyUser(c.portalUser!.misskey_token);
-  console.log(misskeyUser?.roles);
   if (!misskeyUser?.roles.some(r => r.id === HINT_EDITOR_ROLE_ID)) return sendNotHintEditorError(c);
 
   await next();

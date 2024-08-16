@@ -1,5 +1,5 @@
 import { useAtomValue } from 'jotai';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { Button, Card, Form, Stack } from 'react-bootstrap';
 
 import { AdminContainer } from '@/components/domains/admin/AdminContainer';
@@ -14,13 +14,12 @@ const HintEditor: React.FC<{id?: string | null}> = ({ id }) => {
   const api = useAPI();
 
   const isEmperor = useMemo(() => user?.isEmperor ?? false, [user]);
-
-
   const hint = useMemo(() => id === null ? null : allHints.find(hint => hint.id === id), [id, allHints]);
 
-  const [content, setContent] = React.useState(hint?.content || '');
+  const [content, setContent] = useState(hint?.content || '');
+  const [url, setUrl] = useState(hint?.url ?? null);
 
-  const isInvalid = useMemo(() => content.length > 80 || content.length === 0, [content]);
+  const isInvalid = useMemo(() => content.length > 80 || content.length === 0, [content.length]);
 
   const setVisibility = useCallback(async (visibility: boolean) => {
     if (!isEmperor) return;
@@ -33,10 +32,11 @@ const HintEditor: React.FC<{id?: string | null}> = ({ id }) => {
   const submit = useCallback(async () => {
     try {
       if (id) {
-        await api.admin.editHint(id, content);
+        await api.admin.editHint(id, content, url);
       } else {
-        await api.admin.createHint(content);
+        await api.admin.createHint(content, url);
         setContent('');
+        setUrl('');
       }
     } catch (e) {
       console.error(e);
@@ -45,11 +45,11 @@ const HintEditor: React.FC<{id?: string | null}> = ({ id }) => {
       }
     }
     await refetch();
-  }, [refetch, id, api.admin, content]);
+  }, [refetch, id, api.admin, content, url]);
 
   const deleteThisItem = useCallback(async () => {
     if (!hint || !id) return;
-    if (!confirm(`本当に「${hint.content}」を削除？`)) return;
+    if (!confirm(`本当に「${hint.content}」を削除しますか？`)) return;
 
     await api.admin.deleteHint(id);
     await refetch();
@@ -58,33 +58,39 @@ const HintEditor: React.FC<{id?: string | null}> = ({ id }) => {
   return (
     <Card>
       <Card.Body>
-        {!id && <Card.Title>新規作成</Card.Title>}
-        <Form.Group className="mb-2">
-          <Form.Control type="text" placeholder="" value={content} onChange={e => setContent(e.target.value)} isInvalid={isInvalid} />
-          <Form.Text className={`ms-2 ${isInvalid ? 'text-danger' : 'text-muted'}`}>残り{80 - content.length}文字</Form.Text>
-        </Form.Group>
-        {id && (
-          <Form.Group className="mb-2">
-            <Form.Switch>
-              <Form.Check.Input id="isDecoMoji" type="checkbox" disabled={!isEmperor} checked={hint?.is_published} onChange={() => setVisibility(!(hint?.is_published))} />
-              <Form.Check.Label htmlFor="isDecoMoji">
-                <b>公開にする</b><br/>
-                <Form.Text muted>帝国皇帝のみが操作できます。</Form.Text>
-              </Form.Check.Label>
-            </Form.Switch>
+        {!id && <Card.Title><i className="bi bi-plus"/> 新規作成</Card.Title>}
+        <Stack gap={3}>
+          <Form.Group>
+            <Form.Control type="text" placeholder="" value={content} onChange={e => setContent(e.target.value)} isInvalid={isInvalid} />
+            <Form.Text className={`ms-2 ${isInvalid ? 'text-danger' : 'text-muted'}`}>残り{80 - content.length}文字</Form.Text>
           </Form.Group>
-        )}
-        <Stack direction="horizontal" gap={2}>
+          <Form.Group>
+            <Form.Control type="text" placeholder="URL" value={url ?? ''} onChange={e => setUrl(!e.target.value ? null : e.target.value)} />
+            <Form.Text className="ms-2 text-muted">ヘッドラインをタップしたときのリンクURL。不要な場合は空欄にします。</Form.Text>
+          </Form.Group>
           {id && (
-            <Button variant="outline-danger" onClick={() => deleteThisItem()}>
-              <i className="bi bi-trash me-2" />
-              削除する
-            </Button>
+            <Form.Group className="mb-2">
+              <Form.Switch>
+                <Form.Check.Input id="isDecoMoji" type="checkbox" disabled={!isEmperor} checked={hint?.is_published} onChange={() => setVisibility(!(hint?.is_published))} />
+                <Form.Check.Label htmlFor="isDecoMoji">
+                  <b>公開にする</b><br/>
+                  <Form.Text muted>帝国皇帝のみが操作できます。</Form.Text>
+                </Form.Check.Label>
+              </Form.Switch>
+            </Form.Group>
           )}
-          <Button variant="primary" onClick={submit} disabled={isInvalid}>
-            <i className="bi bi-save me-2" />
-            {id ? '更新する' : '作成する'}
-          </Button>
+          <Stack direction="horizontal" gap={2}>
+            {id && (
+              <Button variant="outline-danger" onClick={() => deleteThisItem()}>
+                <i className="bi bi-trash me-2" />
+                削除する
+              </Button>
+            )}
+            <Button variant="primary" onClick={submit} disabled={isInvalid}>
+              <i className="bi bi-save me-2" />
+              {id ? '更新する' : '作成する'}
+            </Button>
+          </Stack>
         </Stack>
       </Card.Body>
     </Card>

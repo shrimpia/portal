@@ -8,7 +8,10 @@ const app = new Hono<PortalEnv>();
 
 app.get('/', async (c) => {
   const hints = await Hints.readAllPublished(c.env.DB);
-  return c.json(hints.map(h => h.content));
+  return c.json(hints.map(h => ({
+    content: h.content,
+    url: h.url,
+  })));
 });
 
 export default app;

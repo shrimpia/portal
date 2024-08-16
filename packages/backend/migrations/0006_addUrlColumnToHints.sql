@@ -1,0 +1,3 @@
+-- Migration number: 0006 	 2024-08-17T10:40:54.001Z
+
+ALTER TABLE hints ADD COLUMN url TEXT;

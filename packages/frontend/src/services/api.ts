@@ -103,9 +103,9 @@ export const api = (token: string | null) => ({
     approveEmojiRequest: (id: string, tag: string) => $post<void>(`admin/emoji-requests/${id}/approve`, { tag }, token),
     rejectEmojiRequest: (id: string, reason: string) => $post<void>(`admin/emoji-requests/${id}/reject`, { reason }, token),
     getAllHints: () => $get<Hint[]>('admin/hints', {}, token),
-    createHint: (content: string) => $post<void>('admin/hints', { content }, token),
+    createHint: (content: string, url: string | null) => $post<void>('admin/hints', { content, url }, token),
     deleteHint: (id: string) => $delete<void>(`admin/hints/${id}`, {}, token),
-    editHint: (id: string, content: string) => $post<void>(`admin/hints/${id}`, { content }, token),
+    editHint: (id: string, content: string, url: string | null) => $post<void>(`admin/hints/${id}`, { content, url }, token),
     changeHintVisibility: (id: string, isPublished: boolean) => $post<void>(`admin/hints/${id}/publication`, { isPublished }, token),
   },
 });

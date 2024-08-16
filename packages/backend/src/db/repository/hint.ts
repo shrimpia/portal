@@ -2,14 +2,15 @@ import type { Hint } from '../models/hint';
 
 export type HintCreateData = {
 	content: string;
+	url: string | null;
 	authorId: string;
 };
 
 export class HintRepository {
   async create(db: D1Database, data: HintCreateData) {
     const id = crypto.randomUUID();
-    await db.prepare('INSERT INTO hints (id, content, created_at, author_id, is_published) VALUES (?, ?, ?, ?, ?)')
-      .bind(id, data.content, new Date().toISOString(), data.authorId, 0)
+    await db.prepare('INSERT INTO hints (id, content, url, created_at, author_id, is_published) VALUES (?, ?, ?, ?, ?)')
+      .bind(id, data.content, data.url, new Date().toISOString(), data.authorId, 0)
       .run();
     return id;
   }
