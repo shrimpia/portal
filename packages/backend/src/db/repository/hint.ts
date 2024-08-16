@@ -9,7 +9,7 @@ export type HintCreateData = {
 export class HintRepository {
   async create(db: D1Database, data: HintCreateData) {
     const id = crypto.randomUUID();
-    await db.prepare('INSERT INTO hints (id, content, url, created_at, author_id, is_published) VALUES (?, ?, ?, ?, ?)')
+    await db.prepare('INSERT INTO hints (id, content, url, created_at, author_id, is_published) VALUES (?, ?, ?, ?, ?, ?)')
       .bind(id, data.content, data.url, new Date().toISOString(), data.authorId, 0)
       .run();
     return id;
@@ -22,13 +22,13 @@ export class HintRepository {
   }
 
   async readAll(db: D1Database) {
-    return db.prepare('SELECT * FROM hints')
+    return db.prepare('SELECT * FROM hints ORDER BY created_at DESC')
       .all<Hint>()
       .then(e => e.results);
   }
 
   async readAllPublished(db: D1Database) {
-    return db.prepare('SELECT * FROM hints WHERE is_published = 1')
+    return db.prepare('SELECT * FROM hints WHERE is_published = 1 ORDER BY created_at DESC')
       .all<Hint>()
       .then(e => e.results);
   }
