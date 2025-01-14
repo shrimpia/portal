@@ -67,8 +67,17 @@ export const IndexSessionPage = () => {
             title="Discord サーバー"
             to={URL_DISCORD}
             icon="bi bi-discord">
-          メンバー同士で、通話やチャットを楽しもう。<br/>
-          緊急メンテナンス時のお知らせとしても利用しています。
+            メンバー同士で、通話やチャットを楽しもう。<br/>
+            緊急メンテナンス時のお知らせ場でもあります。
+          </LinkCardExternal>
+        </Col>
+        <Col xs={12} xl={6}>
+          <LinkCardExternal
+            title="帝国ドキュメント"
+            to={URL_DOCS}
+            icon="bi bi-file-earmark-text">
+            帝国のガイドラインを含む重要な情報や、<br/>
+            シュリンピアの世界観資料があります。
           </LinkCardExternal>
         </Col>
         <Col xs={12} xl={6}>
@@ -76,8 +85,8 @@ export const IndexSessionPage = () => {
             title="Shrimpia+"
             to={URL_SHRIMPIA_PLUS}
             icon="bi bi-patch-plus-fill">
-          Shrimpia+に参加しませんか？<br/>
-          様々な便利機能を手に入れ、運営を支援しましょう。
+            Shrimpia+に参加しませんか？<br/>
+            様々な便利機能を手に入れ、運営を支援しましょう。
           </LinkCardExternal>
         </Col>
       </Row>
