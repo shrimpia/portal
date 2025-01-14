@@ -4,6 +4,7 @@ import { Col, Container, Row } from 'react-bootstrap';
 import { LinkCard } from '@/components/common/LinkCard';
 import { LinkCardExternal } from '@/components/common/LinkCardExternal';
 import { MfmView } from '@/components/common/MfmView';
+import { URL_DISCORD, URL_DOCS, URL_MISSKEY, URL_SHRIMPIA_PLUS } from '@/consts';
 import { isStaff } from '@/services/is-staff';
 import { userAtom } from '@/states/user';
 
@@ -54,17 +55,17 @@ export const IndexSessionPage = () => {
       <Row className="gx-3 gy-3">
         <Col xs={12} xl={6}>
           <LinkCardExternal
-            title="シュリンピア帝国"
-            to="https://mk.shrimpia.network"
+            title="Misskey サーバー"
+            to={URL_MISSKEY}
             icon="bi bi-globe">
-          シュリンピア帝国 Misskeyサーバー。<br/>
-          入国者募集中！
+            帝国の主軸となるMisskeyサーバー。<br/>
+            好きなことを語ろう。
           </LinkCardExternal>
         </Col>
         <Col xs={12} xl={6}>
           <LinkCardExternal
-            title="Shrimpia Park (Discord)"
-            to="https://go.shrimpia.network/discord"
+            title="Discord サーバー"
+            to={URL_DISCORD}
             icon="bi bi-discord">
           メンバー同士で、通話やチャットを楽しもう。<br/>
           緊急メンテナンス時のお知らせとしても利用しています。
@@ -73,7 +74,7 @@ export const IndexSessionPage = () => {
         <Col xs={12} xl={6}>
           <LinkCardExternal
             title="Shrimpia+"
-            to="https://shrimpia.fanbox.cc/"
+            to={URL_SHRIMPIA_PLUS}
             icon="bi bi-patch-plus-fill">
           Shrimpia+に参加しませんか？<br/>
           様々な便利機能を手に入れ、運営を支援しましょう。

@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { LoadingView } from '@/components/common/LoadingView';
 import { OnlyShrimpiaPlus } from '@/components/common/OnlyShrimpiaPlus';
 import { RequestsList } from '@/components/domains/emoji-request/RequestsList';
+import { URL_EMOJI_REQUEST_GUIDELINES } from '@/consts';
 import { filterAtom } from '@/states/emoji-request';
 import { userAtom } from '@/states/user';
 
@@ -27,7 +28,7 @@ const EmojiRequestPage = () => {
       </p>
       <p>
         絵文字を作成・申請する前に、必ずガイドラインをお読みください！<br/>
-        <a href="https://docs.shrimpia.network/a6fe11f1441f4a51912069a218dbc9e9" target="_blank" rel="noopener noreferrer">
+        <a href={URL_EMOJI_REQUEST_GUIDELINES} target="_blank" rel="noopener noreferrer">
           <b>絵文字申請ガイドライン</b>
         </a>
       </p>

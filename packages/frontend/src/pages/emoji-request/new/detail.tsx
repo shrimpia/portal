@@ -11,7 +11,7 @@ import { MfmView } from '@/components/common/MfmView';
 import { EmojiPreview } from '@/components/domains/emoji-request/EmojiPreview';
 import { EmojiRequestFormContainer } from '@/components/domains/emoji-request/EmojiRequestFormContainer';
 import { SubmitButton } from '@/components/domains/emoji-request/SubmitButton';
-import { EmojiRequestFormBase } from '@/components/subpages/emoji-requests/EmojiRequestFormBase';
+import { URL_EMOJI_REQUEST_GUIDELINES } from '@/consts';
 import { detailInputAnimatedFormSchema, detailInputFormSchema, detailInputIncludingTextFormSchema } from '@/form-schemas/emoji-request/detail-input';
 import { imgDataUrlAtom, basicInputFormAtom, animatedInputFormAtom, includingTextInputFormAtom, detailInputFormAtom } from '@/states/emoji-request';
 
@@ -226,7 +226,7 @@ const DetailForm: React.FC = () => {
               />
               <Form.Check.Label htmlFor="agreeToGuideline">
                 この申請が
-                <a href="https://docs.shrimpia.network/guidelines/emoji-request/" target="_blank" rel="noopener noreferrer">
+                <a href={URL_EMOJI_REQUEST_GUIDELINES} target="_blank" rel="noopener noreferrer">
                   絵文字申請ガイドライン
                 </a>
                 に準拠していることを確認しました

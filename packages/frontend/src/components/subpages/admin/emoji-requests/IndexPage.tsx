@@ -2,6 +2,7 @@ import { useAtomValue } from 'jotai';
 import { Alert, Col, Row } from 'react-bootstrap';
 
 import { RequestCard } from '@/components/domains/emoji-request/admin/RequestCard';
+import { URL_EMOJI_REQUEST_GUIDELINES } from '@/consts';
 import { adminPendingEmojiRequestsAtom } from '@/states/emoji-request';
 
 export const IndexPage = () => {
@@ -10,7 +11,7 @@ export const IndexPage = () => {
     <div>
       <header className="mb-5">
         <h1 className="fs-3">絵文字申請の管理</h1>
-        <a href="https://docs.shrimpia.network/a6fe11f1441f4a51912069a218dbc9e9" target="_blank" rel="noopener noreferrer">
+        <a href={URL_EMOJI_REQUEST_GUIDELINES} target="_blank" rel="noopener noreferrer">
           <b>絵文字申請ガイドライン</b>
         </a>
       </header>

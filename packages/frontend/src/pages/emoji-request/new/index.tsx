@@ -10,8 +10,8 @@ import { useNavigate } from 'react-router';
 import type { UploadFormSchema } from '@/form-schemas/emoji-request/upload';
 
 import { EmojiNoteView } from '@/components/common/EmojiNoteView';
+import { EmojiRequestFormContainer } from '@/components/domains/emoji-request/EmojiRequestFormContainer';
 import { SubmitButton } from '@/components/domains/emoji-request/SubmitButton';
-import { EmojiRequestFormBase } from '@/components/subpages/emoji-requests/EmojiRequestFormBase';
 import { uploadFormSchema } from '@/form-schemas/emoji-request/upload';
 import { animatedInputFormAtom, basicInputFormAtom, detailInputFormAtom, fileAtom, imgDataUrlAtom, includingTextInputFormAtom, uploadFormAtom } from '@/states/emoji-request';
 
@@ -95,7 +95,7 @@ const EmojiRequestNewPage = () => {
   }, [file, navigate, setData]);
 
   return (
-    <EmojiRequestFormBase step={0}>
+    <EmojiRequestFormContainer step={0}>
       <Alert variant="info">
         アップロードする前に、<br/><a href="https://docs.shrimpia.network/emoji-guideline" target="_blank" rel="noopener noreferrer">絵文字申請ガイドライン</a>を必ずお読みください！
       </Alert>
@@ -158,7 +158,7 @@ const EmojiRequestNewPage = () => {
           </form>
         </div>
       )}
-    </EmojiRequestFormBase>
+    </EmojiRequestFormContainer>
   );
 };
 
