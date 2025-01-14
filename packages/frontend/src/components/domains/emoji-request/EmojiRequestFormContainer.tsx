@@ -8,6 +8,7 @@ import type { PropsWithChildren } from 'react';
 
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { LoadingView } from '@/components/common/LoadingView';
+import { OnlyShrimpiaPlus } from '@/components/common/OnlyShrimpiaPlus';
 import { Stepper } from '@/components/common/Stepper';
 import { wizardPages } from '@/states/emoji-request';
 import { remainingEmojiRequestLimitAtom, userAtom } from '@/states/user';
@@ -22,7 +23,7 @@ const stepperOuterStyle = css`
   margin: auto;
 `;
 
-export const EmojiRequestFormBase: React.FC<PropsWithChildren<{
+export const EmojiRequestFormContainer: React.FC<PropsWithChildren<{
   step: number;
 }>> = (p) => {
   const navigate = useNavigate();
@@ -31,6 +32,7 @@ export const EmojiRequestFormBase: React.FC<PropsWithChildren<{
   const limit = useAtomValue(remainingEmojiRequestLimitAtom);
   const user = useAtomValue(userAtom);
   const isStaff = user?.canManageCustomEmojis || user?.isEmperor;
+  const isShrimpiaPlus = user && user.shrimpiaPlus !== 'not-member';
 
   const steps = useMemo(() => wizardPages.map(p => p.label), []);
 
@@ -60,36 +62,42 @@ export const EmojiRequestFormBase: React.FC<PropsWithChildren<{
   return (
     <Container className={containerStyle}>
       <h1 className={'fs-3 mb-4'}>絵文字リクエスト</h1>
-      <div className="mb-4">
-        残り申請可能数: {isStaff ? 'スタッフのため無制限': limit}<br/>
-        <small className="text-muted">
-          月ごとのリクエスト可能数は、
-          <a href="https://docs.shrimpia.network/services/shrimpia-plus/" target="_blank" rel="noopener noreferrer">
-            Shrimpia+
-          </a>
-          ページをご確認ください。
-        </small>
-      </div>
-      <Card>
-        <Card.Body>
-          {p.step !== 0 && (
-            <Button variant="link me-3" onClick={goBack}>
-              <i className="bi bi-arrow-left" /> 戻る
-            </Button>
-          )}
+      {!isShrimpiaPlus ? (
+        <OnlyShrimpiaPlus>絵文字リクエスト</OnlyShrimpiaPlus>
+      ) : (
+        <>
+          <div className="mb-4">
+          残り申請可能数: {isStaff ? 'スタッフのため無制限': limit}<br/>
+            <small className="text-muted">
+            月ごとのリクエスト可能数は、
+              <a href="https://docs.shrimpia.network/services/shrimpia-plus/" target="_blank" rel="noopener noreferrer">
+              Shrimpia+
+              </a>
+            ページをご確認ください。
+            </small>
+          </div>
+          <Card>
+            <Card.Body>
+              {p.step !== 0 && (
+                <Button variant="link me-3" onClick={goBack}>
+                  <i className="bi bi-arrow-left" /> 戻る
+                </Button>
+              )}
 
-          <div className={stepperOuterStyle}>
-            <Stepper activeStep={p.step} steps={steps} onChange={teleportTo} />
-          </div>
-          <div className="py-5">
-            <ErrorBoundary>
-              <Suspense fallback={<LoadingView />}>
-                {p.children}
-              </Suspense>
-            </ErrorBoundary>
-          </div>
-        </Card.Body>
-      </Card>
+              <div className={stepperOuterStyle}>
+                <Stepper activeStep={p.step} steps={steps} onChange={teleportTo} />
+              </div>
+              <div className="py-5">
+                <ErrorBoundary>
+                  <Suspense fallback={<LoadingView />}>
+                    {p.children}
+                  </Suspense>
+                </ErrorBoundary>
+              </div>
+            </Card.Body>
+          </Card>
+        </>
+      )}
     </Container>
   );
 };

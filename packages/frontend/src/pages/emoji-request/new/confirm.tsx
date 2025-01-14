@@ -5,7 +5,7 @@ import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 
 import { MfmView } from '@/components/common/MfmView';
-import { EmojiRequestFormBase } from '@/components/subpages/emoji-requests/EmojiRequestFormBase';
+import { EmojiRequestFormContainer } from '@/components/domains/emoji-request/EmojiRequestFormContainer';
 import { useWithSpinner } from '@/hooks/useWithSpinner';
 import { useAPI } from '@/services/api';
 import { animatedInputFormAtom, basicInputFormAtom, detailInputFormAtom, fileAtom, imgDataUrlAtom, includingTextInputFormAtom } from '@/states/emoji-request';
@@ -110,7 +110,7 @@ const ConfirmForm: React.FC = () => {
   const noInput = useMemo(() => <span className="text-muted">(入力なし)</span>, []);
   
   return (!imgData || !basicInput || !detailInput) ? null : (
-    <EmojiRequestFormBase step={3}>
+    <EmojiRequestFormContainer step={3}>
       <p className="text-center mb-5">登録内容が正しいかどうか、今一度ご確認ください。</p>
       <dl className={confirmationListStyle}>
         <dt>アップロードした画像</dt>
@@ -165,7 +165,7 @@ const ConfirmForm: React.FC = () => {
           この内容で申請する
         </Button>
       </div>
-    </EmojiRequestFormBase>
+    </EmojiRequestFormContainer>
   );
 };
 

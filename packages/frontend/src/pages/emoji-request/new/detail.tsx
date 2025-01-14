@@ -9,6 +9,7 @@ import type { DetailInputAnimatedFormSchema, DetailInputFormSchema, DetailInputI
 
 import { MfmView } from '@/components/common/MfmView';
 import { EmojiPreview } from '@/components/domains/emoji-request/EmojiPreview';
+import { EmojiRequestFormContainer } from '@/components/domains/emoji-request/EmojiRequestFormContainer';
 import { SubmitButton } from '@/components/domains/emoji-request/SubmitButton';
 import { EmojiRequestFormBase } from '@/components/subpages/emoji-requests/EmojiRequestFormBase';
 import { detailInputAnimatedFormSchema, detailInputFormSchema, detailInputIncludingTextFormSchema } from '@/form-schemas/emoji-request/detail-input';
@@ -84,7 +85,7 @@ const DetailForm: React.FC = () => {
   }, [basicInput, navigate]);
 
   return !basicInput ? null : (
-    <EmojiRequestFormBase step={2}>
+    <EmojiRequestFormContainer step={2}>
       <Stack gap={3}>
         <div className="d-flex justify-content-center">
           <EmojiPreview src={url ?? ''} />
@@ -242,7 +243,7 @@ const DetailForm: React.FC = () => {
         <SubmitButton type="button" onClick={onClick}>入力項目を確認する</SubmitButton>
 
       </Stack>
-    </EmojiRequestFormBase>
+    </EmojiRequestFormContainer>
   );
 };
 

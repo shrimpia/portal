@@ -9,8 +9,8 @@ import type { BasicInputFormSchema } from '@/form-schemas/emoji-request/basic-in
 
 import { MfmView } from '@/components/common/MfmView';
 import { EmojiPreview } from '@/components/domains/emoji-request/EmojiPreview';
+import { EmojiRequestFormContainer } from '@/components/domains/emoji-request/EmojiRequestFormContainer';
 import { SubmitButton } from '@/components/domains/emoji-request/SubmitButton';
-import { EmojiRequestFormBase } from '@/components/subpages/emoji-requests/EmojiRequestFormBase';
 import { basicInputFormSchema } from '@/form-schemas/emoji-request/basic-input';
 import { useAPI } from '@/services/api';
 import { fileAtom, imgDataUrlAtom, basicInputFormAtom, emojiNameDuplicationCheckStateAtom } from '@/states/emoji-request';
@@ -90,7 +90,7 @@ const BasicForm: React.FC = () => {
   }, [file, navigate]);
 
   return !file ? null : (
-    <EmojiRequestFormBase step={1}>
+    <EmojiRequestFormContainer step={1}>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Stack gap={3}>
           <div className="d-flex justify-content-center">
@@ -144,7 +144,7 @@ const BasicForm: React.FC = () => {
           <SubmitButton disabled={!isValid || emojiNameState !== 'valid'}>次へ進む</SubmitButton>
         </Stack>
       </Form>
-    </EmojiRequestFormBase>
+    </EmojiRequestFormContainer>
   );
 };
 
