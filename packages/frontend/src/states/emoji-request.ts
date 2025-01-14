@@ -9,6 +9,20 @@ import type { UploadFormSchema } from '@/form-schemas/emoji-request/upload';
 import { api } from '@/services/api';
 import { tokenAtom } from '@/states/sessions';
 
+export const wizardPages = [{
+  label: 'アップロード',
+  route: '/emoji-request/new',
+}, {
+  label: '情報を入力',
+  route: '/emoji-request/new/basic',
+}, {
+  label: '詳細情報を入力',
+  route: '/emoji-request/new/detail',
+}, {
+  label: '確認',
+  route: '/emoji-request/new/confirm',
+}];
+
 /** 絵文字リクエストのフィルタのAtom */
 export const filterAtom = atomWithStorage<'mine' | 'all'>('emojiRequest:filter', 'mine');
 

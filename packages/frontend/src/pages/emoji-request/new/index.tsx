@@ -1,23 +1,25 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { css } from '@linaria/core';
-import { useAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { useCallback, useMemo, useState } from 'react';
 import { Alert, Col, Form, Row } from 'react-bootstrap';
 import { ErrorCode, useDropzone } from 'react-dropzone';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
 
 import type { UploadFormSchema } from '@/form-schemas/emoji-request/upload';
 
 import { EmojiNoteView } from '@/components/common/EmojiNoteView';
 import { SubmitButton } from '@/components/domains/emoji-request/SubmitButton';
+import { EmojiRequestFormBase } from '@/components/subpages/emoji-requests/EmojiRequestFormBase';
 import { uploadFormSchema } from '@/form-schemas/emoji-request/upload';
-import { fileAtom, imgDataUrlAtom, uploadFormAtom } from '@/states/emoji-request';
+import { animatedInputFormAtom, basicInputFormAtom, detailInputFormAtom, fileAtom, imgDataUrlAtom, includingTextInputFormAtom, uploadFormAtom } from '@/states/emoji-request';
+
 
 const uploadAreaStyle = css`
   padding: 16px;
   border-radius: 8px;
   border: 2px dashed var(--bs-border-color);
-  background-color: var(--bs-body-bg);
   cursor: pointer;
 
   &[data-active] {
@@ -30,12 +32,18 @@ const uploaderErrorMessageMap: Record<string, string> = {
   [ErrorCode.FileInvalidType]: 'ファイル形式が正しくありません。',
 };
 
-const EmojiRequestWizardUpload: React.FC<{onStep: () => void}> = ({ onStep }) => {
+const EmojiRequestNewPage = () => {
   const [error, setError] = useState<string[]>([]);
-
   const [file, setFile] = useAtom(fileAtom);
   const [imgDataUrl, setImgDataUrl] = useAtom(imgDataUrlAtom);
   const [data, setData] = useAtom(uploadFormAtom);
+
+  const setBasicInput = useSetAtom(basicInputFormAtom);
+  const setDetailInput = useSetAtom(detailInputFormAtom);
+  const setAnimatedInput = useSetAtom(animatedInputFormAtom);
+  const setIncludingTextInput = useSetAtom(includingTextInputFormAtom);
+
+  const navigate = useNavigate();
 
   const fileSizeInKB = useMemo(() => (file ? (file.size / 1024).toPrecision(4) : 0), [file]);
   const isFileSizeValid = useMemo(() => (file && file.size <= 200 * 1024), [file]);
@@ -62,7 +70,16 @@ const EmojiRequestWizardUpload: React.FC<{onStep: () => void}> = ({ onStep }) =>
       const reader = new FileReader();
       reader.onload = () => {
         setImgDataUrl(reader.result as string);
-        reset();
+        setBasicInput(undefined);
+        setDetailInput(undefined);
+        setAnimatedInput(undefined);
+        setIncludingTextInput(undefined);
+        reset({
+          isReadableInDark: false as any,
+          isNotHiddenInDark: false as any,
+          isReadableInLight: false as any,
+          isNotHiddenInLight: false as any,
+        });
       };
       reader.readAsDataURL(file);
     },
@@ -74,23 +91,21 @@ const EmojiRequestWizardUpload: React.FC<{onStep: () => void}> = ({ onStep }) =>
   const onSubmit = useCallback((data: UploadFormSchema) => {
     if (!file) return;
     setData(data);
-    onStep();
-  }, [file, onStep, setData]);
+    navigate('/emoji-request/new/basic');
+  }, [file, navigate, setData]);
 
   return (
-    <div className="">
-      <h1 className="fs-3 mb-3">アップロード</h1>
-
+    <EmojiRequestFormBase step={0}>
       <Alert variant="info">
         アップロードする前に、<br/><a href="https://docs.shrimpia.network/emoji-guideline" target="_blank" rel="noopener noreferrer">絵文字申請ガイドライン</a>を必ずお読みください！
       </Alert>
-
+      
       {error?.length > 0 && error.map(e => (
         <Alert variant="danger" key={'error-' + e}>
           <i className="bi bi-exclamation-triangle-fill" /> {e}
         </Alert>
       ))}
-
+      
       <div className={uploadAreaStyle} data-active={isDragActive ? '' : undefined} {...getRootProps()}>
         <input {...getInputProps()} />
         {file && (
@@ -103,15 +118,15 @@ const EmojiRequestWizardUpload: React.FC<{onStep: () => void}> = ({ onStep }) =>
         )}
         {
           isDragActive ?
-            <span>さあ、それを早く<br/>ここへ落とすんだ……！</span> :
+            <span>そう、その調子！<br/>さあ、その画像をこちらへ…！</span> :
             <span>このエリアに画像をドロップするか、<br/>クリック（あるいはタップ）してください</span>
         }
       </div>
-
+      
       {imgDataUrl && file && (
         <div className="mt-4">
-          <p className="fw-bold text-center mb-4">以下のプレビューを見て、表示に問題がないことを確認してください。</p>
-              
+          <p className="text-center my-5">以下のプレビューを見て、表示に問題がないことを確認してください。</p>
+                    
           <form onSubmit={handleSubmit(onSubmit)}>
             <Row className="">
               <Col lg={6} sm={12} className="mb-2">
@@ -143,8 +158,8 @@ const EmojiRequestWizardUpload: React.FC<{onStep: () => void}> = ({ onStep }) =>
           </form>
         </div>
       )}
-    </div>
+    </EmojiRequestFormBase>
   );
 };
 
-export default EmojiRequestWizardUpload;
+export default EmojiRequestNewPage;

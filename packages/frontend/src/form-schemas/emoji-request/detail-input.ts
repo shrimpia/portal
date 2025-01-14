@@ -3,6 +3,7 @@ import { z } from 'zod';
 export const detailInputFormSchema = z.object({
   authorInfo: z.string().nullable(),
   comment: z.string().max(500).nullable(),
+  agreeToGuideline: z.literal(true),
 }).required();
 export type DetailInputFormSchema = z.infer<typeof detailInputFormSchema>;
 
@@ -12,7 +13,7 @@ export const detailInputAnimatedFormSchema = z.object({
 export type DetailInputAnimatedFormSchema = z.infer<typeof detailInputAnimatedFormSchema>;
   
 export const detailInputIncludingTextFormSchema = z.object({
-  usingFont: z.boolean(),
+  isFreeHanded: z.boolean(),
   fontName: z.string().max(64).nullable(),
   fontSource: z.string().max(64).nullable(),
   yomigana: z.string().max(64).nullable(),

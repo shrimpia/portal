@@ -3,23 +3,26 @@ import { useAtom, useAtomValue } from 'jotai';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { Card, Form, Stack } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
 
 import type { BasicInputFormSchema } from '@/form-schemas/emoji-request/basic-input';
 
 import { MfmView } from '@/components/common/MfmView';
 import { EmojiPreview } from '@/components/domains/emoji-request/EmojiPreview';
 import { SubmitButton } from '@/components/domains/emoji-request/SubmitButton';
+import { EmojiRequestFormBase } from '@/components/subpages/emoji-requests/EmojiRequestFormBase';
 import { basicInputFormSchema } from '@/form-schemas/emoji-request/basic-input';
 import { useAPI } from '@/services/api';
 import { fileAtom, imgDataUrlAtom, basicInputFormAtom, emojiNameDuplicationCheckStateAtom } from '@/states/emoji-request';
 
-const EmojiRequestBasicForm: React.FC<{onStep: () => void}> = ({ onStep }) => {
+const BasicForm: React.FC = () => {
   const url = useAtomValue(imgDataUrlAtom);
   const file = useAtomValue(fileAtom);
   const [data, setData] = useAtom(basicInputFormAtom);
   const [emojiNameState, setEmojiNameState] = useAtom(emojiNameDuplicationCheckStateAtom);
 
   const api = useAPI();
+  const navigate = useNavigate();
 
   const normalizedName = useMemo(() => {
     if (!file) return undefined;
@@ -39,7 +42,7 @@ const EmojiRequestBasicForm: React.FC<{onStep: () => void}> = ({ onStep }) => {
       case 'valid':
         return (
           <Form.Text className="text-success ms-2">
-            <i className="bi bi-check-circle-fill" /> <MfmView>:eeyan:</MfmView>
+            <i className="bi bi-check-circle-fill" /> <MfmView>:iizo:</MfmView>
           </Form.Text>
         );
       case 'invalid':
@@ -72,27 +75,32 @@ const EmojiRequestBasicForm: React.FC<{onStep: () => void}> = ({ onStep }) => {
 
   const onSubmit = useCallback((data: BasicInputFormSchema) => {
     setData(data);
-    onStep();
-  }, [onStep, setData]);
+    navigate('/emoji-request/new/detail');
+  }, [navigate, setData]);
 
   useEffect(() => {
     if (normalizedName) checkEmojiNameDuplicated(normalizedName);
   }, [checkEmojiNameDuplicated, normalizedName]);
 
-  return (
-    <div className="">
-      <h1 className="fs-3 mb-3">情報を入力</h1>
-      <p>
-        アップロードした絵文字について、情報を入力してください。<br/>
-        入力内容が正しくない、あるいは不足している場合は却下の対象となります。
-      </p>
+  // 必要なデータがなければトップに飛ばす
+  useEffect(() => {
+    if (!file) {
+      navigate('/emoji-request/new');
+    }
+  }, [file, navigate]);
 
-      <h2 className="fs-6 mt-4 fw-bold">絵文字プレビュー</h2>
-      <EmojiPreview src={url ?? ''} />
-
+  return !file ? null : (
+    <EmojiRequestFormBase step={1}>
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Stack gap={3}>
-          <Form.Group controlId="name" className="mt-4">
+          <div className="d-flex justify-content-center">
+            <EmojiPreview src={url ?? ''} />
+          </div>
+          <p className="text-center mb-5">
+            アップロードした絵文字について、情報を入力してください。<br/>
+            入力内容が正しくない、あるいは不足している場合は却下の対象となります。
+          </p>
+          <Form.Group controlId="name">
             <Form.Label className="fw-bold">名前</Form.Label>
             <Form.Control
               type="text"
@@ -136,8 +144,8 @@ const EmojiRequestBasicForm: React.FC<{onStep: () => void}> = ({ onStep }) => {
           <SubmitButton disabled={!isValid || emojiNameState !== 'valid'}>次へ進む</SubmitButton>
         </Stack>
       </Form>
-    </div>
+    </EmojiRequestFormBase>
   );
 };
 
-export default EmojiRequestBasicForm;
+export default BasicForm;
