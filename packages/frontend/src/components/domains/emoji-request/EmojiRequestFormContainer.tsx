@@ -1,8 +1,9 @@
 import { css } from '@linaria/core';
 import { useAtomValue } from 'jotai';
 import { Suspense, useCallback, useEffect, useMemo } from 'react';
-import { Button, Card, Container } from 'react-bootstrap';
+import { Alert, Button, Card, Container } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
 
 import type { PropsWithChildren } from 'react';
 
@@ -61,11 +62,15 @@ export const EmojiRequestFormContainer: React.FC<PropsWithChildren<{
 
   return (
     <Container className={containerStyle}>
-      <h1 className={'fs-3 mb-4'}>絵文字リクエスト</h1>
+      <h1 className={'fs-3 mb-4'}>カスタム絵文字の追加申請</h1>
       {!isShrimpiaPlus ? (
-        <OnlyShrimpiaPlus>絵文字リクエスト</OnlyShrimpiaPlus>
+        <OnlyShrimpiaPlus>カスタム絵文字の追加申請</OnlyShrimpiaPlus>
       ) : (
         <>
+          <Alert variant="success">
+            <i className="bi bi-stars" /> 絵文字申請フォームをリニューアルしました！<br/>
+            気に入らなければ、<Link to="/settings">設定</Link>ページから従来のフォームに戻すことができます。
+          </Alert>
           <div className="mb-4">
           残り申請可能数: {isStaff ? 'スタッフのため無制限': limit}<br/>
             <small className="text-muted">

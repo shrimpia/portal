@@ -8,15 +8,16 @@ import { Link } from 'react-router-dom';
 import type { ChangeEvent } from 'react';
 
 import { EmojiPreview } from '@/components/domains/emoji-request/EmojiPreview';
+import { URL_EMOJI_REQUEST_GUIDELINES } from '@/consts';
 import { useWithSpinner } from '@/hooks/useWithSpinner';
 import { useAPI } from '@/services/api';
 import { remainingEmojiRequestLimitAtom, userAtom } from '@/states/user';
 
-import './new.scss';
+import './Legacy.scss';
 
 const namePattern = /^[a-z0-9_]+$/;
 
-const EmojiRequestNewPage = () => {
+const LegacyEmojiRequestFormPage = () => {
   const [file, setFile] = useState<File | null>(null);
   const [imgDataUrl, setImgDataUrl] = useState<string | null>(null);
   const [name, setName] = useState('');
@@ -99,7 +100,11 @@ const EmojiRequestNewPage = () => {
 
   return (
     <Container>
-      <h1 className="fs-3 mb-5">カスタム絵文字のリクエスト</h1>
+      <h1 className="fs-3 mb-5">カスタム絵文字の追加申請</h1>
+      <Alert variant="success">
+        <i className="bi bi-stars" /> 絵文字申請フォームをリニューアルしました！<br/>
+        より整理された新フォームを試すには、<Link to="/settings">設定</Link>から「カスタム絵文字の追加申請フォームを従来版に戻す」をオフにしてください。
+      </Alert>
       <Form>
         <Stack direction="vertical" gap={3}>
           <Alert variant={limit > 0 ? 'info' : 'danger'}>
@@ -227,11 +232,11 @@ const EmojiRequestNewPage = () => {
               <Form.Group controlId="agreeToGuideline">
                 <Alert variant="warning">
                   投稿する絵文字は、必ず
-                  <a href="https://docs.shrimpia.network/a6fe11f1441f4a51912069a218dbc9e9" target="_blank" rel="noreferrer noopener" style={{ color: 'inherit' }}>
-                    絵文字ガイドライン
+                  <a href={URL_EMOJI_REQUEST_GUIDELINES} target="_blank" rel="noreferrer noopener" style={{ color: 'inherit' }}>
+                    絵文字申請ガイドライン
                   </a>
                   を遵守する必要があります！
-                  <Form.Check className="mt-2" type="checkbox" checked={isAgreeToGuideline} label="絵文字ガイドラインに同意する" onChange={e => setAgreeToGuideline(e.target.checked)} />
+                  <Form.Check className="mt-2" type="checkbox" checked={isAgreeToGuideline} label="絵文字申請ガイドライン" onChange={e => setAgreeToGuideline(e.target.checked)} />
                 </Alert>
               </Form.Group>
               <Button size="lg" className="mx-auto mt-5 px-5 fw-bold" disabled={!canSubmit} onClick={post}>この内容で申請する</Button>
@@ -245,4 +250,4 @@ const EmojiRequestNewPage = () => {
   );
 };
 
-export default EmojiRequestNewPage;
+export default LegacyEmojiRequestFormPage;

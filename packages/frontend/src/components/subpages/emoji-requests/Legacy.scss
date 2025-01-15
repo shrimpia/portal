@@ -1,0 +1,12 @@
+.sh-preview-container {
+    padding: 16px;
+    background: var(--bs-gray-100);
+
+    &.dark {
+        background: var(--bs-gray-900);
+    }
+
+    > img {
+        height: 32px;
+    }
+}

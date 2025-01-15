@@ -20,7 +20,7 @@ const EmojiRequestPage = () => {
   return (
     <Container>
       <h1 className="fs-3 mb-4">
-        カスタム絵文字のリクエスト
+        カスタム絵文字の追加申請
       </h1>
       <p>
         シュリンピア帝国で利用できるカスタム絵文字を、あなたも作って申請しましょう！<br/>
@@ -33,7 +33,7 @@ const EmojiRequestPage = () => {
         </a>
       </p>
       {!isShrimpiaPlus && (
-        <OnlyShrimpiaPlus>カスタム絵文字のリクエスト</OnlyShrimpiaPlus>
+        <OnlyShrimpiaPlus>カスタム絵文字の追加申請</OnlyShrimpiaPlus>
       )}
       <Stack className="mb-3" direction="horizontal" gap={3}>
         {user && isShrimpiaPlus ? (
