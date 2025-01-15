@@ -12,7 +12,7 @@ import { filterAtom } from '@/states/emoji-request';
 import { userAtom } from '@/states/user';
 
 const EmojiRequestPage = () => {
-  const user = useAtomValue(userAtom);
+  const [{data: user}] = useAtom(userAtom);
   const [filter, setFilter] = useAtom(filterAtom);
 
   const isShrimpiaPlus = user && user.shrimpiaPlus !== 'not-member';

@@ -1,5 +1,5 @@
 
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { useCallback, useMemo, useState } from 'react';
 import { Alert, Button, Card, Container, Form, Spinner, Stack } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
@@ -29,8 +29,8 @@ const LegacyEmojiRequestFormPage = () => {
   const [isAgreeToGuideline, setAgreeToGuideline] = useState(false);
   const [emojiNameState, setEmojiNameState] = useState<'initial' | 'valid' | 'invalid' | 'loading'>('initial');
 
-  const limit = useAtomValue(remainingEmojiRequestLimitAtom);
-  const user = useAtomValue(userAtom);
+  const [{data: limit}] = useAtom(remainingEmojiRequestLimitAtom);
+  const [{data: user}] = useAtom(userAtom);
 
   const withSpinner = useWithSpinner();
   const api = useAPI();

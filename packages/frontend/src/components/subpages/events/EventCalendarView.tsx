@@ -1,5 +1,5 @@
 import { isWithinInterval } from 'date-fns';
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { useCallback, useMemo, useState } from 'react';
 import { Button, Offcanvas, Stack } from 'react-bootstrap';
 
@@ -26,7 +26,7 @@ export const EventCalendarView: React.FC = () => {
   
   const save = useSaveEvent();
 
-  const events = useAtomValue(allEventsAtom);
+  const [{data: events}] = useAtom(allEventsAtom);
 
   const calendarEvents = useMemo(() => events.map((e) => ({
     id: e.id,

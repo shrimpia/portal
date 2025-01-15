@@ -1,4 +1,4 @@
-import { useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { useCallback } from 'react';
 
 import { useWithSpinner } from './useWithSpinner';
@@ -6,10 +6,10 @@ import { useWithSpinner } from './useWithSpinner';
 import type { EventDraft } from '@/types/event';
 
 import { useAPI } from '@/services/api';
-import { allEventsStatusAtom } from '@/states/events';
+import { allEventsAtom } from '@/states/events';
 
 export const useSaveEvent = () => {
-  const { refetch } = useAtomValue(allEventsStatusAtom);
+  const [{refetch}] = useAtom(allEventsAtom);
   const api = useAPI();
   const withSpinner = useWithSpinner();
 

@@ -1,11 +1,11 @@
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useSetAtom } from 'jotai';
 import { Alert, Button } from 'react-bootstrap';
 
 import { tokenAtom } from '@/states/sessions';
 import { userAtom } from '@/states/user';
 
 export const TokenOutdatedBanner: React.FC = () => {
-  const user = useAtomValue(userAtom);
+  const [{data: user}] = useAtom(userAtom);
   const setToken = useSetAtom(tokenAtom);
 
   const logout = () => {

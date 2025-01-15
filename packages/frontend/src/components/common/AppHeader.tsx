@@ -1,4 +1,4 @@
-import { useAtomValue, useSetAtom } from 'jotai';
+import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import React, { Suspense } from 'react';
 import { Container, Dropdown, Navbar, Spinner, Stack } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
@@ -14,7 +14,7 @@ import { userAtom } from '@/states/user';
 import './AppHeader.scss';
 
 export const UserMenuButton: React.FC = () => {
-  const user = useAtomValue(userAtom);
+  const [{data: user}] = useAtom(userAtom);
   const setToken = useSetAtom(tokenAtom);
   const currentTheme = useAtomValue(currentThemeAtom);
 

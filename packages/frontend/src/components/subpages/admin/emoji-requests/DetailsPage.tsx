@@ -1,4 +1,4 @@
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
@@ -6,7 +6,7 @@ import { RequestCard } from '@/components/domains/emoji-request/admin/RequestCar
 import { adminCurrentEmojiRequestAtom } from '@/states/emoji-request';
 
 export const DetailsPage = () => {
-  const item = useAtomValue(adminCurrentEmojiRequestAtom);
+  const [{data: item}] = useAtom(adminCurrentEmojiRequestAtom);
   return item ? (
     <>
       <Button as={Link as any} to="/admin/emoji-requests" className="mb-3" variant="outline-primary">

@@ -1,5 +1,5 @@
 import { format } from 'date-fns';
-import { useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import React, { useCallback, useState } from 'react';
 import { Button, Card } from 'react-bootstrap';
 
@@ -11,10 +11,10 @@ import { MfmView } from '@/components/common/MfmView';
 import { UserLinkView } from '@/components/common/UserLinkView';
 import { useWithSpinner } from '@/hooks/useWithSpinner';
 import { useAPI } from '@/services/api';
-import { allEventsStatusAtom } from '@/states/events';
 import { userAtom } from '@/states/user';
 
 import './EventCardView.scss';
+import { allEventsAtom } from '@/states/events';
 
 export type EventCardViewProp = {
     event: EventDto;
@@ -23,8 +23,8 @@ export type EventCardViewProp = {
 const getFormat = (isAllDay: boolean) => isAllDay ? 'yyyy/MM/dd' : 'yyyy/MM/dd HH:mm';
 
 export const EventCardView: React.FC<EventCardViewProp> = ({ event }) => {
-  const user = useAtomValue(userAtom);
-  const { refetch } = useAtomValue(allEventsStatusAtom);
+  const [{data: user}] = useAtom(userAtom);
+  const [{refetch}] = useAtom(allEventsAtom);
   const api = useAPI();
   const withSpinner = useWithSpinner();
 

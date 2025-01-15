@@ -1,4 +1,4 @@
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 
 import { emojisAtom } from '@/states/emojis';
@@ -10,7 +10,7 @@ export type CustomEmojiViewProp = {
 };
 
 export const CustomEmojiView = ({ name }: CustomEmojiViewProp) => {
-  const emojis = useAtomValue(emojisAtom);
+  const [{data: emojis}] = useAtom(emojisAtom);
 
   const emoji = useMemo(() => emojis.find(e => e.name === name), [name, emojis]);
 

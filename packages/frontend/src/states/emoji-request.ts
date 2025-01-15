@@ -1,6 +1,6 @@
 import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
-import { atomsWithQuery } from 'jotai-tanstack-query';
+import { atomWithSuspenseQuery } from 'jotai-tanstack-query';
 
 import type { BasicInputFormSchema } from '@/form-schemas/emoji-request/basic-input';
 import type { DetailInputAnimatedFormSchema, DetailInputFormSchema, DetailInputIncludingTextFormSchema } from '@/form-schemas/emoji-request/detail-input';
@@ -56,7 +56,7 @@ export const animatedInputFormAtom = atom<DetailInputAnimatedFormSchema | undefi
 /**
  * 絵文字リクエストの一覧をクエリするAtom
  */
-export const [emojiRequestsAtom, emojiRequestsStatusAtom] = atomsWithQuery((get) => ({
+export const emojiRequestsAtom = atomWithSuspenseQuery((get) => ({
   queryKey: ['emojiRequests', get(filterAtom), get(tokenAtom)],
   queryFn: async ({ queryKey }) => {
     const filter = queryKey[1] as 'mine' | 'all';
@@ -70,7 +70,7 @@ export const [emojiRequestsAtom, emojiRequestsStatusAtom] = atomsWithQuery((get)
 /**
  * 管理者ページにおける未処理の絵文字リクエストの一覧をクエリするAtom
  */
-export const [adminPendingEmojiRequestsAtom, adminPendingEmojiRequestsStatusAtom] = atomsWithQuery((get) => ({
+export const adminPendingEmojiRequestsAtom = atomWithSuspenseQuery((get) => ({
   queryKey: ['adminPendingEmojiRequests', get(tokenAtom)],
   queryFn: async ({ queryKey }) => {
     const token = queryKey[1] as string | null;
@@ -83,7 +83,7 @@ export const [adminPendingEmojiRequestsAtom, adminPendingEmojiRequestsStatusAtom
 /**
  * 管理者ページにおける絵文字リクエストの詳細をクエリするAtom
  */
-export const [adminCurrentEmojiRequestAtom, adminCurrentEmojiRequestStatusAtom] = atomsWithQuery((get) => ({
+export const adminCurrentEmojiRequestAtom = atomWithSuspenseQuery((get) => ({
   queryKey: ['adminCurrentEmojiRequest', get(tokenAtom), get(currentRequestIdAtom)],
   queryFn: async ({ queryKey }) => {
     const token = queryKey[1] as string | null;

@@ -1,5 +1,5 @@
 import { css } from '@linaria/core';
-import { useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import React from 'react';
 
 import { MfmView } from './MfmView';
@@ -112,7 +112,7 @@ const wrapperStyle = css`
 `;
 
 export const EmojiNoteView: React.FC<{emojiUrl: string; theme: 'dark' | 'light'}> = ({ emojiUrl, theme }) => {
-  const user = useAtomValue(userAtom);
+  const [{data: user}] = useAtom(userAtom);
 
   return (
     <article className={wrapperStyle} data-theme={theme}>

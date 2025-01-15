@@ -1,4 +1,4 @@
-import { useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Alert, Button, Form, Modal, Stack } from 'react-bootstrap';
 import DatePicker from 'react-datepicker';
@@ -25,7 +25,7 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
   const [isAllDay, setAllDay] = useState(false);
   const [isOfficial, setOfficial] = useState(false);
   const [description, setDescription] = useState('');
-  const user = useAtomValue(userAtom);
+  const [{data: user}] = useAtom(userAtom);
 
   const isUpdateMode = p.initialEvent != null;
 

@@ -1,4 +1,4 @@
-import { useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import groupBy from 'lodash.groupby';
 import { useMemo, type PropsWithChildren } from 'react';
 import { Container } from 'react-bootstrap';
@@ -12,7 +12,7 @@ import { emojiRequestsAtom } from '@/states/emoji-request';
 export type RequestsListProp = PropsWithChildren;
 
 export const RequestsList: React.FC<RequestsListProp> = ({ children }) => {
-  const requests = useAtomValue(emojiRequestsAtom);
+  const [{data: requests}] = useAtom(emojiRequestsAtom);
 
   const grouped = useMemo(() => groupBy(requests, r => r.createdYear * 100 + r.createdMonth), [requests]);
   const groupKeys = useMemo(() => Object.keys(grouped).sort((a, b) => Number(b) - Number(a)), [grouped]);

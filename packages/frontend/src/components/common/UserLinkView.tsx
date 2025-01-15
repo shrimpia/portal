@@ -1,18 +1,17 @@
 import { Suspense } from 'react';
 import { Placeholder, Stack } from 'react-bootstrap';
-import { useQuery } from 'react-query';
+import { useSuspenseQuery } from '@tanstack/react-query';
 
 import { URL_EMPIRE } from '@/consts';
 import { fetchUser } from '@/services/fetch-user';
 
 const Inner: React.FC<{ username?: string | null, host?: string | null }> = ({ username }) => {
   // TODO: リモートユーザーに対応させる
-  const { data } = useQuery({
+  const { data } = useSuspenseQuery({
     queryKey: [username],
     queryFn: async ({ queryKey }) => {
       return await fetchUser(queryKey[0] as string);
     },
-    suspense: true,
   });
   
   return data && 'error' in data ? (

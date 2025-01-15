@@ -1,16 +1,15 @@
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Button, Card, Form, Stack } from 'react-bootstrap';
 
 import { AdminContainer } from '@/components/domains/admin/AdminContainer';
 import { useAPI } from '@/services/api';
-import { allHintsAtom, allHintsStatusAtom } from '@/states/hints';
+import { allHintsAtom } from '@/states/hints';
 import { userAtom } from '@/states/user';
 
 const HintEditor: React.FC<{id?: string | null}> = ({ id }) => {
-  const allHints = useAtomValue(allHintsAtom);
-  const { refetch } = useAtomValue(allHintsStatusAtom);
-  const user = useAtomValue(userAtom);
+  const [{data: allHints, refetch}] = useAtom(allHintsAtom);
+  const [{data: user}] = useAtom(userAtom);
   const api = useAPI();
 
   const isEmperor = useMemo(() => user?.isEmperor ?? false, [user]);
@@ -98,8 +97,8 @@ const HintEditor: React.FC<{id?: string | null}> = ({ id }) => {
 };
 
 const IndexPage = () => {
-  const user = useAtomValue(userAtom);
-  const hints = useAtomValue(allHintsAtom);
+  const [{data: user}] = useAtom(userAtom);
+  const [{data: hints}] = useAtom(allHintsAtom);
   
   return user ? (
     <AdminContainer mode="staff">

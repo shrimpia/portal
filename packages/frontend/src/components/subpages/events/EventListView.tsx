@@ -1,4 +1,4 @@
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 import Masonry from 'react-masonry-css';
 
@@ -6,7 +6,7 @@ import { EventCardView } from '@/components/domains/events/EventCardView';
 import { allEventsAtom } from '@/states/events';
 
 export const EventListView: React.FC = () => {
-  const allEvents = useAtomValue(allEventsAtom);
+  const [{data: allEvents}] = useAtom(allEventsAtom);
 
   const futureEvents = useMemo(() => {
     // 未来に終わるイベントのみを取得

@@ -1,4 +1,4 @@
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { Stack } from 'react-bootstrap';
 
 import { LinkCard } from '@/components/common/LinkCard';
@@ -6,7 +6,7 @@ import { AdminContainer } from '@/components/domains/admin/AdminContainer';
 import { userAtom } from '@/states/user';
 
 const IndexPage = () => {
-  const user = useAtomValue(userAtom);
+  const [{data: user}] = useAtom(userAtom);
   return user ? (
     <AdminContainer mode="staff">
       <h1 className="fs-3 mb-5">Staff Portal</h1>

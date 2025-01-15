@@ -1,5 +1,5 @@
 import { css } from '@linaria/core';
-import { useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { Suspense, useCallback, useEffect, useMemo } from 'react';
 import { Alert, Button, Card, Container } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router';
@@ -31,8 +31,8 @@ export const EmojiRequestFormContainer: React.FC<PropsWithChildren<{
   const navigate = useNavigate();
   const location = useLocation();
 
-  const limit = useAtomValue(remainingEmojiRequestLimitAtom);
-  const user = useAtomValue(userAtom);
+  const [{data: limit}] = useAtom(remainingEmojiRequestLimitAtom);
+  const [{data: user}] = useAtom(userAtom);
   const isStaff = user?.canManageCustomEmojis || user?.isEmperor;
   const isShrimpiaPlus = user && user.shrimpiaPlus !== 'not-member';
 

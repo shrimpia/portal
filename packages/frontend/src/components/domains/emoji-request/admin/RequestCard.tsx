@@ -1,4 +1,4 @@
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Card, Spinner, Stack, Table } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
@@ -12,7 +12,7 @@ import { EmojiPreview } from '@/components/domains/emoji-request/EmojiPreview';
 import { useWithSpinner } from '@/hooks/useWithSpinner';
 import { useAPI } from '@/services/api';
 import { getImageSize } from '@/services/get-image-size';
-import { adminPendingEmojiRequestsStatusAtom } from '@/states/emoji-request';
+import { adminPendingEmojiRequestsAtom } from '@/states/emoji-request';
 
 
 const parseComment = (comment: string | null) => {
@@ -52,7 +52,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
   const [imageSize, setImageSize] = useState<string | null>(null);
   const [fileSizeInKB, setFileSizeInKB] = useState<string | null>(null);
   
-  const stat = useAtomValue(adminPendingEmojiRequestsStatusAtom);
+  const [{refetch}] = useAtom(adminPendingEmojiRequestsAtom);
   const api = useAPI();
   const navigate = useNavigate();
   const withSpinner = useWithSpinner();
@@ -69,7 +69,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
     withSpinner(async () => {
       try {
         await api.admin.approveEmojiRequest(r.id, tag);
-        await stat.refetch();
+        await refetch();
         if (details) {
           navigate('/admin/emoji-requests');
         }
@@ -89,7 +89,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
     withSpinner(async () => {
       try {
         await api.admin.rejectEmojiRequest(r.id, reason);
-        await stat.refetch();
+        await refetch();
         if (details) {
           navigate('/admin/emoji-requests');
         }

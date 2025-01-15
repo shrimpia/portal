@@ -1,4 +1,4 @@
-import { useAtomValue } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import { Col, Container, Row } from 'react-bootstrap';
 
 import { LinkCard } from '@/components/common/LinkCard';
@@ -9,7 +9,7 @@ import { isStaff } from '@/services/is-staff';
 import { userAtom } from '@/states/user';
 
 export const IndexSessionPage = () => {
-  const user = useAtomValue(userAtom);
+  const [{data: user}] = useAtom(userAtom);
   return user ? (
     <Container>
       <h1 className="fs-3 mb-5">おかえりなさい、<MfmView>{user.name || user.username}</MfmView>さん。</h1>

@@ -1,10 +1,10 @@
 
 import { atomWithStorage } from 'jotai/utils';
-import { atomsWithQuery } from 'jotai-tanstack-query';
+import { atomWithSuspenseQuery } from 'jotai-tanstack-query';
 
 import { api } from '@/services/api';
 
-export const [allEventsAtom, allEventsStatusAtom] = atomsWithQuery(() => ({
+export const allEventsAtom = atomWithSuspenseQuery(() => ({
   queryKey: ['allEvents'],
   queryFn: async () => {
     return await api(null).getAllEvents();

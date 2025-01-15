@@ -1,4 +1,4 @@
-import { atomsWithQuery } from 'jotai-tanstack-query';
+import { atomWithSuspenseQuery } from 'jotai-tanstack-query';
 
 import { api } from '../services/api';
 
@@ -7,7 +7,7 @@ import { tokenAtom } from './sessions';
 
 import type { ShrimpiaPlus } from '../types/shrimpia-plus';
 
-export const [userAtom, userStatusAtom] = atomsWithQuery((get) => ({
+export const userAtom = atomWithSuspenseQuery((get) => ({
   queryKey: ['user', get(tokenAtom), get(shrimpiaPlusEmulationAtom)],
   queryFn: async ({ queryKey }) => {
     const token = queryKey[1] as string | null;
@@ -21,7 +21,7 @@ export const [userAtom, userStatusAtom] = atomsWithQuery((get) => ({
   },
 }));
 
-export const [remainingEmojiRequestLimitAtom, remainingEmojiRequestLimitStatusAtom] = atomsWithQuery((get) => ({
+export const remainingEmojiRequestLimitAtom = atomWithSuspenseQuery((get) => ({
   queryKey: ['remainingEmojiRequestLimit', get(tokenAtom)],
   queryFn: async ({ queryKey }) => {
     const token = queryKey[1] as string | null;

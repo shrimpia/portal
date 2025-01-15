@@ -1,4 +1,4 @@
-import { useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { Alert, Col, Row } from 'react-bootstrap';
 
 import { RequestCard } from '@/components/domains/emoji-request/admin/RequestCard';
@@ -6,7 +6,7 @@ import { URL_EMOJI_REQUEST_GUIDELINES } from '@/consts';
 import { adminPendingEmojiRequestsAtom } from '@/states/emoji-request';
 
 export const IndexPage = () => {
-  const pendingList = useAtomValue(adminPendingEmojiRequestsAtom);
+  const [{data: pendingList}] = useAtom(adminPendingEmojiRequestsAtom);
   return (
     <div>
       <header className="mb-5">
