@@ -11,6 +11,7 @@ import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { LoadingView } from '@/components/common/LoadingView';
 import { OnlyShrimpiaPlus } from '@/components/common/OnlyShrimpiaPlus';
 import { Stepper } from '@/components/common/Stepper';
+import { UserLinkView } from '@/components/common/UserLinkView';
 import { wizardPages } from '@/states/emoji-request';
 import { remainingEmojiRequestLimitAtom, userAtom } from '@/states/user';
 
@@ -68,8 +69,9 @@ export const EmojiRequestFormContainer: React.FC<PropsWithChildren<{
       ) : (
         <>
           <Alert variant="success">
-            <i className="bi bi-stars" /> 絵文字申請フォームをリニューアルしました！<br/>
-            気に入らなければ、<Link to="/settings">設定</Link>ページから従来のフォームに戻すことができます。
+            <i className="bi bi-stars" /> リニューアルしました！<br/>
+            移行期間中のため、<Link to="/settings">設定</Link>ページから従来のフォームに戻すことができます。<br/>
+            不具合や改善要望などは、<UserLinkView username="Lutica" />までお知らせください。
           </Alert>
           <div className="mb-4">
           残り申請可能数: {isStaff ? 'スタッフのため無制限': limit}<br/>
