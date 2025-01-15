@@ -21,11 +21,11 @@ const Inner: React.FC<{ username?: string | null, host?: string | null }> = ({ u
       <div className="text-start">不明</div>
     </Stack>
   ) : data ? (
-    <Stack as="a" href={`${URL_EMPIRE}/@${data.username}`} target="_blank" rel="noopener noreferrer" className="d-inline-flex" direction="horizontal" gap={2}>
+    <Stack as="a" href={`${URL_EMPIRE}/@${data.username}`} target="_blank" rel="noopener noreferrer" className="d-inline-flex align-bottom" direction="horizontal" gap={2}>
       <img src={data.avatarUrl} alt={data.username} width="24" height="24" className="rounded-circle" />
-      <div className="text-start fw-bold">
+      <span className="text-start fw-bold">
         {data.username}
-      </div>
+      </span>
     </Stack>
   ) : null;
 };
