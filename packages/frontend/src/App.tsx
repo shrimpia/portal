@@ -27,7 +27,7 @@ function App() {
               {useRoutes(routes)}
               <footer className="text-center text-muted" style={{ marginTop: 128, fontFamily: 'serif' }}>
                 <p>
-            (C)2023-2024 シュリンピア帝国<br/>
+            (C)2023-2025 シュリンピア帝国<br/>
             政府は、国民および帝国政府による特別な許諾を得た者のみに対し、本システムの利用を許諾する。<br/>
             本システムの利用により生じたいかなる損害に対しても、政府は責任を負わない。
                 </p>
