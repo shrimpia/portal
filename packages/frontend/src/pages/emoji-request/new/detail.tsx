@@ -35,7 +35,7 @@ const DetailForm: React.FC = () => {
     resolver: zodResolver(detailInputIncludingTextFormSchema),
     mode: 'onChange',
     defaultValues: includingTextInputForm ?? {
-      isFreeHanded: false,
+      fontUsage: 'font',
       fontName: '',
       fontSource: '',
       yomigana: '',
@@ -63,8 +63,6 @@ const DetailForm: React.FC = () => {
     let isIncludingTextFormValid = true;
     if (basicInput.hasText) isIncludingTextFormValid = await includingTextForm.trigger(undefined, { shouldFocus: true });
 
-    console.log(isDetailFormValid, isAnimatedFormValid, isIncludingTextFormValid);
-
     if (!isDetailFormValid || !isAnimatedFormValid || !isIncludingTextFormValid) return;
 
     setAnimatedInputForm(animatedForm.getValues());
@@ -75,7 +73,7 @@ const DetailForm: React.FC = () => {
   
   const comment = detailForm.watch('comment');
 
-  const isFreeHanded = includingTextForm.watch('isFreeHanded');
+  const fontUsage = includingTextForm.watch('fontUsage');
 
   // 必要なデータがなければトップに飛ばす
   useEffect(() => {
@@ -109,17 +107,15 @@ const DetailForm: React.FC = () => {
                 <Form.Check.Label htmlFor="doesNotContainExcessiveFlashing">
                   過度な点滅や激しい動きを含まない
                 </Form.Check.Label>
+                <Form.Control.Feedback type="invalid">
+                    この項目をオンにしないと登録できません！
+                </Form.Control.Feedback>
                 <Form.Text muted className="d-block">
                   <a href="https://ja.wikipedia.org/wiki/%E5%85%89%E9%81%8E%E6%95%8F%E6%80%A7%E7%99%BA%E4%BD%9C" target="_blank" rel="noopener noreferrer">
                     光過敏性発作
                   </a>
                   を誘発しないよう考慮されているか、今一度ご確認ください。
                 </Form.Text>
-                {animatedForm.formState.errors.doesNotContainExcessiveFlashing && (
-                  <Form.Text className="text-danger d-block fw-bold">
-                    この項目をオンにしないと登録できません！
-                  </Form.Text>
-                )}
               </Form.Check>
             </Card.Body>
           </Card>
@@ -130,25 +126,28 @@ const DetailForm: React.FC = () => {
             <Card.Body>
               <Card.Title>テキストについての確認事項</Card.Title>
               <Stack gap={3}>
-                <Form.Check>
-                  <Form.Check.Input id="isFreeHanded" type="checkbox" {...includingTextForm.register('isFreeHanded')} />
-                  <Form.Check.Label htmlFor="isFreeHanded">
-                    文字フォントを使用していない<br/>
-                    <Form.Text muted>手書き文字のみを含む場合は<b>オン</b>にしてください。</Form.Text>
-                  </Form.Check.Label>
-                </Form.Check>
-                {!isFreeHanded && (
+                <Form.Group>
+                  <Form.Check type="radio" id="handwritten" label="手書きのみ" value="handwritten"  {...includingTextForm.register('fontUsage', { required: true })} />
+                  <Form.Check type="radio" id="font" label="フォントを使用している" value="font"  {...includingTextForm.register('fontUsage', { required: true })} />
+                </Form.Group>
+                {fontUsage === 'font' && (
                   <>
                     <Form.Group controlId="fontName">
                       <Form.Label className="fw-bold">使用しているフォントの名前</Form.Label>
-                      <Form.Control type="text" placeholder="例: M PLUS Rounded 1c" {...includingTextForm.register('fontName')} />
+                      <Form.Control type="text" placeholder="例: M PLUS Rounded 1c" isInvalid={includingTextForm.formState.errors.fontName != null} {...includingTextForm.register('fontName')} />
+                      <Form.Control.Feedback type="invalid">
+                        必ず入力してください！
+                      </Form.Control.Feedback>
                       <Form.Text muted className="ms-2 d-block">
                         MEGAMOJI等のツールを用いて作成した場合は、ツール内における呼称でOKです。<br/>
                       </Form.Text>
                     </Form.Group>
                     <Form.Group controlId="fontSource">
                       <Form.Label className="fw-bold">フォントの入手元</Form.Label>
-                      <Form.Control type="text" placeholder="例: Adobe Fonts"  {...includingTextForm.register('fontSource')} />
+                      <Form.Control type="text" placeholder="例: Adobe Fonts" isInvalid={includingTextForm.formState.errors.fontSource != null} {...includingTextForm.register('fontSource')} />
+                      <Form.Control.Feedback type="invalid">
+                        必ず入力してください！
+                      </Form.Control.Feedback>
                       <Form.Text muted className="ms-2 d-block">
                         サブスクリプションの場合は、サービス名を記入してください。<br/>
                         ツール内蔵のフォントを用いた場合は、ツールのURLを入力してください。<br/>
@@ -188,7 +187,7 @@ const DetailForm: React.FC = () => {
                   （一部のMFMが利用できます。）
                 </Form.Text>
                 
-                <Nav variant="underline" activeKey={commentFormType} onSelect={key => setCommentFormType(key as 'editor' | 'preview')}>
+                <Nav variant="underline" activeKey={commentFormType} className="ms-2" onSelect={key => setCommentFormType(key as 'editor' | 'preview')}>
                   <Nav.Item>
                     <Nav.Link eventKey="editor">エディタ</Nav.Link>
                   </Nav.Item>
@@ -232,9 +231,9 @@ const DetailForm: React.FC = () => {
                 に準拠していることを確認しました
               </Form.Check.Label>
               {detailForm.formState.errors.agreeToGuideline && (
-                <Form.Text className="text-danger d-block fw-bold">
+                <Form.Control.Feedback type="invalid">
                   この項目をオンにしないと登録できません！
-                </Form.Text>
+                </Form.Control.Feedback>
               )}
             </Form.Check>
           </Card.Body>

@@ -58,7 +58,7 @@ const ConfirmForm: React.FC = () => {
     if (!basicInput || !detailInput) return '';
     
     if (basicInput?.hasText && includingTextInput) {
-      if (includingTextInput.isFreeHanded) {
+      if (includingTextInput.fontUsage === 'handwritten') {
         append('フォント名: 手書き');
       } else {
         append(`フォント名: ${includingTextInput.fontName}`);
@@ -98,7 +98,7 @@ const ConfirmForm: React.FC = () => {
       }
       console.error(e);
     }
-  }, []);
+  }, [api, basicInput, composedComment, file, navigate, setAnimatedInput, setBasicInput, setDetailInput, setFile, setImgData, setIncludingTextInput, withSpinner]);
   
   // 必要なデータがなければトップに飛ばす
   useEffect(() => {
@@ -131,9 +131,11 @@ const ConfirmForm: React.FC = () => {
         )}
         {basicInput.hasText && includingTextInput && (
           <>
-            <dt>手書き</dt>
-            <dd>{includingTextInput.isFreeHanded ? 'はい' : 'いいえ'}</dd>
-            {!includingTextInput.isFreeHanded && (
+            <dt>テキストの表現</dt>
+            <dd>
+              {includingTextInput.fontUsage === 'handwritten' ? '手書き' : 'フォントを使用'}
+            </dd>
+            {includingTextInput.fontUsage === 'font' && (
               <>
                 <dt>フォントの名前</dt>
                 <dd>{includingTextInput.fontName || noInput}</dd>
