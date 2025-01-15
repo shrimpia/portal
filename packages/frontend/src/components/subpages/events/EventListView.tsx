@@ -1,4 +1,4 @@
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { useMemo } from 'react';
 import Masonry from 'react-masonry-css';
 

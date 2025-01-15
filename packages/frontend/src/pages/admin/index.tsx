@@ -1,4 +1,4 @@
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { Stack } from 'react-bootstrap';
 
 import { LinkCard } from '@/components/common/LinkCard';

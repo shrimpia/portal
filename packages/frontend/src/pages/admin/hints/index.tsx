@@ -1,4 +1,4 @@
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Button, Card, Form, Stack } from 'react-bootstrap';
 

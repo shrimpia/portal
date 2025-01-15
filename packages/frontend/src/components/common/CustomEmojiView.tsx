@@ -1,4 +1,4 @@
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { useMemo } from 'react';
 
 import { emojisAtom } from '@/states/emojis';

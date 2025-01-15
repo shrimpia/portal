@@ -101,7 +101,7 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
                 showTimeSelect={!isAllDay}
                 selected={startDate}
                 className="form-control"
-                onChange={(date: Date) => setStartDate(date)} />
+                onChange={(date: Date | null) => setStartDate(date ?? new Date())} />
               <div className="mx-2">～</div>
               <DatePicker
                 dateFormat={isAllDay ? 'y年M月d日' : 'y年M月d日 HH:mm'}
@@ -109,7 +109,7 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
                 showTimeSelect={!isAllDay}
                 selected={endDate}
                 className="form-control"
-                onChange={(date: Date) => setEndDate(date)} />
+                onChange={(date: Date | null) => setEndDate(date ?? new Date())} />
             </div>
             <Form.Check checked={isAllDay} type="checkbox" id="isAllDay" label="終日予定にする" className="mt-2 ms-2" onChange={e => setAllDay(e.target.checked)} />
           </div>

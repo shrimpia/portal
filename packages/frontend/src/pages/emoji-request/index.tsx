@@ -1,5 +1,5 @@
 
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { Suspense } from 'react';
 import { Button, Container, Nav, Stack } from 'react-bootstrap';
 import { Link } from 'react-router-dom';

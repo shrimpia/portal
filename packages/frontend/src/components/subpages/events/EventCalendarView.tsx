@@ -1,5 +1,5 @@
 import { isWithinInterval } from 'date-fns';
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { useCallback, useMemo, useState } from 'react';
 import { Button, Offcanvas, Stack } from 'react-bootstrap';
 

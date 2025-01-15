@@ -1,4 +1,4 @@
-import { useAtom, useAtomValue } from 'jotai';
+import { useAtom } from 'jotai';
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
