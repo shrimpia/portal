@@ -127,14 +127,14 @@ const BasicForm: React.FC = () => {
                 <Form.Check>
                   <Form.Check.Input id="hasText" type="checkbox" {...register('hasText')} />
                   <Form.Check.Label htmlFor="hasText">
-                    <b>画像内にテキストが含まれる</b><br/>
+                    <b>テキストを含む</b><br/>
                   </Form.Check.Label>
                 </Form.Check>
       
                 <Form.Check>
                   <Form.Check.Input id="hasAnimation" type="checkbox" {...register('hasAnimation')} />
                   <Form.Check.Label htmlFor="hasAnimation">
-                    <b>アニメーション画像である</b>
+                    <b>アニメーションする</b>
                   </Form.Check.Label>
                 </Form.Check>
               </Stack>
