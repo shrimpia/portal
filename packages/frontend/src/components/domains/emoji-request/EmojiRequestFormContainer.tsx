@@ -74,7 +74,11 @@ export const EmojiRequestFormContainer: React.FC<PropsWithChildren<{
             不具合や改善要望などは、<UserLinkView username="Lutica" />までお知らせください。
           </Alert>
           <div className="mb-4">
-          残り申請可能数: {isStaff ? 'スタッフのため無制限': limit}<br/>
+            残り申請可能数: {
+              isStaff
+                ? <b>スタッフのため無制限</b>
+                : <b className={limit === 0 ? 'text-danger' : ''}>{limit}</b>
+            }<br/>
             <small className="text-muted">
             月ごとのリクエスト可能数は、
               <a href="https://docs.shrimpia.network/services/shrimpia-plus/" target="_blank" rel="noopener noreferrer">
@@ -83,26 +87,28 @@ export const EmojiRequestFormContainer: React.FC<PropsWithChildren<{
             ページをご確認ください。
             </small>
           </div>
-          <Card>
-            <Card.Body>
-              {p.step !== 0 && (
-                <Button variant="link me-3" onClick={goBack}>
-                  <i className="bi bi-arrow-left" /> 戻る
-                </Button>
-              )}
+          {limit > 0 && (
+            <Card>
+              <Card.Body>
+                {p.step !== 0 && (
+                  <Button variant="link me-3" onClick={goBack}>
+                    <i className="bi bi-arrow-left" /> 戻る
+                  </Button>
+                )}
 
-              <div className={stepperOuterStyle}>
-                <Stepper activeStep={p.step} steps={steps} onChange={teleportTo} />
-              </div>
-              <div className="py-5">
-                <ErrorBoundary>
-                  <Suspense fallback={<LoadingView />}>
-                    {p.children}
-                  </Suspense>
-                </ErrorBoundary>
-              </div>
-            </Card.Body>
-          </Card>
+                <div className={stepperOuterStyle}>
+                  <Stepper activeStep={p.step} steps={steps} onChange={teleportTo} />
+                </div>
+                <div className="py-5">
+                  <ErrorBoundary>
+                    <Suspense fallback={<LoadingView />}>
+                      {p.children}
+                    </Suspense>
+                  </ErrorBoundary>
+                </div>
+              </Card.Body>
+            </Card>
+          )}
         </>
       )}
     </Container>
