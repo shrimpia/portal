@@ -6,7 +6,7 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "types": [
-      "./is-animated.d.ts",
+      "./src/is-animated.d.ts",
     ],
 
     /* Bundler mode */
