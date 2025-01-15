@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@frsource/is-animated": "^1.0.3",
     "@hookform/resolvers": "^3.7.0",
     "@linaria/core": "^6.2.0",
     "@linaria/react": "^6.2.1",
