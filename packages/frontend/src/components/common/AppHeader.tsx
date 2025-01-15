@@ -3,6 +3,8 @@ import React, { Suspense } from 'react';
 import { Container, Dropdown, Navbar, Spinner, Stack } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
+import { TokenOutdatedBanner } from './TokenOutdatedBanner';
+
 import shrimpia from '@/assets/shrimpia.svg';
 import { SHRIMPIA_PLUS_PLAN_NAMES, URL_SHRIMPIA_PLUS } from '@/consts';
 import { currentThemeAtom } from '@/states/screen';
@@ -62,19 +64,24 @@ export const UserMenuButton: React.FC = () => {
 export const AppHeader: React.FC = () => {
   const token = useAtomValue(tokenAtom);
   return token ? (
-    <Navbar expand="lg" sticky="top" className="mb-5 sh-app-header shadow">
-      <Container>
-        <Navbar.Brand as={Link} to="/">
-          <img src={shrimpia} alt="Shrimpia" width="32" height="32" className="d-inline-block align-top" />
-          <span className="sh-portal-text">
-            {' '}
+    <>
+      <Navbar expand="lg" sticky="top" className="sh-app-header shadow">
+        <Container>
+          <Navbar.Brand as={Link} to="/">
+            <img src={shrimpia} alt="Shrimpia" width="32" height="32" className="d-inline-block align-top" />
+            <span className="sh-portal-text">
+              {' '}
             Portal {import.meta.env.DEV ? '(開発版)' : ''}
-          </span>
-        </Navbar.Brand>
-        <Suspense fallback={<Spinner variant="primary" size="sm" />}>
-          <UserMenuButton />
-        </Suspense>
-      </Container>
-    </Navbar>
+            </span>
+          </Navbar.Brand>
+          <Suspense fallback={<Spinner variant="primary" size="sm" />}>
+            <UserMenuButton />
+          </Suspense>
+        </Container>
+      </Navbar>
+      <Suspense fallback={null}>
+        <TokenOutdatedBanner />
+      </Suspense>
+    </>
   ) : null;
 };

@@ -1,9 +1,10 @@
 import { useAtom } from 'jotai';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { Button, Container, Form, Stack } from 'react-bootstrap';
 
 import { MfmView } from '@/components/common/MfmView';
 import { Stepper } from '@/components/common/Stepper';
+import { useAPI } from '@/services/api';
 import { shrimpiaPlusEmulationAtom } from '@/states/debug';
 
 const DebugPage = () => {
@@ -14,7 +15,13 @@ const DebugPage = () => {
 
   const [mfm, setMfm] = useState('**Hello, world!**');
 
+  const api = useAPI();
+
   const steps = useMemo(() => Array.from({ length: maxStep }, (_, i) => `Step ${i + 1}`), [maxStep]);
+
+  const testNotification = useCallback(() => {
+    api.testNotification();
+  }, [api]);
 
   return (
     <Container>
@@ -50,6 +57,11 @@ const DebugPage = () => {
           <div className="mt-3">
             <MfmView>{mfm}</MfmView>
           </div>
+        </Form.Group>
+
+        <Form.Group controlId="other">
+          <Form.Label>その他</Form.Label>
+          <Button onClick={testNotification}>通知テスト</Button>
         </Form.Group>
       </Stack>
     </Container>

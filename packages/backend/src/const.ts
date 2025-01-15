@@ -3,6 +3,7 @@ export const PORTAL_FRONTEND_URL = 'https://portal.shrimpia.network';
 export const URL_BUCKET = 'https://images.portal.shrimpia.network';
 export const MENTION_MINISTRY_OF_EMOJIS = '<@&1085176103150305320>';
 export const CATEGORY_NAME_NEW = '00: NEW!';
+export const CURRENT_MISSKEY_TOKEN_VERSION = 2;
 
 /**
  * Shrimpia+のロール名。

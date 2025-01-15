@@ -79,6 +79,7 @@ export const useAPI = () => {
 };
 
 export const api = (token: string | null) => ({
+  testNotification: () => $get<void>('test-notification', {}, token),
   miauth: (sessionId: string) => $post<{ token: string }>('miauth', { sessionId }, token),
   getEmojis: () => $get<Emoji[]>('emojis', {}, token),
   getSession: () => $get<Session>('session', {}, token),

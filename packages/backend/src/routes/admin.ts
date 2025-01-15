@@ -8,6 +8,8 @@ import { hintStaffGuard } from '../middlewares/hint-staff-guard';
 import { moeStaffGuard } from '../middlewares/moe-staff-guard';
 import { send400, send404, sendError } from '../services/error';
 import { callMisskeyApi } from '../services/misskey-api';
+import { sendEmojiRequestApprovedNotification } from '../services/send-emoji-request-approved-notification';
+import { sendEmojiRequestRejectedNotification } from '../services/send-emoji-request-rejected-notification';
 
 import type { PortalEnv } from '../env';
 
@@ -81,6 +83,8 @@ app.post('/emoji-requests/:id/approve', moeStaffGuard, async (c) => {
 
     await EmojiRequests.updateStatus(c.env.DB, id, 'approved');
     await EmojiRequests.updateProcessor(c.env.DB, id, c.portalUser!.id);
+    // 申請者にMisskey通知を送信
+    await sendEmojiRequestApprovedNotification(id, c.env.DB);
   } catch (e) {
     return sendError(c, 500, e instanceof Error ? e.message : `${e}`);
   }
@@ -105,6 +109,8 @@ app.post('/emoji-requests/:id/reject', moeStaffGuard, async (c) => {
     await EmojiRequests.updateStatus(c.env.DB, id, 'rejected');
     await EmojiRequests.updateStaffComment(c.env.DB, id, reason);
     await EmojiRequests.updateProcessor(c.env.DB, id, c.portalUser!.id);
+    // 申請者にMisskey通知を送信
+    await sendEmojiRequestRejectedNotification(id, c.env.DB);
   } catch (e) {
     return sendError(c, 500, e instanceof Error ? e.message : `${e}`);
   }

@@ -22,7 +22,8 @@ CREATE TABLE user (
 	misskey_token TEXT NOT NULL,
 
 	-- Misskey API トークンのバージョン。
-	--  1: 現行バージョン
+	--  2: 現行。通知操作APIに対応
+	--  1: 初代
 	misskey_token_version INT NOT NULL DEFAULT 1
 );
 

@@ -26,7 +26,7 @@ export const IndexWelcomePage = () => {
     const query = new URLSearchParams();
     query.set('name', 'シュリンピアポータル');
     query.set('callback', `${location.origin}/miauth`);
-    query.set('permission', 'read:account');
+    query.set('permission', 'read:account,write:notifications');
     const url = `${URL_EMPIRE}/miauth/${sessionId}?${query.toString()}`;
     location.href = url;
   }, []);

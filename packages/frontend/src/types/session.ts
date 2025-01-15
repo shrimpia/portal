@@ -7,4 +7,5 @@ export interface Session {
     isEmperor: boolean;
     avatarUrl: string;
     canManageCustomEmojis: boolean;
+    misskeyTokenVersion: number;
 }

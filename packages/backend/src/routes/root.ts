@@ -11,6 +11,7 @@ import { toEmbed404, toEmbedMisskeyNote } from '../services/EmbedMisskeyNote';
 import { send400, sendFailedToGetMisskeyUserError } from '../services/error';
 import { getShrimpiaPlus } from '../services/get-shrimpia-plus';
 import { getMisskeyUser } from '../services/misskey-api';
+import { sendMisskeyNotification } from '../services/send-misskey-notification';
 import { upsertUser } from '../services/upsert-user';
 
 import type { PortalEnv } from '../env';
@@ -36,6 +37,7 @@ app.get('/session', sessionGuard, async c => {
     username: misskeyUser.username,
     name: misskeyUser.name || misskeyUser.username,
     shrimpiaPlus: getShrimpiaPlus(misskeyUser),
+    misskeyTokenVersion: c.portalUser!.misskey_token_version,
     isEmperor: misskeyUser.isAdmin,
     avatarUrl: misskeyUser.avatarUrl,
     canManageCustomEmojis: misskeyUser.policies.canManageCustomEmojis,
@@ -72,6 +74,18 @@ app.post('/miauth', async c => {
   return c.json({
     token: portal_token,
   });
+});
+
+app.get('test-notification', sessionGuard, async c => {
+  if (!c.env.DEV) {
+    return c.status(403);
+  }
+  const token = c.portalUser?.misskey_token;
+  if (!token) {
+    return c.status(400);
+  }
+  await sendMisskeyNotification(token, 'テスト通知', 'これはテスト通知です。');
+  return c.json({});
 });
 
 /**

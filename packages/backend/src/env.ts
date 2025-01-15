@@ -7,5 +7,6 @@ export interface PortalEnv extends Env {
 		KV: KVNamespace;
 		DISCORD_WEBHOOK_URL: string;
 		MISSKEY_ADMIN_TOKEN: string;
+		DEV: boolean;
 	};
 }
