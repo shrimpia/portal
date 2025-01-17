@@ -58,11 +58,6 @@ const DebugPage = () => {
             <MfmView>{mfm}</MfmView>
           </div>
         </Form.Group>
-
-        <Form.Group controlId="other">
-          <Form.Label>その他</Form.Label>
-          <Button onClick={testNotification}>通知テスト</Button>
-        </Form.Group>
       </Stack>
     </Container>
   );

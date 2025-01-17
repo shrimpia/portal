@@ -9,6 +9,7 @@ import type { Session } from '@/types/session';
 
 import { URL_PORTAL_BACKEND } from '@/consts';
 import { tokenAtom } from '@/states/sessions';
+import { MinecraftAccount } from '@/types/minecraft-account';
 
 export const $get = async <T>(endpoint: string, args: Record<string, unknown>, token: string | null): Promise<T> => {
   const url = new URL(`${URL_PORTAL_BACKEND}/${endpoint}`);
@@ -98,6 +99,8 @@ export const api = (token: string | null) => ({
   createEvent: (data: EventDraft) => $post<void>('events', data, token),
   deleteEvent: (id: string) => $delete<void>(`events/${id}`, {}, token),
   editEvent: (id: string, data: EventDraft) => $post<void>(`events/${id}`, data, token),
+  authMinecraft: (authCode: string) => $post<void>('minecraft/auth', { authCode }, token),
+  getMinecraftAccounts: () => $get<MinecraftAccount[]>('minecraft/accounts', {}, token),
   admin: {
     getAllPendingEmojiRequests: () => $get<EmojiRequest[]>('admin/emoji-requests', {}, token),
     getEmojiRequest: (id: string) => $get<EmojiRequest>(`admin/emoji-requests/${id}`, {}, token),

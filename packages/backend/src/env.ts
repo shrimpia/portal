@@ -8,5 +8,6 @@ export interface PortalEnv extends Env {
 		DISCORD_WEBHOOK_URL: string;
 		MISSKEY_ADMIN_TOKEN: string;
 		DEV: boolean;
+		MINECRAFT_SERVER_ACCEPTING_KEY: string;
 	};
 }
