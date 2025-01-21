@@ -8,7 +8,7 @@
     "dev": "wrangler dev",
     "migrate:create": "wrangler d1 migrations create portal",
     "migrate:run:local": "wrangler d1 migrations apply portal --local",
-    "migrate:run:production": "wrangler d1 migrations apply portal",
+    "migrate:run:production": "wrangler d1 migrations apply portal --remote",
     "lint": "eslint . --ext ts --report-unused-disable-directives --max-warnings 0 --fix"
   },
   "devDependencies": {

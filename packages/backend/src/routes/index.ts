@@ -14,11 +14,25 @@ import { getMisskeyUser } from '../services/misskey-api';
 import { sendMisskeyNotification } from '../services/send-misskey-notification';
 import { upsertUser } from '../services/upsert-user';
 
+import admin from './admin';
+import emojiRequests from './emoji-requests';
+import emojis from './emojis';
+import events from './events';
+import hints from './hints';
+import minecraft from './minecraft';
+
 import type { PortalEnv } from '../env';
 import type { MisskeyNote } from '../types/note';
 import type { MisskeyUser } from '../types/user';
 
 const app = new Hono<PortalEnv>();
+
+app.route('/emojis', emojis);
+app.route('/events', events);
+app.route('/admin', admin);
+app.route('/emoji-requests', emojiRequests);
+app.route('/hints', hints);
+app.route('/minecraft', minecraft);
 
 app.get('/', c => {
   return c.text('Portal API');
