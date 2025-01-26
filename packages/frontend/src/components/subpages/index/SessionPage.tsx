@@ -30,15 +30,14 @@ export const IndexSessionPage = () => {
             帝国で開催されるイベントを確認しましょう。<br/>入国から1ヶ月経つと、イベントを追加できます！
           </LinkCard>
         </Col>
-        {/* TODO: サービス開始時に以下のコメントアウトは解除する */}
-        {/* <Col xs={12} xl={6}>
+        <Col xs={12} xl={6}>
           <LinkCard
             title="Shrimpia Minecraft"
             to="/minecraft-auth"
             icon="bi bi-box">
             帝国のMinecraftサーバーに入るための認証はこちらから。
           </LinkCard>
-        </Col> */}
+        </Col>
         {isStaff(user) && (
           <Col xs={12} xl={6}>
             <LinkCard

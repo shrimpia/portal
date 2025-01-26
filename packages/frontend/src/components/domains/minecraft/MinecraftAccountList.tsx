@@ -11,7 +11,7 @@ export const MinecraftAccountList: React.FC = () => {
             {accounts.length === 0 && <div>まだ、1つもMinecraftアカウントが紐づいていません。</div>}
             {accounts.map((account) => (
                 <div key={account.player_id} className="d-flex gap-2 align-items-center rounded bg-body p-2">
-                    <img src={`https://crafatar.com/renders/head/${account.player_id}?overlay&scale=2`} alt={account.player_name} title={account.player_name} className="rounded-2" />
+                    <img src={`https://api.creepernation.net/head/${account.player_id}`} alt={account.player_name} title={account.player_name} height="32" className="rounded-2" />
                     <b>{account.player_name}</b>
                 </div>
             ))}

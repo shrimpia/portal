@@ -40,7 +40,7 @@ app.post('/internal-auth', async c => {
 
   // アカウントが存在しない、あるいは紐づけがない場合は認証コードを発行し、DBに記録する
   if (!account || account.user_id === null) {
-    const authCode = (await generateMinecraftAuthCode(c.env.DB)).toString().padStart(6, '0');
+    const authCode = await generateMinecraftAuthCode(c.env.DB);
     await MinecraftAccounts.upsertMinecraftAccount(c.env.DB, playerId, playerName, authCode);
 
     return c.json({
