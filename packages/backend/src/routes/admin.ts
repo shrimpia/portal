@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { z } from 'zod';
 
 import { CATEGORY_NAME_NEW } from '../const';
-import { Bucket, EmojiRequests, Hints, Users } from '../db/repository';
+import { Bucket, EmojiRequests, Hints, SurveyAnswers, Users } from '../db/repository';
 import { emperorGuard } from '../middlewares/emperor-guard';
 import { hintStaffGuard } from '../middlewares/hint-staff-guard';
 import { moeStaffGuard } from '../middlewares/moe-staff-guard';
@@ -203,6 +203,11 @@ app.post('/hints/:id/publication', emperorGuard, async (c) => {
   return c.json({
     ok: true,
   });
+});
+
+app.get('/survey/answers', emperorGuard, async (c) => {
+  const answers = await SurveyAnswers.readAll(c.env.DB);
+  return c.json(answers);
 });
 
 export default app;

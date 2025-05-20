@@ -10,6 +10,7 @@ import type { Session } from '@/types/session';
 import { URL_PORTAL_BACKEND } from '@/consts';
 import { tokenAtom } from '@/states/sessions';
 import { MinecraftAccount } from '@/types/minecraft-account';
+import { SurveyAnswer, SurveyQuestionType } from '@/types/survey-answer';
 
 export const $get = async <T>(endpoint: string, args: Record<string, unknown>, token: string | null): Promise<T> => {
   const url = new URL(`${URL_PORTAL_BACKEND}/${endpoint}`);
@@ -101,6 +102,7 @@ export const api = (token: string | null) => ({
   editEvent: (id: string, data: EventDraft) => $post<void>(`events/${id}`, data, token),
   authMinecraft: (authCode: string) => $post<void>('minecraft/auth', { authCode }, token),
   getMinecraftAccounts: () => $get<MinecraftAccount[]>('minecraft/accounts', {}, token),
+  createSurveyAnswer: (questionType: SurveyQuestionType, body: string, withUserId: boolean) => $post<void>('survey/answers', { questionType, body, withUserId }, token),
   admin: {
     getAllPendingEmojiRequests: () => $get<EmojiRequest[]>('admin/emoji-requests', {}, token),
     getEmojiRequest: (id: string) => $get<EmojiRequest>(`admin/emoji-requests/${id}`, {}, token),
@@ -111,5 +113,6 @@ export const api = (token: string | null) => ({
     deleteHint: (id: string) => $delete<void>(`admin/hints/${id}`, {}, token),
     editHint: (id: string, content: string, url: string | null) => $post<void>(`admin/hints/${id}`, { content, url }, token),
     changeHintVisibility: (id: string, isPublished: boolean) => $post<void>(`admin/hints/${id}/publication`, { isPublished }, token),
+    getAllSurveyAnswers: () => $get<SurveyAnswer[]>('admin/survey/answers', {}, token),
   },
 });

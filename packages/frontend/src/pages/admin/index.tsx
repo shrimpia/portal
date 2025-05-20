@@ -23,6 +23,12 @@ const IndexPage = () => {
           icon="bi bi-lightbulb">
           ヒントの追加・編集・削除を行います。<br/>
         </LinkCard>
+        <LinkCard
+          title="アンケート回答の管理"
+          to="/admin/surveys"
+          icon="bi bi-check-square">
+          アンケートの回答を一覧表示します。<br/>
+        </LinkCard>
       </Stack>
     </AdminContainer>
   ) : null;

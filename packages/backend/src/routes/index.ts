@@ -20,6 +20,7 @@ import emojis from './emojis';
 import events from './events';
 import hints from './hints';
 import minecraft from './minecraft';
+import survey from './survey';
 
 import type { PortalEnv } from '../env';
 import type { MisskeyNote } from '../types/note';
@@ -29,6 +30,7 @@ const app = new Hono<PortalEnv>();
 
 app.route('/emojis', emojis);
 app.route('/events', events);
+app.route('/survey', survey);
 app.route('/admin', admin);
 app.route('/emoji-requests', emojiRequests);
 app.route('/hints', hints);
