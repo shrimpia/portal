@@ -21,7 +21,7 @@ export class SurveyAnswerRepository {
 	 * @returns アンケート回答の配列
 	 */
   async readAll(db: D1Database) {
-    return db.prepare('SELECT survey_answers.*, user.username FROM survey_answers LEFT JOIN user ON survey_answers.user_id = user.id')
+    return db.prepare('SELECT survey_answers.*, user.username FROM survey_answers LEFT JOIN user ON survey_answers.user_id = user.id ORDER BY created_at DESC')
       .all<SurveyAnswerWithUser>()
       .then(e => e.results);
   }
