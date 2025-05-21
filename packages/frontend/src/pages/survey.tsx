@@ -1,8 +1,10 @@
+import { useLoginGuard } from "@/hooks/useLoginGuard";
 import { useAPI } from "@/services/api";
 import { useMemo, useState } from "react";
 import { Button, Card, Container, Form } from "react-bootstrap";
 
 const SurveyPage = () => {
+  useLoginGuard();
   const [evaluation, setEvaluation] = useState<number>(0);
   const [comment, setComment] = useState("");
   const [withUserId, setWithUserId] = useState(false);

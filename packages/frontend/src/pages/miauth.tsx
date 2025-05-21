@@ -12,6 +12,7 @@ const MiAuthPage = () => {
   const setToken = useSetAtom(tokenAtom);
   
   const session = q.get('session');
+  const callbackTo = q.get('callback_to');
 
   const [error, setError] = useState('');
 
@@ -27,7 +28,8 @@ const MiAuthPage = () => {
 
       api.miauth(session).then(({ token }) => {
         setToken(token);
-        location.href = '/';
+        alert(callbackTo);
+        location.href = callbackTo ?? '/';
       }).catch((err) => {
         setError(err.message);
       });

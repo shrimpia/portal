@@ -14,6 +14,7 @@ import { Stepper } from '@/components/common/Stepper';
 import { UserLinkView } from '@/components/common/UserLinkView';
 import { wizardPages } from '@/states/emoji-request';
 import { remainingEmojiRequestLimitAtom, userAtom } from '@/states/user';
+import { useLoginGuard } from '@/hooks/useLoginGuard';
 
 const containerStyle = css`
   max-width: 960px;
@@ -28,6 +29,8 @@ const stepperOuterStyle = css`
 export const EmojiRequestFormContainer: React.FC<PropsWithChildren<{
   step: number;
 }>> = (p) => {
+  useLoginGuard();
+
   const navigate = useNavigate();
   const location = useLocation();
 

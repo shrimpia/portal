@@ -1,12 +1,14 @@
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { LoadingView } from "@/components/common/LoadingView";
 import { MinecraftAccountList } from "@/components/domains/minecraft/MinecraftAccountList";
+import { useLoginGuard } from "@/hooks/useLoginGuard";
 import { useWithSpinner } from "@/hooks/useWithSpinner";
 import { useAPI } from "@/services/api";
 import { Suspense, useCallback, useState } from "react";
 import { Button, Card, Container, Form, InputGroup, Stack } from "react-bootstrap";
 
 const MinecraftPage = () => {
+  useLoginGuard();
   const [code, setCode] = useState('');
 
   const api = useAPI();

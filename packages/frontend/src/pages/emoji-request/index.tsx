@@ -10,8 +10,10 @@ import { RequestsList } from '@/components/domains/emoji-request/RequestsList';
 import { URL_EMOJI_REQUEST_GUIDELINES } from '@/consts';
 import { filterAtom } from '@/states/emoji-request';
 import { userAtom } from '@/states/user';
+import { useLoginGuard } from '@/hooks/useLoginGuard';
 
 const EmojiRequestPage = () => {
+  useLoginGuard();
   const [{data: user}] = useAtom(userAtom);
   const [filter, setFilter] = useAtom(filterAtom);
 

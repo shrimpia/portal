@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Button, Stack } from 'react-bootstrap';
-import { v4 as uuid } from 'uuid';
-
-import './WelcomePage.scss';
 
 import shrimpia from '@/assets/shrimpia.svg';
-import { URL_EMPIRE } from '@/consts';
+import { navigateToMiAuth } from '@/services/navigate-to-miauth';
 
+import './WelcomePage.scss';
 
 export const IndexWelcomePage = () => {
   const [error, setError] = useState('');
@@ -22,13 +20,7 @@ export const IndexWelcomePage = () => {
   }, []);
 
   const login = useCallback(() => {
-    const sessionId = uuid();
-    const query = new URLSearchParams();
-    query.set('name', 'シュリンピアポータル');
-    query.set('callback', `${location.origin}/miauth`);
-    query.set('permission', 'read:account,write:notifications');
-    const url = `${URL_EMPIRE}/miauth/${sessionId}?${query.toString()}`;
-    location.href = url;
+    navigateToMiAuth();
   }, []);
 
   return (

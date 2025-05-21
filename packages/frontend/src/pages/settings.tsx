@@ -5,8 +5,10 @@ import { Card, Container, Form, Stack } from 'react-bootstrap';
 import type { ThemeType } from '@/types/theme-type';
 
 import { currentThemeAtom, optoutNewEmojiRequestFormAtom, themeAtom } from '@/states/screen';
+import { useLoginGuard } from '@/hooks/useLoginGuard';
 
 const SettingsPage = () => {
+  useLoginGuard();
   const [theme, setTheme] = useAtom(themeAtom);
   const currentTheme = useAtomValue(currentThemeAtom);
   const [optoutNewEmojiRequestForm, setOptoutNewEmojiRequestForm] = useAtom(optoutNewEmojiRequestFormAtom);

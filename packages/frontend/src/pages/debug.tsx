@@ -5,8 +5,10 @@ import { Button, Container, Form, Stack } from 'react-bootstrap';
 import { MfmView } from '@/components/common/MfmView';
 import { Stepper } from '@/components/common/Stepper';
 import { shrimpiaPlusEmulationAtom } from '@/states/debug';
+import { useLoginGuard } from '@/hooks/useLoginGuard';
 
 const DebugPage = () => {
+  useLoginGuard();
   const [shrimpiaPlusEmulation, setShrimpiaPlusEmulation] = useAtom(shrimpiaPlusEmulationAtom);
 
   const [step, setStep] = useState(0);

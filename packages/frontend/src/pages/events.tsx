@@ -10,8 +10,10 @@ import { EventCalendarView } from '@/components/subpages/events/EventCalendarVie
 import { EventListView } from '@/components/subpages/events/EventListView';
 import { useSaveEvent } from '@/hooks/useRegisterEvent';
 import { viewModeAtom } from '@/states/events';
+import { useLoginGuard } from '@/hooks/useLoginGuard';
 
 const EventsPage: React.FC = () => {
+  useLoginGuard();
   const [show, setShow] = useState(false);
   const [viewMode, setViewMode] = useAtom(viewModeAtom);
 
