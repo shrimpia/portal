@@ -10,6 +10,7 @@ export const TokenOutdatedBanner: React.FC = () => {
 
   const logout = () => {
     setToken(null);
+    location.href = '/';
   };
 
   return !user || user.misskeyTokenVersion >= 2 ? null : (

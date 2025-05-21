@@ -20,6 +20,7 @@ export const UserMenuButton: React.FC = () => {
 
   const logout = () => {
     setToken(null);
+    location.href = '/';
   };
 
   return user && (

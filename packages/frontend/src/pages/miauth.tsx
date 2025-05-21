@@ -28,7 +28,6 @@ const MiAuthPage = () => {
 
       api.miauth(session).then(({ token }) => {
         setToken(token);
-        alert(callbackTo);
         location.href = callbackTo ?? '/';
       }).catch((err) => {
         setError(err.message);
