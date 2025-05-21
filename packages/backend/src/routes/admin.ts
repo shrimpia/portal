@@ -210,4 +210,16 @@ app.get('/survey/answers', emperorGuard, async (c) => {
   return c.json(answers);
 });
 
+app.post('/survey/answers/:id/staff_comment', emperorGuard, async (c) => {
+  const { comment } = await c.req.json();
+  if (typeof comment !== 'string') {
+    return send400(c, 'invalid param: comment');
+  }
+  const id = c.req.param('id');
+  await SurveyAnswers.updateStaffComment(c.env.DB, id, comment);
+  return c.json({
+    ok: true,
+  });
+});
+
 export default app;

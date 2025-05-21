@@ -15,6 +15,12 @@ export class SurveyAnswerRepository {
     return id;
   }
 
+  async updateStaffComment(db: D1Database, id: string, comment: string) {
+    await db.prepare('UPDATE survey_answers SET staff_comment = ? WHERE id = ?')
+      .bind(comment, id)
+      .run();
+  }
+
   /**
 	 * アンケート回答を全て取得します。
 	 * @param db DBへの参照

@@ -1,9 +1,11 @@
 import { LoadingView } from "@/components/common/LoadingView";
 import { MfmView } from "@/components/common/MfmView";
 import { AdminContainer } from "@/components/domains/admin/AdminContainer";
+import { useAPI } from "@/services/api";
 import { surveyAnswersAtom } from "@/states/surveys";
+import { SurveyAnswer } from "@/types/survey-answer";
 import { useAtomValue } from "jotai";
-import { Suspense, useMemo, useState } from "react";
+import React, { Suspense, useEffect, useMemo, useState } from "react";
 import { Button, Card, Form, Stack } from "react-bootstrap";
 
 const convertBody = (body: string) => {
@@ -16,6 +18,49 @@ const convertBody = (body: string) => {
   lines[0] = `評価: ${evaluationStars}`;
   return lines.join("\n");
 };
+
+const SurveyCard: React.FC<{survey: SurveyAnswer}> = ({ survey }) => {
+  const [comment, setComment] = useState("");
+  const api = useAPI();
+
+  useEffect(() => {
+    setComment(survey.staff_comment);
+  }, [survey.staff_comment]);
+
+  const updateStaffComment = async () => {
+    if (comment === survey.staff_comment) return;
+    await api.admin.addStaffCommentToSurveyAnswer(survey.id, comment);
+  };
+
+  return (
+    <Card key={survey.id}>
+      <Card.Body>
+        <MfmView>
+          {convertBody(survey.body)}
+        </MfmView>
+        <div className="text-muted mt-2">
+          <div>回答者: {survey.username ? `@${survey.username}` : <span className="text-muted">匿名希望</span>}</div>
+          <div>回答日時: {new Date(survey.created_at).toLocaleString()}</div>
+        </div>
+        <div className="mt-2">
+          <textarea
+            className="form-control"
+            rows={3}
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            placeholder="スタッフのコメント"
+            maxLength={3000}
+          />
+          <Button
+            variant="primary"
+            className="mt-2"
+            onClick={updateStaffComment}
+            >更新</Button>
+        </div>
+      </Card.Body>
+    </Card>
+  );
+}
 
 const SurveyList = () => {
   const { data, refetch } = useAtomValue(surveyAnswersAtom);
@@ -56,17 +101,10 @@ const SurveyList = () => {
             </Form.Select>
         </Stack>
         {filteredData.map((survey) => (
-          <Card key={survey.id}>
-            <Card.Body>
-              <MfmView>
-                {convertBody(survey.body)}
-              </MfmView>
-              <div className="text-muted mt-2">
-                <div>回答者: {survey.username ? `@${survey.username}` : <span className="text-muted">匿名希望</span>}</div>
-                <div>回答日時: {new Date(survey.created_at).toLocaleString()}</div>
-              </div>
-            </Card.Body>
-          </Card>
+          <SurveyCard
+            key={survey.id}
+            survey={survey}
+            />
         ))}
         {filteredData.length === 0 && (
           <div className="text-muted text-center">

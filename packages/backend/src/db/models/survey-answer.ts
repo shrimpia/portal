@@ -4,6 +4,7 @@ export interface SurveyAnswer {
 	question_type: string;
 	body: string;
 	user_id?: string | null;
+	staff_comment: string;
 }
 
 export interface SurveyAnswerWithUser extends SurveyAnswer {

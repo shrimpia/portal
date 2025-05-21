@@ -7,4 +7,5 @@ export interface SurveyAnswer {
 	body: string;
 	user_id?: string | null;
     username?: string | null;
+	staff_comment: string;
 }

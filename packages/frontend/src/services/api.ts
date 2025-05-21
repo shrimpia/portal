@@ -114,5 +114,6 @@ export const api = (token: string | null) => ({
     editHint: (id: string, content: string, url: string | null) => $post<void>(`admin/hints/${id}`, { content, url }, token),
     changeHintVisibility: (id: string, isPublished: boolean) => $post<void>(`admin/hints/${id}/publication`, { isPublished }, token),
     getAllSurveyAnswers: () => $get<SurveyAnswer[]>('admin/survey/answers', {}, token),
+    addStaffCommentToSurveyAnswer: (id: string, comment: string) => $post<void>(`admin/survey/answers/${id}/staff_comment`, { comment }, token),
   },
 });
