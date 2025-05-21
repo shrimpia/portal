@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { z } from 'zod';
 
 import { SurveyAnswers } from '../db/repository';
+import { sessionGuard } from '../middlewares/session-guard';
 import { send400 } from '../services/error';
 
 import type { PortalEnv } from '../env';
@@ -15,7 +16,7 @@ const postAnswerBodySchema = z.object({
   withUserId: z.boolean(),
 });
 
-app.post('/answers', async (c) => {
+app.post('/answers', sessionGuard, async (c) => {
   const validation = await postAnswerBodySchema.safeParseAsync(await c.req.json());
   if (!validation.success) {
     return send400(c, validation.error.message);
