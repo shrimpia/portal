@@ -6,6 +6,17 @@ import { useAtomValue } from "jotai";
 import { Suspense, useMemo, useState } from "react";
 import { Button, Card, Form, Stack } from "react-bootstrap";
 
+const convertBody = (body: string) => {
+  // 評価: \d+ で始まる行を、星評価に変換する（例: 3 -> ★★★☆☆）
+  const lines = body.split("\n");
+  const evaluationLine = lines[0];
+  const evaluationMatch = evaluationLine.match(/評価:\s*(\d+)/);
+  const evaluation = evaluationMatch ? parseInt(evaluationMatch[1]) : 0;
+  const evaluationStars = "★".repeat(evaluation) + "☆".repeat(5 - evaluation);
+  lines[0] = `評価: ${evaluationStars}`;
+  return lines.join("\n");
+};
+
 const SurveyList = () => {
   const { data, refetch } = useAtomValue(surveyAnswersAtom);
   const [questionType, setQuestionType] = useState("");
@@ -20,8 +31,7 @@ const SurveyList = () => {
     if (questionType === "") return data;
     
     return data.filter((survey) => survey.question_type === questionType);
-  }
-  , [data, questionType]);
+  }, [data, questionType]);
 
   return (
     <>
@@ -49,7 +59,7 @@ const SurveyList = () => {
           <Card key={survey.id}>
             <Card.Body>
               <MfmView>
-                {survey.body}
+                {convertBody(survey.body)}
               </MfmView>
               <div className="text-muted mt-2">
                 <div>回答者: {survey.username ? `@${survey.username}` : <span className="text-muted">匿名希望</span>}</div>
