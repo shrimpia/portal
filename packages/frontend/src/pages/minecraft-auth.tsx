@@ -39,7 +39,7 @@ const MinecraftPage = () => {
   return (
     <Container>
       <h1 className="fs-3 mb-3">Shrimpia Minecraft</h1>
-      <p>シュリンピア帝国公式マインクラフトサーバーで遊ぼう。</p>
+      <p>シュリンピア公式マインクラフトサーバーで遊ぼう。</p>
 
       <Stack gap={3}>
         <Card>

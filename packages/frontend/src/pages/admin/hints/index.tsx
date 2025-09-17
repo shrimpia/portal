@@ -73,7 +73,7 @@ const HintEditor: React.FC<{id?: string | null}> = ({ id }) => {
                 <Form.Check.Input id="isDecoMoji" type="checkbox" disabled={!isEmperor} checked={hint?.is_published} onChange={() => setVisibility(!(hint?.is_published))} />
                 <Form.Check.Label htmlFor="isDecoMoji">
                   <b>公開にする</b><br/>
-                  <Form.Text muted>帝国皇帝のみが操作できます。</Form.Text>
+                  <Form.Text muted>管理者のみが操作できます。</Form.Text>
                 </Form.Check.Label>
               </Form.Switch>
             </Form.Group>

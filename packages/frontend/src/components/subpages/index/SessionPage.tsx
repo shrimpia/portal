@@ -19,7 +19,7 @@ export const IndexSessionPage = () => {
             title="カスタム絵文字の追加申請"
             to="/emoji-request"
             icon="bi bi-magic">
-              シュリンピア帝国に、新しくカスタム絵文字の追加を申請できます。<br/>申請にはShrimpia+への参加が必要です。
+              シュリンピアに、新しくカスタム絵文字の追加を申請できます。<br/>申請にはShrimpia+への参加が必要です。
           </LinkCard>
         </Col>
         <Col xs={12} xl={6}>
@@ -27,7 +27,7 @@ export const IndexSessionPage = () => {
             title="イベントカレンダー"
             to="/events"
             icon="bi bi-calendar-event">
-            帝国で開催されるイベントを確認しましょう。<br/>入国から1ヶ月経つと、イベントを追加できます！
+            シュリンピアで開催されるイベントを確認しましょう。<br/>入国から1ヶ月経つと、イベントを追加できます！
           </LinkCard>
         </Col>
         <Col xs={12} xl={6}>
@@ -35,7 +35,7 @@ export const IndexSessionPage = () => {
             title="Shrimpia Minecraft"
             to="/minecraft-auth"
             icon="bi bi-box">
-            帝国のMinecraftサーバーに入るための認証はこちらから。
+            シュリンピアのMinecraftサーバーに入るための認証はこちらから。
           </LinkCard>
         </Col>
         {isStaff(user) && (
@@ -44,7 +44,7 @@ export const IndexSessionPage = () => {
               title="Staff Portal"
               to="/admin"
               icon="bi bi-speedometer">
-              帝国の運営関係者向けのポータルです。
+              シュリンピアの運営関係者向けのポータルです。
             </LinkCard>
           </Col>
         )}
@@ -58,7 +58,7 @@ export const IndexSessionPage = () => {
             title="Misskey サーバー"
             to={URL_MISSKEY}
             icon="bi bi-globe">
-            帝国の主軸となるMisskeyサーバー。<br/>
+            シュリンピアでの会話を楽しめるMisskeyサーバー。<br/>
             好きなことを語ろう。
           </LinkCardExternal>
         </Col>
@@ -73,11 +73,11 @@ export const IndexSessionPage = () => {
         </Col>
         <Col xs={12} xl={6}>
           <LinkCardExternal
-            title="帝国ドキュメント"
+            title="ドキュメント"
             to={URL_DOCS}
             icon="bi bi-file-earmark-text">
-            帝国のガイドラインを含む重要な情報や、<br/>
-            シュリンピアの世界観資料があります。
+            シュリンピアのガイドラインを含む重要な情報や、<br/>
+            世界観資料があります。
           </LinkCardExternal>
         </Col>
         <Col xs={12} xl={6}>

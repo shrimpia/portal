@@ -1,23 +1,23 @@
 // Shrimpia Color Set
-$shrimpianDarkForeground: #F4F7F3;
-$shrimpianDarkBackground: #211520;
-$shrimpianDarkPrimary: #B93E43;
-$shrimpianDarkPanel: #392437;
-$shrimpianDarkLink: #b46fde;
+$shrimpianDarkForeground: #c9baba;
+$shrimpianDarkBackground: #0f0f1a;
+$shrimpianDarkPrimary: #F24149;
+$shrimpianDarkPanel: #161625;
+$shrimpianDarkLink: #F24149;
 $shrimpianDarkDimmed: #a59ea3;
 $shrimpianDarkWarning: #ecbd15;
-$shrimpianDarkSuccess: #57b809;
+$shrimpianDarkSuccess: #6f8e4d;
 $shrimpianDarkDanger: #f44336;
 
 $shrimpianLightForeground: #000000;
-$shrimpianLightBackground: #A5CAEF;
-$shrimpianLightPrimary: #B93E43;
-$shrimpianLightPanel: #D0E3F7;
-$shrimpianLightLink: #b46fde;
+$shrimpianLightBackground: #FFE5E4;
+$shrimpianLightPrimary: #F24149;
+$shrimpianLightPanel: #F8EEED;
+$shrimpianLightLink: #F24149;
 $shrimpianLightDimmed: #495a6b;
-$shrimpianLightWarning: #9A8300;
-$shrimpianLightSuccess: #abe300;
-$shrimpianLightDanger: #D93737;
+$shrimpianLightWarning: #ffd154;
+$shrimpianLightSuccess: #21A430;
+$shrimpianLightDanger: #F20A15;
 
 
 // Bootstrap Customize
@@ -57,14 +57,14 @@ html {
     --sh-primary: var(--bs-primary);
 
     body {
-        background-image: url("./assets/bg-light.png");
+        // background-image: url("./assets/bg-light.png");
     }
 
     &[data-bs-theme="dark"] {
         --sh-card-bg: #{$shrimpianDarkPanel};
 
         body {
-            background-image: url("./assets/bg-dark.png");
+            // background-image: url("./assets/bg-dark.png");
         }
     }
 }
@@ -107,4 +107,8 @@ html {
         color: var(--sh-primary);
         font-size: 1.5rem;
     }
+}
+
+.form-select, .form-control, .form-check-input {
+    background-color: var(--sh-card-bg);
 }

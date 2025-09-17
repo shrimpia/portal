@@ -83,7 +83,7 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
               <div className="d-flex gap-2">
                 <i className="bi bi-exclamation-triangle-fill" />
                 <div>
-                  イベントは帝国全体に公開されます。<br/>
+                  イベントはシュリンピア全体に公開されます。<br/>
                   憲法に反する内容のイベントは削除またはアカウント停止の対象となる場合があります。
                 </div>
               </div>
@@ -121,7 +121,7 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
           {user?.isEmperor && (
             <div>
               <Form.Label className="fw-bold">その他の設定</Form.Label>
-              <Form.Check type="checkbox" id="isOfficial" label="公式イベント（皇帝のみ設定可能）" checked={isOfficial} onChange={e => setOfficial(e.target.checked)} />              
+              <Form.Check type="checkbox" id="isOfficial" label="公式イベント（管理者のみ設定可能）" checked={isOfficial} onChange={e => setOfficial(e.target.checked)} />              
             </div>
           )}
         </Stack>

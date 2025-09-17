@@ -31,7 +31,7 @@ export const IndexWelcomePage = () => {
         シュリンピアポータル
       </h1>
       <Button variant="primary" size="lg" onClick={login}>
-        シュリンピア帝国でログイン
+        Misskeyでログイン
       </Button>
     </Stack>
   );
