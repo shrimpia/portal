@@ -65,11 +65,9 @@ const EmojiRequestPage = () => {
           </Nav.Link>
         </Nav.Item>
       </Nav>
-      <Suspense fallback={<LoadingView />}>
-        <RequestsList>
-          まだ絵文字を申請していません。
-        </RequestsList>
-      </Suspense>
+      <RequestsList>
+        まだ絵文字を申請していません。
+      </RequestsList>
     </Container>
   );
 };

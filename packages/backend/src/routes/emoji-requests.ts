@@ -15,12 +15,15 @@ const emojiNamePattern = /^[a-z0-9_]+$/;
 const app = new Hono<PortalEnv>();
 
 /**
- * 絵文字リクエスト一覧を取得する
+ * 絵文字リクエスト一覧を取得する（ページネーション対応）
  */
 app.get('/', sessionGuard, async (c) => {
+  const page = parseInt(c.req.query('page') || '1', 10);
+  const perPage = parseInt(c.req.query('per_page') || '20', 10);
+
   const requests = await (c.req.query('filter') === 'mine'
-    ? EmojiRequests.readAllByUserId(c.env.DB, c.portalUser!.id)
-    : EmojiRequests.readAll(c.env.DB)
+    ? EmojiRequests.readAllByUserIdWithPagination(c.env.DB, c.portalUser!.id, page, perPage)
+    : EmojiRequests.readAllWithPagination(c.env.DB, page, perPage)
   );
 
   return c.json(requests.map(r => EmojiRequests.toDto(r, c)));

@@ -1,6 +1,6 @@
 import { atom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
-import { atomWithSuspenseQuery } from 'jotai-tanstack-query';
+import { atomWithInfiniteQuery, atomWithSuspenseQuery } from 'jotai-tanstack-query';
 
 import type { BasicInputFormSchema } from '@/form-schemas/emoji-request/basic-input';
 import type { DetailInputAnimatedFormSchema, DetailInputFormSchema, DetailInputIncludingTextFormSchema } from '@/form-schemas/emoji-request/detail-input';
@@ -56,15 +56,17 @@ export const animatedInputFormAtom = atom<DetailInputAnimatedFormSchema | undefi
 /**
  * 絵文字リクエストの一覧をクエリするAtom
  */
-export const emojiRequestsAtom = atomWithSuspenseQuery((get) => ({
+export const emojiRequestsAtom = atomWithInfiniteQuery((get) => ({
   queryKey: ['emojiRequests', get(filterAtom), get(tokenAtom)],
-  queryFn: async ({ queryKey }) => {
+  queryFn: async ({ queryKey, pageParam }) => {
     const filter = queryKey[1] as 'mine' | 'all';
     const token = queryKey[2] as string | null;
     if (!token) return [];
-    const emojiRequests = await api(token).getAllEmojiRequests(filter);
+    const emojiRequests = await api(token).getAllEmojiRequests(filter, pageParam as number, 10);
     return emojiRequests;
   },
+  getNextPageParam: (lastPage, _, lastPageParam) => lastPage.length >= 10 ? lastPageParam as number + 1 : undefined,
+  initialPageParam: 1,
 }));
 
 /**

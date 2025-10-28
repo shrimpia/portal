@@ -52,6 +52,35 @@ export class EmojiRequestRepository {
       .then(e => e.results);
   }
 
+  async readAllByUserIdWithPagination(db: D1Database, userId: string, page: number, perPage: number) {
+    const offset = (page - 1) * perPage;
+    return db.prepare(`
+   SELECT e.*, u1.username, u2.username as processer_name FROM emoji_request e
+    LEFT JOIN user u1 on e.user_id = u1.id
+    LEFT JOIN user u2 on e.processer_id = u2.id
+    WHERE e.user_id = ?
+    ORDER BY e.created_at DESC NULLS LAST
+    LIMIT ? OFFSET ?
+  `)
+      .bind(userId, perPage, offset)
+      .all<EmojiRequestWithUserName>()
+      .then(e => e.results);
+  }
+
+  async readAllWithPagination(db: D1Database, page: number, perPage: number) {
+    const offset = (page - 1) * perPage;
+    return db.prepare(`
+   SELECT e.*, u1.username, u2.username as processer_name FROM emoji_request e
+    LEFT JOIN user u1 on e.user_id = u1.id
+    LEFT JOIN user u2 on e.processer_id = u2.id
+    ORDER BY e.created_at DESC NULLS LAST
+    LIMIT ? OFFSET ?
+  `)
+      .bind(perPage, offset)
+      .all<EmojiRequestWithUserName>()
+      .then(e => e.results);
+  }
+
   async readAllByUserIdAndCreatedYearAndCreatedMonth(db: D1Database, userId: string, createdYear: number, createdMonth: number) {
     return db.prepare(`
 			SELECT e.*, u1.username, u2.username as processer_name FROM emoji_request e

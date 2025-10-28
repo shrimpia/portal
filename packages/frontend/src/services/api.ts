@@ -95,7 +95,12 @@ export const api = (token: string | null) => ({
     formData.append('comment', comment);
     return $post<void>('emoji-requests', formData, token);
   },
-  getAllEmojiRequests: (filter: 'mine' | 'all') => $get<EmojiRequest[]>('emoji-requests', { filter }, token),
+  getAllEmojiRequests: (filter: 'mine' | 'all', page?: number, perPage?: number) => {
+    const params: Record<string, unknown> = { filter };
+    if (page !== undefined) params.page = page;
+    if (perPage !== undefined) params.per_page = perPage;
+    return $get<EmojiRequest[]>('emoji-requests', params, token);
+  },
   getRemainingAvatarDecorationRequestLimit: () => $get<{ limit: number }>('avatar-decoration-requests/remaining', {}, token),
   createAvatarDecorationRequest: (image: Blob, name: string, description: string) => {
     const formData = new FormData();
