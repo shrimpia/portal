@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 
 import { AvatarDecorationRequests, Bucket } from '../db/repository';
 import { sessionGuard } from '../middlewares/session-guard';
+import { postNewAvatarDecorationRequestToDiscord } from '../services/discord';
 import { sendError, sendFailedToGetMisskeyUserError } from '../services/error';
 import { getRemainingAvatarDecorationRequestLimit } from '../services/get-remaining-avatar-decoration-request-limit';
 import { getMisskeyUser } from '../services/misskey-api';
@@ -96,6 +97,13 @@ app.post('/', sessionGuard, async (c) => {
     imageKey,
     userId: c.portalUser!.id,
     createdAt,
+  });
+
+  await postNewAvatarDecorationRequestToDiscord(c.env.DISCORD_WEBHOOK_URL, c.portalUser!, {
+    id,
+    name: name.trim(),
+    description: description.trim(),
+    imageUrl: new URL(c.req.url).origin + '/uploaded/' + imageKey,
   });
 
   return c.json({
