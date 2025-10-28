@@ -15,7 +15,7 @@ const AdminAvatarDecorationRequestsDetailsPage = () => {
   }, [id, setCurrentRequestId]);
 
   return (
-    <AdminContainer mode="emoji">
+    <AdminContainer mode="avatarDeco">
       <DetailsPage />
     </AdminContainer>
   );

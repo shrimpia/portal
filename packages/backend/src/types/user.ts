@@ -23,6 +23,7 @@ export interface MisskeyUser {
     inviteLimitCycle: number,
     inviteExpirationTime: number,
     canManageCustomEmojis: boolean,
+		canManageAvatarDecorations: boolean,
     canSearchNotes: boolean,
     canHideAds: boolean,
     driveCapacityMb: number,

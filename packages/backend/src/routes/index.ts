@@ -57,8 +57,10 @@ app.get('/session', sessionGuard, async c => {
     shrimpiaPlus: getShrimpiaPlus(misskeyUser),
     misskeyTokenVersion: c.portalUser!.misskey_token_version,
     isEmperor: misskeyUser.isAdmin,
+    isModerator: misskeyUser.isModerator,
     avatarUrl: misskeyUser.avatarUrl,
     canManageCustomEmojis: misskeyUser.policies.canManageCustomEmojis,
+    canManageAvatarDecorations: misskeyUser.policies.canManageAvatarDecorations,
   });
 });
 

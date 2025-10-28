@@ -3,7 +3,7 @@ import { IndexPage } from '@/components/subpages/admin/avatar-decoration-request
 
 const AdminAvatarDecorationRequestsIndexPage = () => {
   return (
-    <AdminContainer mode="emoji">
+    <AdminContainer mode="avatarDeco">
       <IndexPage />
     </AdminContainer>
   );

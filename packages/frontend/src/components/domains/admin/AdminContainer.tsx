@@ -1,36 +1,58 @@
 
 import { useAtom } from 'jotai';
-import React from 'react';
-import { Container, Image } from 'react-bootstrap';
+import React, { useMemo } from 'react';
+import { Alert, Container } from 'react-bootstrap';
 
 import type { PropsWithChildren } from 'react';
 
-import ebifurai from '@/assets/ebifurai.jpg';
 import { userAtom } from '@/states/user';
 import { useLoginGuard } from '@/hooks/useLoginGuard';
+import { Session } from '@/types/session';
+
+export const roles = {
+  emoji: {
+    name: '絵文字の管理',
+    check: (user: Session) => user.canManageCustomEmojis,
+  },
+  'avatarDeco': {
+    name: 'アバターデコレーションの管理',
+    check: (user: Session) => user.canManageAvatarDecorations,
+  },
+  moderator: {
+    name: 'モデレーター',
+    check: (user: Session) => user.isModerator,
+  },
+  admin: {
+    name: '管理者',
+    check: (user: Session) => user.isEmperor,
+  },
+  staff: {
+    name: 'スタッフ',
+    check: (user: Session) => user.canManageCustomEmojis || user.canManageAvatarDecorations || user.isModerator || user.isEmperor,
+  },
+} as const;
 
 export type AdminContainerProps = PropsWithChildren<{
-  mode: 'emoji' | 'police' | 'emperor' | 'staff';
+  mode: keyof typeof roles;
 }>;
 
 export const AdminContainer: React.FC<AdminContainerProps> = ({ mode, children }) => {
   const [{data: user}] = useAtom(userAtom);
   useLoginGuard();
 
-  const allowedRoleName = mode === 'emperor' ? '皇帝': mode === 'emoji' ? '絵文字庁職員' : mode === 'police' ? '警察' : '職員';
-  const isAllowed = user && (user.isEmperor || (mode === 'emoji' && user.canManageCustomEmojis) || (mode === 'staff' && (user.canManageCustomEmojis /* || user.isModerator */)));
+  const allowedRoleName = useMemo(() => roles[mode].name, [mode]);
+  const isAllowed = user && (user.isEmperor || (roles[mode]?.check(user) ?? false));
 
   return (
     <Container>
       {isAllowed ? children : (
-        <>
-          <h1>{allowedRoleName}以外の立ち入りを禁止します。</h1>
+        <Alert variant="danger">
+          <Alert.Heading>権限がありません。</Alert.Heading>
           <p>
-            本ページは{allowedRoleName}のみがアクセスできます。<br />
-            無理に入ろうとしたらどうなるか、<span className="text-primary"><b>わかってるよね？</b></span>
+            本ページの閲覧には、<strong>{allowedRoleName}</strong> 権限が必要です。<br/>
+            スタッフにも関わらず権限が付与されていない場合は、お手数ですが管理者までお問い合わせください。
           </p>
-          <Image src={ebifurai} alt="エビフライの刑" fluid />
-        </>
+        </Alert>
       )}
     </Container>
   );
