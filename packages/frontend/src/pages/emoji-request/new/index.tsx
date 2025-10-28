@@ -12,11 +12,8 @@ import type { UploadFormSchema } from '@/form-schemas/emoji-request/upload';
 import { EmojiNoteView } from '@/components/common/EmojiNoteView';
 import { EmojiRequestFormContainer } from '@/components/domains/emoji-request/EmojiRequestFormContainer';
 import { SubmitButton } from '@/components/domains/emoji-request/SubmitButton';
-import LegacyEmojiRequestFormPage from '@/components/subpages/emoji-requests/Legacy';
 import { uploadFormSchema } from '@/form-schemas/emoji-request/upload';
 import { animatedInputFormAtom, basicInputFormAtom, detailInputFormAtom, fileAtom, imgDataUrlAtom, includingTextInputFormAtom, uploadFormAtom } from '@/states/emoji-request';
-import { optoutNewEmojiRequestFormAtom } from '@/states/screen';
-
 
 const uploadAreaStyle = css`
   padding: 16px;
@@ -95,8 +92,7 @@ const EmojiRequestNewPage = () => {
     setData(data);
     navigate('/emoji-request/new/basic');
   }, [file, navigate, setData]);
-  const optout = useAtomValue(optoutNewEmojiRequestFormAtom);
-  return optout ? <LegacyEmojiRequestFormPage /> : (
+  return (
     <EmojiRequestFormContainer step={0}>
       <Alert variant="info">
         アップロードする前に、<br/><a href="https://docs.shrimpia.network/emoji-guideline" target="_blank" rel="noopener noreferrer">絵文字申請ガイドライン</a>を必ずお読みください！

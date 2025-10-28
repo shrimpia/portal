@@ -71,11 +71,6 @@ export const EmojiRequestFormContainer: React.FC<PropsWithChildren<{
         <OnlyShrimpiaPlus>カスタム絵文字の追加申請</OnlyShrimpiaPlus>
       ) : (
         <>
-          <Alert variant="success">
-            <i className="bi bi-stars" /> リニューアルしました！<br/>
-            移行期間中のため、<Link to="/settings">設定</Link>ページから従来のフォームに戻すことができます。<br/>
-            不具合や改善要望などは、<UserLinkView username="Lutica" />までお知らせください。
-          </Alert>
           <div className="mb-4">
             残り申請可能数: {
               isStaff
