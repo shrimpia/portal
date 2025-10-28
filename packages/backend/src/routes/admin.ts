@@ -268,11 +268,11 @@ app.post('/avatar-decoration-requests/:id/approve', moeStaffGuard, async (c) => 
   body.append('i', c.env.MISSKEY_ADMIN_TOKEN);
 
   try {
-    const driveFile = await callMisskeyApi<{id: string}>('drive/files/create', body);
+    const driveFile = await callMisskeyApi<{url: string}>('drive/files/create', body);
 
     await callMisskeyApi('admin/avatar-decorations/create', {
       i: c.env.MISSKEY_ADMIN_TOKEN,
-      fileId: driveFile.id,
+      url: driveFile.url,
       name: decorationRequest.name,
       description: decorationRequest.description,
     });
