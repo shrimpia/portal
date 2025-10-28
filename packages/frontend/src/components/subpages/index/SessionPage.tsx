@@ -24,6 +24,14 @@ export const IndexSessionPage = () => {
         </Col>
         <Col xs={12} xl={6}>
           <LinkCard
+            title="アバターデコレーションの申請"
+            to="/avatar-decoration-request"
+            icon="bi bi-stars">
+            アイコンを楽しく着飾る、デコレーションを申請しましょう。<br/>申請にはShrimpia+への参加が必要です。
+          </LinkCard>
+        </Col>
+        <Col xs={12} xl={6}>
+          <LinkCard
             title="イベントカレンダー"
             to="/events"
             icon="bi bi-calendar-event">
