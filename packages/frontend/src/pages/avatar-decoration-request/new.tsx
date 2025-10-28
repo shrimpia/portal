@@ -89,6 +89,7 @@ const AvatarDecorationRequestNewPage = () => {
   const navigate = useNavigate();
   const withSpinner = useWithSpinner();
 
+    const isStaff = user?.canManageAvatarDecorations || user?.isEmperor;
   const isShrimpiaPlus = user && user.shrimpiaPlus !== 'not-member';
   const fileSizeInMB = useMemo(() => (file ? (file.size / 1024 / 1024).toPrecision(3) : 0), [file]);
   const isFileSizeValid = useMemo(() => (file && file.size <= 5 * 1024 * 1024), [file]);
@@ -170,16 +171,13 @@ const AvatarDecorationRequestNewPage = () => {
         <OnlyShrimpiaPlus>アバターデコレーションの申請</OnlyShrimpiaPlus>
       ) : (
         <>
-          <Alert variant="info">
-            アップロードする前に、<br/>
-            <a href="https://docs.shrimpia.network/avatar-decoration-guideline" target="_blank" rel="noopener noreferrer">
-              アバターデコレーション申請ガイドライン
-            </a>
-            を必ずお読みください！
-          </Alert>
 
           <div className="mb-4">
-            残り申請可能数: <b className={limit === 0 ? 'text-danger' : ''}>{limit}</b><br/>
+            残り申請可能数: {
+              isStaff
+                ? <b>スタッフのため無制限</b>
+                : <b className={limit === 0 ? 'text-danger' : ''}>{limit}</b>
+            }<br/>
             <small className="text-muted">
               月ごとのリクエスト可能数は、
               <a href="https://docs.shrimpia.network/services/shrimpia-plus/" target="_blank" rel="noopener noreferrer">
@@ -197,6 +195,14 @@ const AvatarDecorationRequestNewPage = () => {
                     <i className="bi bi-exclamation-triangle-fill" /> {e}
                   </Alert>
                 ))}
+                
+                <Alert variant="info">
+                    アップロードする前に、<br/>
+                    <a href="https://docs.shrimpia.network/avatar-decoration-guideline" target="_blank" rel="noopener noreferrer">
+                    アバターデコレーション申請ガイドライン
+                    </a>
+                    を必ずお読みください！
+                </Alert>
 
                 <div className={uploadAreaStyle} data-active={isDragActive ? '' : undefined} {...getRootProps()}>
                   <input {...getInputProps()} />
