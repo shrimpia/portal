@@ -21,4 +21,10 @@ export const EMOJI_REQUEST_MAX = {
   pro: 5,
 } as const;
 
+export const AVATAR_DECORATION_REQUEST_MAX = {
+  lite: 1,
+  normal: 2,
+  pro: 3,
+} as const;
+
 export const HINT_EDITOR_ROLE_ID = '9wyy6b6oiu';
