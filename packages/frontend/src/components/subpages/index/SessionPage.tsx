@@ -12,7 +12,7 @@ export const IndexSessionPage = () => {
   const [{data: user}] = useAtom(userAtom);
   return user ? (
     <Container>
-      <h1 className="fs-3 mb-5">おかえりなさい、<MfmView>{user.name || user.username}</MfmView>さん。</h1>
+      <h1 className="fs-3 mb-5 text-center">おかえりなさい、<MfmView>{user.name || user.username}</MfmView>さん。</h1>
       <Row className="gx-3 gy-3">
         <Col xs={12} xl={6}>
           <LinkCard
