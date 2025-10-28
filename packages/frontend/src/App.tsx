@@ -1,8 +1,7 @@
 import { Suspense } from 'react';
 import { useRoutes } from 'react-router-dom';
 
-import { ErrorBoundary } from './components/common/ErrorBoundary';
-
+import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { AppHeader } from '@/components/common/AppHeader';
 import { LoadingView } from '@/components/common/LoadingView';
 import { ModalSpinner } from '@/components/common/ModalSpinner';

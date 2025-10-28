@@ -46,3 +46,46 @@ export const postNewEmojiRequestToDiscord = async (webhook: string, user: User, 
     body: JSON.stringify(body),
   });
 };
+
+export const postNewAvatarDecorationRequestToDiscord = async (webhook: string, user: User, data: {
+	id: string,
+	name: string,
+	description: string,
+	imageUrl: string,
+}) => {
+  const misskeyUser = await getMisskeyUser(user.misskey_token);
+  if (!misskeyUser) throw new Error('Failed to get Misskey account.');
+  const body = {
+    'content': `🎨 新しいアバターデコレーション申請「${data.name}」が届いています！\n[**ポータルを開く**](${PORTAL_FRONTEND_URL}/admin/avatar-decoration-requests/${data.id})`,
+    'embeds': [
+      {
+        'color': 15844367,
+        'fields': [
+          {
+            'name': '名前',
+            'value': data.name,
+          },
+          {
+            'name': '説明',
+            'value': data.description || 'なし',
+          },
+        ],
+        'author': {
+          'name': `${misskeyUser.name ?? misskeyUser.username} (@${misskeyUser.username})`,
+          'icon_url': misskeyUser.avatarUrl,
+        },
+        'thumbnail': {
+          'url': data.imageUrl,
+        },
+      },
+    ],
+  };
+
+  await fetch(webhook, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+};

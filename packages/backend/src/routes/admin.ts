@@ -2,12 +2,14 @@ import { Hono } from 'hono';
 import { z } from 'zod';
 
 import { CATEGORY_NAME_NEW } from '../const';
-import { Bucket, EmojiRequests, Hints, SurveyAnswers, Users } from '../db/repository';
+import { AvatarDecorationRequests, Bucket, EmojiRequests, Hints, SurveyAnswers, Users } from '../db/repository';
 import { emperorGuard } from '../middlewares/emperor-guard';
 import { hintStaffGuard } from '../middlewares/hint-staff-guard';
 import { moeStaffGuard } from '../middlewares/moe-staff-guard';
 import { send400, send404, sendError } from '../services/error';
 import { callMisskeyApi } from '../services/misskey-api';
+import { sendAvatarDecorationRequestApprovedNotification } from '../services/send-avatar-decoration-request-approved-notification';
+import { sendAvatarDecorationRequestRejectedNotification } from '../services/send-avatar-decoration-request-rejected-notification';
 import { sendEmojiRequestApprovedNotification } from '../services/send-emoji-request-approved-notification';
 import { sendEmojiRequestRejectedNotification } from '../services/send-emoji-request-rejected-notification';
 
@@ -217,6 +219,101 @@ app.post('/survey/answers/:id/staff_comment', emperorGuard, async (c) => {
   }
   const id = c.req.param('id');
   await SurveyAnswers.updateStaffComment(c.env.DB, id, comment);
+  return c.json({
+    ok: true,
+  });
+});
+
+/**
+ * アバターデコレーションリクエスト一覧を取得する
+ */
+app.get('/avatar-decoration-requests', moeStaffGuard, async (c) => {
+  const req = await AvatarDecorationRequests.readAllPendings(c.env.DB);
+  return c.json(req.map(r => AvatarDecorationRequests.toAdminDto(r, c)));
+});
+
+/**
+ * アバターデコレーションリクエストの詳細を取得する
+ */
+app.get('/avatar-decoration-requests/:id', moeStaffGuard, async (c) => {
+  const param = c.req.param('id');
+  if (!param) {
+    return send400(c, 'id is required');
+  }
+  const r = await AvatarDecorationRequests.readById(c.env.DB, param);
+  if (!r) {
+    return send404(c);
+  }
+
+  return c.json(AvatarDecorationRequests.toAdminDto(r, c));
+});
+
+/**
+ * アバターデコレーションリクエストを承認する
+ */
+app.post('/avatar-decoration-requests/:id/approve', moeStaffGuard, async (c) => {
+  const id = c.req.param('id');
+  const decorationRequest = await AvatarDecorationRequests.readById(c.env.DB, id);
+  if (!decorationRequest) {
+    return send400(c, 'invalid param: id');
+  }
+
+  const file = await Bucket.get(c.env.BUCKET, decorationRequest.image_key);
+  if (!file) {
+    return sendError(c, 500, 'no such file');
+  }
+
+  const body = new FormData();
+  body.append('file', file);
+  body.append('i', c.env.MISSKEY_ADMIN_TOKEN);
+
+  try {
+    const driveFile = await callMisskeyApi<{id: string}>('drive/files/create', body);
+
+    await callMisskeyApi('admin/avatar-decorations/create', {
+      i: c.env.MISSKEY_ADMIN_TOKEN,
+      fileId: driveFile.id,
+      name: decorationRequest.name,
+      description: decorationRequest.description,
+    });
+
+    await AvatarDecorationRequests.updateStatus(c.env.DB, id, 'approved');
+    await AvatarDecorationRequests.updateProcessor(c.env.DB, id, c.portalUser!.id);
+    // 申請者にMisskey通知を送信
+    await sendAvatarDecorationRequestApprovedNotification(id, c.env.DB);
+  } catch (e) {
+    return sendError(c, 500, e instanceof Error ? e.message : `${e}`);
+  }
+
+  return c.json({
+    ok: true,
+  });
+});
+
+/**
+ * アバターデコレーションリクエストを却下する
+ */
+app.post('/avatar-decoration-requests/:id/reject', moeStaffGuard, async (c) => {
+  const { reason } = await c.req.json();
+  if (typeof reason !== 'string') {
+    return send400(c, 'invalid param: reason');
+  }
+  if (reason.length > 500) {
+    return send400(c, 'reason is too long (max 500 characters)');
+  }
+
+  const id = c.req.param('id');
+
+  try {
+    await AvatarDecorationRequests.updateStatus(c.env.DB, id, 'rejected');
+    await AvatarDecorationRequests.updateStaffComment(c.env.DB, id, reason);
+    await AvatarDecorationRequests.updateProcessor(c.env.DB, id, c.portalUser!.id);
+    // 申請者にMisskey通知を送信
+    await sendAvatarDecorationRequestRejectedNotification(id, c.env.DB);
+  } catch (e) {
+    return sendError(c, 500, e instanceof Error ? e.message : `${e}`);
+  }
+
   return c.json({
     ok: true,
   });

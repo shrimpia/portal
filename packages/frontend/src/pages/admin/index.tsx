@@ -18,6 +18,12 @@ const IndexPage = () => {
           処理待ちの絵文字申請を一覧表示します。<br/>
         </LinkCard>
         <LinkCard
+          title="アバターデコ申請の管理"
+          to="/admin/avatar-decoration-requests"
+          icon="bi bi-stars">
+          処理待ちのアバターデコレーション申請を一覧表示します。<br/>
+        </LinkCard>
+        <LinkCard
           title="ヒントの管理"
           to="/admin/hints"
           icon="bi bi-lightbulb">

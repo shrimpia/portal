@@ -15,6 +15,7 @@ import { sendMisskeyNotification } from '../services/send-misskey-notification';
 import { upsertUser } from '../services/upsert-user';
 
 import admin from './admin';
+import avatarDecorationRequests from './avatar-decoration-requests';
 import emojiRequests from './emoji-requests';
 import emojis from './emojis';
 import events from './events';
@@ -33,6 +34,7 @@ app.route('/events', events);
 app.route('/survey', survey);
 app.route('/admin', admin);
 app.route('/emoji-requests', emojiRequests);
+app.route('/avatar-decoration-requests', avatarDecorationRequests);
 app.route('/hints', hints);
 app.route('/minecraft', minecraft);
 
@@ -55,8 +57,10 @@ app.get('/session', sessionGuard, async c => {
     shrimpiaPlus: getShrimpiaPlus(misskeyUser),
     misskeyTokenVersion: c.portalUser!.misskey_token_version,
     isEmperor: misskeyUser.isAdmin,
+    isModerator: misskeyUser.isModerator,
     avatarUrl: misskeyUser.avatarUrl,
     canManageCustomEmojis: misskeyUser.policies.canManageCustomEmojis,
+    canManageAvatarDecorations: misskeyUser.policies.canManageAvatarDecorations,
   });
 });
 

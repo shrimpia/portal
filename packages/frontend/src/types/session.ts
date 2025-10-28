@@ -5,7 +5,9 @@ export interface Session {
     name: string;
     shrimpiaPlus: ShrimpiaPlus;
     isEmperor: boolean;
+    isModerator: boolean;
     avatarUrl: string;
     canManageCustomEmojis: boolean;
+    canManageAvatarDecorations?: boolean;
     misskeyTokenVersion: number;
 }

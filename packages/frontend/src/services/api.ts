@@ -1,6 +1,7 @@
 import { useAtomValue } from 'jotai';
 import { useMemo } from 'react';
 
+import type { AvatarDecorationRequest } from '@/types/avatar-decoration-request';
 import type { Emoji } from '@/types/emoji';
 import type { EmojiRequest } from '@/types/emoji-request';
 import type { EventDraft, EventDto } from '@/types/event';
@@ -95,6 +96,15 @@ export const api = (token: string | null) => ({
     return $post<void>('emoji-requests', formData, token);
   },
   getAllEmojiRequests: (filter: 'mine' | 'all') => $get<EmojiRequest[]>('emoji-requests', { filter }, token),
+  getRemainingAvatarDecorationRequestLimit: () => $get<{ limit: number }>('avatar-decoration-requests/remaining', {}, token),
+  createAvatarDecorationRequest: (image: Blob, name: string, description: string) => {
+    const formData = new FormData();
+    formData.append('image', image);
+    formData.append('name', name);
+    formData.append('description', description);
+    return $post<void>('avatar-decoration-requests', formData, token);
+  },
+  getAllAvatarDecorationRequests: (filter: 'mine' | 'all') => $get<AvatarDecorationRequest[]>('avatar-decoration-requests', { filter }, token),
   getAllEvents: () => $get<EventDto[]>('events', {}, token),
   getEvent: (id: string) => $get<EventDto>(`events/${id}`, {}, token),
   createEvent: (data: EventDraft) => $post<void>('events', data, token),
@@ -115,5 +125,9 @@ export const api = (token: string | null) => ({
     changeHintVisibility: (id: string, isPublished: boolean) => $post<void>(`admin/hints/${id}/publication`, { isPublished }, token),
     getAllSurveyAnswers: () => $get<SurveyAnswer[]>('admin/survey/answers', {}, token),
     addStaffCommentToSurveyAnswer: (id: string, comment: string) => $post<void>(`admin/survey/answers/${id}/staff_comment`, { comment }, token),
+    getAllPendingAvatarDecorationRequests: () => $get<AvatarDecorationRequest[]>('admin/avatar-decoration-requests', {}, token),
+    getAvatarDecorationRequest: (id: string) => $get<AvatarDecorationRequest>(`admin/avatar-decoration-requests/${id}`, {}, token),
+    approveAvatarDecorationRequest: (id: string) => $post<void>(`admin/avatar-decoration-requests/${id}/approve`, {}, token),
+    rejectAvatarDecorationRequest: (id: string, reason: string) => $post<void>(`admin/avatar-decoration-requests/${id}/reject`, { reason }, token),
   },
 });
