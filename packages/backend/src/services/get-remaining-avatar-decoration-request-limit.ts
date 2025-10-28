@@ -12,7 +12,7 @@ export const getRemainingAvatarDecorationRequestLimit = async (db: D1Database, p
     throw new Error('Failed to get misskey user');
   }
 
-  if (misskeyUser.policies.canManageCustomEmojis) return Number.MAX_SAFE_INTEGER;
+  if (misskeyUser.policies.canManageAvatarDecorations) return Number.MAX_SAFE_INTEGER;
 
   const shrimpiaPlus = getShrimpiaPlus(misskeyUser);
   if (shrimpiaPlus === 'not-member') return 0;
