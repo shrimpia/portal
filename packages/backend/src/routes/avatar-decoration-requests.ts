@@ -30,7 +30,7 @@ app.get('/', sessionGuard, async (c) => {
  * 自分が申請したアバターデコレーションリクエスト一覧を取得する（ページネーション対応）
  */
 app.get('/me', sessionGuard, async (c) => {
-  const page = parseInt(c.req.query('page') || '1', 1);
+  const page = parseInt(c.req.query('page') || '1', 10);
   const perPage = parseInt(c.req.query('per_page') || '20', 10);
 
   const requests = await AvatarDecorationRequests.readAllByUserIdWithPagination(c.env.DB, c.portalUser!.id, page, perPage);
