@@ -22,9 +22,9 @@ export const EMOJI_REQUEST_MAX = {
 } as const;
 
 export const AVATAR_DECORATION_REQUEST_MAX = {
-  lite: 1,
+  lite: 0,
   normal: 2,
-  pro: 3,
+  pro: 4,
 } as const;
 
 export const HINT_EDITOR_ROLE_ID = '9wyy6b6oiu';
