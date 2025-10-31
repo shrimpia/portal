@@ -119,7 +119,7 @@ const SurveyList = () => {
 
 const SurveyAnswerPage = () => {
   return (
-    <AdminContainer mode="emperor">
+    <AdminContainer mode="admin">
       <h1 className="fs-3 mb-5">投書箱の管理</h1>
       <Suspense fallback={<LoadingView />}>
         <SurveyList />

@@ -1,6 +1,7 @@
 export const URL_EMPIRE = 'https://mk.shrimpia.network';
 export const URL_SHRIMPIA_PLUS = 'https://docs.shrimpia.network/services/shrimpia-plus/';
 export const URL_EMOJI_REQUEST_GUIDELINES = 'https://docs.shrimpia.network/guidelines/emoji-request/';
+export const URL_AVATAR_DECORATION_REQUEST_GUIDELINES = 'https://docs.shrimpia.network/guidelines/avatar-decoration-guideline/';
 export const URL_MISSKEY = 'https://mk.shrimpia.network';
 export const URL_DISCORD = 'https://go.shrimpia.network/discord';
 export const URL_DOCS = 'https://docs.shrimpia.network';

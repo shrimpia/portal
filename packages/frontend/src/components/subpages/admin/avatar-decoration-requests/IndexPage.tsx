@@ -3,6 +3,7 @@ import { Alert, Col, Row } from 'react-bootstrap';
 
 import { RequestCard } from '@/components/domains/avatar-decoration-request/admin/RequestCard';
 import { adminPendingAvatarDecorationRequestsAtom } from '@/states/avatar-decoration-request';
+import { URL_AVATAR_DECORATION_REQUEST_GUIDELINES } from '@/consts';
 
 export const IndexPage = () => {
   const [{data: pendingList}] = useAtom(adminPendingAvatarDecorationRequestsAtom);
@@ -11,7 +12,7 @@ export const IndexPage = () => {
     <div>
       <header className="mb-5">
         <h1 className="fs-3">アバターデコレーション申請の管理</h1>
-        <a href="https://docs.shrimpia.network/avatar-decoration-guideline" target="_blank" rel="noopener noreferrer">
+        <a href={URL_AVATAR_DECORATION_REQUEST_GUIDELINES} target="_blank" rel="noopener noreferrer">
           <b>アバターデコレーション申請ガイドライン</b>
         </a>
       </header>

@@ -28,6 +28,7 @@ import { tokenAtom } from '@/states/sessions';
 import { userAtom } from '@/states/user';
 
 import avatarDecorationTemplate from '@/assets/avatar-decoration-template.png';
+import { URL_AVATAR_DECORATION_REQUEST_GUIDELINES } from '@/consts';
 
 const uploadAreaStyle = css`
   padding: 16px;
@@ -198,7 +199,7 @@ const AvatarDecorationRequestNewPage = () => {
                 
                 <Alert variant="info">
                     アップロードする前に、<br/>
-                    <a href="https://docs.shrimpia.network/avatar-decoration-guideline" target="_blank" rel="noopener noreferrer">
+                    <a href={URL_AVATAR_DECORATION_REQUEST_GUIDELINES} target="_blank" rel="noopener noreferrer">
                     アバターデコレーション申請ガイドライン
                     </a>
                     を必ずお読みください！
@@ -271,7 +272,7 @@ const AvatarDecorationRequestNewPage = () => {
                         id="agreedToGuidelines"
                         label={
                           <>
-                            <a href="https://docs.shrimpia.network/avatar-decoration-guideline" target="_blank" rel="noopener noreferrer">
+                            <a href={URL_AVATAR_DECORATION_REQUEST_GUIDELINES} target="_blank" rel="noopener noreferrer">
                               ガイドライン
                             </a>
                             を読み、同意しました

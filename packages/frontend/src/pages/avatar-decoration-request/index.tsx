@@ -9,6 +9,7 @@ import { AvatarDecorationRequestsList } from '@/components/domains/avatar-decora
 import { useLoginGuard } from '@/hooks/useLoginGuard';
 import { filterAtom } from '@/states/avatar-decoration-request';
 import { userAtom } from '@/states/user';
+import { URL_AVATAR_DECORATION_REQUEST_GUIDELINES } from '@/consts';
 
 const AvatarDecorationRequestPage = () => {
   useLoginGuard();
@@ -28,7 +29,7 @@ const AvatarDecorationRequestPage = () => {
       </p>
       <p>
         デコレーションを作成・申請する前に、必ずガイドラインをお読みください！<br/>
-        <a href="https://docs.shrimpia.network/avatar-decoration-guideline" target="_blank" rel="noopener noreferrer">
+        <a href={URL_AVATAR_DECORATION_REQUEST_GUIDELINES} target="_blank" rel="noopener noreferrer">
           <b>アバターデコレーション申請ガイドライン</b>
         </a>
       </p>
