@@ -47,16 +47,40 @@ const previewContainerStyle = css`
   height: 192px;
   max-width: 100%;
   margin: 0 auto;
+  pointer-events: none;
 `;
 
-const overlayImageStyle = css`
+const avatarStyle = css`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+  width: 50%;
+  height: 50%;
+  z-index: 0;
+`;
+
+const decorationStyle = css`
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  pointer-events: none;
+  z-index: 1;
+`;
+
+const decorationTemplateStyle = css`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   opacity: 0.7;
+  z-index: 2;
+`;
+
+const optionsStyle = css`
+  margin: 0 auto;
 `;
 
 const uploaderErrorMessageMap: Record<string, string> = {
@@ -75,25 +99,29 @@ type FormSchema = z.infer<typeof formSchema>;
 const AvatarDecorationRequestNewPage = () => {
   useLoginGuard();
 
+  // States
   const [error, setError] = useState<string[]>([]);
+  const [isShowingIcon, setShowingIcon] = useState(true);
+
+  // Atoms
   const [file, setFile] = useAtom(fileAtom);
   const [imgDataUrl, setImgDataUrl] = useAtom(imgDataUrlAtom);
   const [name, setName] = useAtom(nameAtom);
   const [description, setDescription] = useAtom(descriptionAtom);
   const [agreedToGuidelines, setAgreedToGuidelines] = useAtom(agreedToGuidelinesAtom);
-  
   const [{data: user}] = useAtom(userAtom);
   const [{data: limit}] = useAtom(remainingAvatarDecorationRequestLimitAtom);
   const [token] = useAtom(tokenAtom);
   const setRequests = useSetAtom(avatarDecorationRequestsAtom);
 
-  const navigate = useNavigate();
-  const withSpinner = useWithSpinner();
-
-    const isStaff = user?.canManageAvatarDecorations || user?.isEmperor;
+  // Computed Values
+  const isStaff = user?.canManageAvatarDecorations || user?.isEmperor;
   const isShrimpiaPlus = user && user.shrimpiaPlus !== 'not-member';
   const fileSizeInMB = useMemo(() => (file ? (file.size / 1024 / 1024).toPrecision(3) : 0), [file]);
   const isFileSizeValid = useMemo(() => (file && file.size <= 5 * 1024 * 1024), [file]);
+
+  const navigate = useNavigate();
+  const withSpinner = useWithSpinner();
 
   const { register, handleSubmit, formState: { isValid, errors } } = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
@@ -226,16 +254,25 @@ const AvatarDecorationRequestNewPage = () => {
                 </div>
 
                 {imgDataUrl && file && (
-                  <form onSubmit={handleSubmit(onSubmit)} className="mt-4">
-                    <div className="mb-4">
-                      <p className="text-center my-3">以下のプレビューを見て、表示に問題がないことを確認してください。</p>
+                  <form onSubmit={handleSubmit(onSubmit)} className="mt-4 vstack gap-3">
+                    <div className="vstack gap-1 text-center">
+                      <div>以下のプレビューを見て、表示に問題がないことを確認してください。</div>
                       <div className={previewContainerStyle}>
-                        <Image src={imgDataUrl} alt="プレビュー" fluid />
-                        <Image src={avatarDecorationTemplate} alt="テンプレート" className={overlayImageStyle} fluid />
+                        {isShowingIcon && <Image src={user.avatarUrl} alt="ユーザーアイコン" className={avatarStyle} roundedCircle fluid />}
+                        <Image src={imgDataUrl} alt="プレビュー" className={decorationStyle} fluid />
+                        <Image src={avatarDecorationTemplate} alt="テンプレート" className={decorationTemplateStyle} fluid />
+                      </div>
+                      <div className="mx-auto">
+                        <Form.Switch
+                          id="show-icon-checkbox"
+                          label="ユーザーアイコンを表示"
+                          checked={isShowingIcon}
+                          onChange={(e) => setShowingIcon(e.target.checked)}
+                        />
                       </div>
                     </div>
 
-                    <Form.Group className="mb-3">
+                    <Form.Group>
                       <Form.Label>デコレーション名 <span className="text-danger">*</span></Form.Label>
                       <Form.Control
                         type="text"
