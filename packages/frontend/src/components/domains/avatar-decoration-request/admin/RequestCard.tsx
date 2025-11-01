@@ -17,8 +17,10 @@ import { adminPendingAvatarDecorationRequestsAtom } from '@/states/avatar-decora
 
 const previewContainerStyle = css`
   position: relative;
-  width: 256px;
-  height: 256px;
+  max-width: 256px;
+  max-height: 256px;
+  width: 100%;
+  aspect-ratio: 1 / 1;
 `;
 
 const overlayImageStyle = css`
