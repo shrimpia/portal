@@ -82,3 +82,8 @@ export const remainingAvatarDecorationRequestLimitAtom = atomWithSuspenseQuery((
     return result.limit;
   },
 }));
+
+/**
+ * 管理画面: アバターデコレーションテンプレート表示の設定を保存するAtom
+ */
+export const adminAvatarDecorationRequestIsShowingTemplateAtom = atomWithStorage<boolean>('admin:avatarDecorationRequest:isShowingTemplate', true);

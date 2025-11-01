@@ -1,12 +1,15 @@
 import { useAtom } from 'jotai';
-import { Alert, Col, Row } from 'react-bootstrap';
+import { Alert, Col, Form, Row } from 'react-bootstrap';
 
 import { RequestCard } from '@/components/domains/avatar-decoration-request/admin/RequestCard';
-import { adminPendingAvatarDecorationRequestsAtom } from '@/states/avatar-decoration-request';
+import { adminAvatarDecorationRequestIsShowingTemplateAtom, adminPendingAvatarDecorationRequestsAtom } from '@/states/avatar-decoration-request';
 import { URL_AVATAR_DECORATION_REQUEST_GUIDELINES } from '@/consts';
+import { useState } from 'react';
 
 export const IndexPage = () => {
   const [{data: pendingList}] = useAtom(adminPendingAvatarDecorationRequestsAtom);
+
+  const [isShowingTemplate, setIsShowingTemplate] = useAtom(adminAvatarDecorationRequestIsShowingTemplateAtom);
   
   return (
     <div>
@@ -16,10 +19,15 @@ export const IndexPage = () => {
           <b>アバターデコレーション申請ガイドライン</b>
         </a>
       </header>
+      <Form.Switch className="mb-3"
+        label="プレビュー画像にテンプレートを表示"
+        checked={isShowingTemplate}
+        onChange={e => setIsShowingTemplate(e.target.checked)}
+      />
       <Row>
         {pendingList.map(r => (
           <Col key={r.id} xs={12} md={4} lg={3} xl={3} className="g-2">
-            <RequestCard request={r} />
+            <RequestCard request={r} showPreview={isShowingTemplate} />
           </Col>
         ))}
         {pendingList.length === 0 && (

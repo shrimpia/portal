@@ -35,10 +35,11 @@ const overlayImageStyle = css`
 
 export type RequestCardProps = {
     request: AvatarDecorationRequest;
+    showPreview?: boolean;
     details?: boolean;
 };
 
-export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details }) => {
+export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details, showPreview }) => {
   const [type, setType] = useState<string | null>(null);
   const [imageSize, setImageSize] = useState<string | null>(null);
   const [fileSizeInMB, setFileSizeInMB] = useState<string | null>(null);
@@ -120,12 +121,12 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
               style={{ width: '100%' }}
               fluid
             />
-            <Image
+            {showPreview && <Image
               src={avatarDecorationTemplate}
               alt="テンプレート"
               className={overlayImageStyle}
               fluid
-            />
+            />}
           </div>
           <div>
             {!details ? (
