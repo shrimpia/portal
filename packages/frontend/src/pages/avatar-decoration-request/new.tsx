@@ -2,14 +2,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { css } from '@linaria/core';
 import { useAtom, useSetAtom } from 'jotai';
 import { useCallback, useMemo, useState } from 'react';
-import { Alert, Button, Card, Col, Container, Form, Image, Row, Stack } from 'react-bootstrap';
+import { Alert, Button, Card, Container, Form, Image, Modal, Stack } from 'react-bootstrap';
 import { ErrorCode, useDropzone } from 'react-dropzone';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { z } from 'zod';
 
 import { OnlyShrimpiaPlus } from '@/components/common/OnlyShrimpiaPlus';
-import { UserLinkView } from '@/components/common/UserLinkView';
 import { useLoginGuard } from '@/hooks/useLoginGuard';
 import { useWithSpinner } from '@/hooks/useWithSpinner';
 import { api } from '@/services/api';
@@ -17,7 +16,6 @@ import { getImageSize } from '@/services/get-image-size';
 import {
   agreedToGuidelinesAtom,
   avatarDecorationRequestsAtom,
-  confirmedTemplateAtom,
   descriptionAtom,
   fileAtom,
   imgDataUrlAtom,
@@ -102,6 +100,7 @@ const AvatarDecorationRequestNewPage = () => {
   // States
   const [error, setError] = useState<string[]>([]);
   const [isShowingIcon, setShowingIcon] = useState(true);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   // Atoms
   const [file, setFile] = useAtom(fileAtom);
@@ -168,12 +167,13 @@ const AvatarDecorationRequestNewPage = () => {
     },
   });
 
-  const onSubmit = useCallback(async (data: FormSchema) => {
+  const handleConfirmSubmit = useCallback(async () => {
     if (!file || !token) return;
+    setShowConfirmDialog(false);
 
     await withSpinner(async () => {
       try {
-        await api(token).createAvatarDecorationRequest(file, data.name, data.description);
+        await api(token).createAvatarDecorationRequest(file, name, description);
         
         // キャッシュを無効化して再取得
         setRequests();
@@ -190,7 +190,14 @@ const AvatarDecorationRequestNewPage = () => {
         setError([e.message || '申請に失敗しました。']);
       }
     });
-  }, [file, token, withSpinner, navigate, setFile, setImgDataUrl, setName, setDescription, setAgreedToGuidelines, setRequests]);
+  }, [file, token, name, description, withSpinner, navigate, setFile, setImgDataUrl, setName, setDescription, setAgreedToGuidelines, setRequests]);
+
+  const onSubmit = useCallback(async (data: FormSchema) => {
+    if (!file || !token) return;
+    
+    // ダイアログを表示
+    setShowConfirmDialog(true);
+  }, [file, token]);
 
   return (
     <Container style={{ maxWidth: 960 }}>
@@ -340,6 +347,42 @@ const AvatarDecorationRequestNewPage = () => {
           )}
         </>
       )}
+
+      {/* 確認ダイアログ */}
+      <Modal show={showConfirmDialog} onHide={() => setShowConfirmDialog(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>申請の確認</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>以下の内容でアバターデコレーションを申請します。よろしいですか？</p>
+          <div className="vstack gap-2">
+            <div>
+              <strong>デコレーション名:</strong> {name}
+            </div>
+            {description && (
+              <div>
+                <strong>説明:</strong> {description}
+              </div>
+            )}
+            {imgDataUrl && (
+              <div className="text-center mt-3">
+                <div className={previewContainerStyle}>
+                  {isShowingIcon && user && <Image src={user.avatarUrl} alt="ユーザーアイコン" className={avatarStyle} roundedCircle fluid />}
+                  <Image src={imgDataUrl} alt="プレビュー" className={decorationStyle} fluid />
+                </div>
+              </div>
+            )}
+          </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowConfirmDialog(false)}>
+            キャンセル
+          </Button>
+          <Button variant="primary" onClick={handleConfirmSubmit}>
+            申請する
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </Container>
   );
 };
