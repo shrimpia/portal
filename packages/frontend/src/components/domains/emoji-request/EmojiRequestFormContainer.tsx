@@ -67,7 +67,7 @@ export const EmojiRequestFormContainer: React.FC<PropsWithChildren<{
   return (
     <Container className={containerStyle}>
       <h1 className={'fs-3 mb-4'}>カスタム絵文字の追加申請</h1>
-      {isShrimpiaPlus && limit === 0 ? (
+      {!isShrimpiaPlus && limit === 0 ? (
         <OnlyShrimpiaPlus>カスタム絵文字の追加申請</OnlyShrimpiaPlus>
       ) : (
         <>
