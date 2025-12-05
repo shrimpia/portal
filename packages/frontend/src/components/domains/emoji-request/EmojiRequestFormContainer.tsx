@@ -11,7 +11,7 @@ import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { LoadingView } from '@/components/common/LoadingView';
 import { OnlyShrimpiaPlus } from '@/components/common/OnlyShrimpiaPlus';
 import { Stepper } from '@/components/common/Stepper';
-import { UserLinkView } from '@/components/common/UserLinkView';
+import { isEmojiStaff } from '@/services/is-staff';
 import { wizardPages } from '@/states/emoji-request';
 import { remainingEmojiRequestLimitAtom, userAtom } from '@/states/user';
 import { useLoginGuard } from '@/hooks/useLoginGuard';
@@ -36,7 +36,7 @@ export const EmojiRequestFormContainer: React.FC<PropsWithChildren<{
 
   const [{data: limit}] = useAtom(remainingEmojiRequestLimitAtom);
   const [{data: user}] = useAtom(userAtom);
-  const isStaff = user?.canManageCustomEmojis || user?.isEmperor;
+  const isStaff = isEmojiStaff(user!);
   const isShrimpiaPlus = user && user.shrimpiaPlus !== 'not-member';
 
   const steps = useMemo(() => wizardPages.map(p => p.label), []);
@@ -67,7 +67,7 @@ export const EmojiRequestFormContainer: React.FC<PropsWithChildren<{
   return (
     <Container className={containerStyle}>
       <h1 className={'fs-3 mb-4'}>カスタム絵文字の追加申請</h1>
-      {!isShrimpiaPlus ? (
+      {isShrimpiaPlus && limit === 0 ? (
         <OnlyShrimpiaPlus>カスタム絵文字の追加申請</OnlyShrimpiaPlus>
       ) : (
         <>

@@ -6,19 +6,20 @@ export const CATEGORY_NAME_NEW = '00: NEW!';
 export const CURRENT_MISSKEY_TOKEN_VERSION = 2;
 
 /**
- * Shrimpia+のロール名。
+ * Shrimpia+のロール ID。
  */
-export const SHRIMPIA_PLUS_ROLE_NAME = {
-  lite: 'Shrimpia+ Lite',
-  normal: 'Shrimpia+',
-  pro: 'Shrimpia+ Pro',
+export const SHRIMPIA_PLUS_ROLE_ID = {
+  lite: '9grhphq4s3',
+  normal: '9grhhcyul1',
+  pro: '9grhl4hsnn',
 } as const;
 
 // TODO: 設定可能にする
 export const EMOJI_REQUEST_MAX = {
-  lite: 1,
-  normal: 2,
-  pro: 5,
+  'not-member': 1,
+  lite: 2,
+  normal: 3,
+  pro: 6,
 } as const;
 
 export const AVATAR_DECORATION_REQUEST_MAX = {
@@ -28,3 +29,7 @@ export const AVATAR_DECORATION_REQUEST_MAX = {
 } as const;
 
 export const HINT_EDITOR_ROLE_ID = '9wyy6b6oiu';
+
+export const SHRIMPIAN_ROLE_ID = '9cuoryxcup';
+
+export const SUPER_SHRIMPIAN_ROLE_ID = '9cuopghgu3';

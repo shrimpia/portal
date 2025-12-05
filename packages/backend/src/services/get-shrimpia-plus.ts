@@ -1,4 +1,6 @@
-import { SHRIMPIA_PLUS_ROLE_NAME } from '../const';
+import { SHRIMPIA_PLUS_ROLE_ID } from '../const';
+
+import { hasRole } from './has-role';
 
 import type { ShrimpiaPlus } from '../types/shrimpia-plus';
 import type { MisskeyUser } from '../types/user';
@@ -9,9 +11,8 @@ import type { MisskeyUser } from '../types/user';
  * @returns Shrimpia+プラン
  */
 export const getShrimpiaPlus = (user: MisskeyUser): ShrimpiaPlus => {
-  const roleNames = user.roles.map(r => r.name);
-  if (roleNames.includes(SHRIMPIA_PLUS_ROLE_NAME.pro)) return 'pro';
-  if (roleNames.includes(SHRIMPIA_PLUS_ROLE_NAME.normal)) return 'normal';
-  if (roleNames.includes(SHRIMPIA_PLUS_ROLE_NAME.lite)) return 'lite';
+  if (hasRole(user, SHRIMPIA_PLUS_ROLE_ID.pro)) return 'pro';
+  if (hasRole(user, SHRIMPIA_PLUS_ROLE_ID.normal)) return 'normal';
+  if (hasRole(user, SHRIMPIA_PLUS_ROLE_ID.lite)) return 'lite';
   return 'not-member';
 };

@@ -5,7 +5,7 @@ import { LinkCard } from '@/components/common/LinkCard';
 import { LinkCardExternal } from '@/components/common/LinkCardExternal';
 import { MfmView } from '@/components/common/MfmView';
 import { URL_DISCORD, URL_DOCS, URL_MISSKEY, URL_SHRIMPIA_PLUS } from '@/consts';
-import { isStaff } from '@/services/is-staff';
+import { isEmojiStaff } from '@/services/is-staff';
 import { userAtom } from '@/states/user';
 
 export const IndexSessionPage = () => {
@@ -46,7 +46,7 @@ export const IndexSessionPage = () => {
             シュリンピアのMinecraftサーバーに入るための認証はこちらから。
           </LinkCard>
         </Col>
-        {isStaff(user) && (
+        {isEmojiStaff(user) && (
           <Col xs={12} xl={6}>
             <LinkCard
               title="Staff Portal"
