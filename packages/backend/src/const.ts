@@ -16,10 +16,10 @@ export const SHRIMPIA_PLUS_ROLE_ID = {
 
 // TODO: 設定可能にする
 export const EMOJI_REQUEST_MAX = {
-  'not-member': 1,
-  lite: 2,
-  normal: 3,
-  pro: 6,
+  'not-member': 0,
+  lite: 1,
+  normal: 2,
+  pro: 5,
 } as const;
 
 export const AVATAR_DECORATION_REQUEST_MAX = {
