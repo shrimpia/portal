@@ -26,7 +26,7 @@ function App() {
               {useRoutes(routes)}
               <footer className="text-center text-muted" style={{ marginTop: 128, fontFamily: 'serif' }}>
                 <p>
-                  (C)2023-2025 Shrimpia Network
+                  (C)2023-2026 Shrimpia Network
                 </p>
                 <p>
                   <a className="text-muted" href="https://github.com/shrimpia/portal" target="_blank" rel="noopener noreferrer">GitHub</a>
