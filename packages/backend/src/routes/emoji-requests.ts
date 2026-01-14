@@ -101,4 +101,16 @@ app.post('/', sessionGuard, async (c) => {
   });
 });
 
+/**
+ * 絵文字リクエスト詳細を取得する（認証不要・公開用）
+ */
+app.get('/:id', async (c) => {
+  const id = c.req.param('id');
+  const request = await EmojiRequests.readById(c.env.DB, id);
+  if (!request) {
+    return sendError(c, 404, 'Not found');
+  }
+  return c.json(EmojiRequests.toDto(request, c));
+});
+
 export default app;

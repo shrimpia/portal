@@ -9,38 +9,11 @@ import { AutoCollapse } from '@/components/common/AutoCollapse';
 import { MfmView } from '@/components/common/MfmView';
 import { UserLinkView } from '@/components/common/UserLinkView';
 import { EmojiPreview } from '@/components/domains/emoji-request/EmojiPreview';
+import { parseComment } from '@/components/domains/emoji-request/ParsedCommentView';
 import { useWithSpinner } from '@/hooks/useWithSpinner';
 import { useAPI } from '@/services/api';
 import { getImageSize } from '@/services/get-image-size';
 import { adminPendingEmojiRequestsAtom } from '@/states/emoji-request';
-
-
-const parseComment = (comment: string | null) => {
-  if (!comment?.trim()) return null;
-
-  const data = {
-    fontName: null as string | null,
-    fontSource: null as string | null,
-    kana: null as string | null,
-    description: '',
-  };
-
-  const lines = comment.trim().split('\n');
-
-  for (const line of lines) {
-    if (line.startsWith('フォント名: ')) {
-      data.fontName = line.slice('フォント名: '.length);
-    } else if (line.startsWith('よみがな: ')) {
-      data.kana = line.slice('よみがな: '.length);
-    } else if (line.startsWith('フォント入手元: ')) {
-      data.fontSource = line.slice('フォント入手元: '.length);
-    } else {
-      data.description += line + '\n';
-    }
-  }
-
-  return data;
-};
 
 export type RequestCardProps = {
     request: EmojiRequest;

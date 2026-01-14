@@ -96,3 +96,16 @@ export const adminCurrentEmojiRequestAtom = atomWithSuspenseQuery((get) => ({
   },
 }));
 
+/**
+ * 公開ページにおける絵文字リクエストの詳細をクエリするAtom（認証不要）
+ */
+export const publicCurrentEmojiRequestAtom = atomWithSuspenseQuery((get) => ({
+  queryKey: ['publicCurrentEmojiRequest', get(currentRequestIdAtom)],
+  queryFn: async ({ queryKey }) => {
+    const id = queryKey[1] as string | null;
+    if (!id) return null;
+    const req = await api(null).getEmojiRequest(id);
+    return req;
+  },
+}));
+

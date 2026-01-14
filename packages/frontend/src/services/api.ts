@@ -101,6 +101,7 @@ export const api = (token: string | null) => ({
     if (perPage !== undefined) params.per_page = perPage;
     return $get<EmojiRequest[]>('emoji-requests', params, token);
   },
+  getEmojiRequest: (id: string) => $get<EmojiRequest>(`emoji-requests/${id}`, {}, token),
   getRemainingAvatarDecorationRequestLimit: () => $get<{ limit: number }>('avatar-decoration-requests/remaining', {}, token),
   createAvatarDecorationRequest: (image: Blob, name: string, description: string) => {
     const formData = new FormData();
