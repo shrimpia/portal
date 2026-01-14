@@ -7,6 +7,7 @@ import { emperorGuard } from '../middlewares/emperor-guard';
 import { hintStaffGuard } from '../middlewares/hint-staff-guard';
 import { moeStaffGuard } from '../middlewares/moe-staff-guard';
 import { send400, send404, sendError } from '../services/error';
+import { generateEmojiRequestLicense } from '../services/generate-emoji-request-license';
 import { callMisskeyApi } from '../services/misskey-api';
 import { sendAvatarDecorationRequestApprovedNotification } from '../services/send-avatar-decoration-request-approved-notification';
 import { sendAvatarDecorationRequestRejectedNotification } from '../services/send-avatar-decoration-request-rejected-notification';
@@ -80,7 +81,7 @@ app.post('/emoji-requests/:id/approve', moeStaffGuard, async (c) => {
       name: emojiRequest.name,
       category: CATEGORY_NAME_NEW,
       aliases: tags,
-      license: `(C) @${author.username}`,
+      license: generateEmojiRequestLicense(emojiRequest, author),
     });
 
     await EmojiRequests.updateStatus(c.env.DB, id, 'approved');
