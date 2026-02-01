@@ -18,14 +18,14 @@ export const SHRIMPIA_PLUS_ROLE_ID = {
 export const EMOJI_REQUEST_MAX = {
   'not-member': 0,
   lite: 1,
-  normal: 2,
-  pro: 5,
+  normal: 3,
+  pro: 10,
 } as const;
 
 export const AVATAR_DECORATION_REQUEST_MAX = {
   lite: 0,
   normal: 2,
-  pro: 4,
+  pro: 6,
 } as const;
 
 export const HINT_EDITOR_ROLE_ID = '9wyy6b6oiu';
