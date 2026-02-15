@@ -1,18 +1,27 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { css } from '@linaria/core';
-import { useAtom, useSetAtom } from 'jotai';
-import { useCallback, useMemo, useState } from 'react';
-import { Alert, Button, Card, Container, Form, Image, Modal, Stack } from 'react-bootstrap';
-import { ErrorCode, useDropzone } from 'react-dropzone';
-import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router';
-import { z } from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { css } from "@linaria/core";
+import { useAtom, useSetAtom } from "jotai";
+import { useCallback, useMemo, useState } from "react";
+import {
+  Alert,
+  Button,
+  Card,
+  Container,
+  Form,
+  Image,
+  Modal,
+  Stack,
+} from "react-bootstrap";
+import { ErrorCode, useDropzone } from "react-dropzone";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router";
+import { z } from "zod";
 
-import { OnlyShrimpiaPlus } from '@/components/common/OnlyShrimpiaPlus';
-import { useLoginGuard } from '@/hooks/useLoginGuard';
-import { useWithSpinner } from '@/hooks/useWithSpinner';
-import { api } from '@/services/api';
-import { getImageSize } from '@/services/get-image-size';
+import { OnlyShrimpiaPlus } from "@/components/common/OnlyShrimpiaPlus";
+import { useLoginGuard } from "@/hooks/useLoginGuard";
+import { useWithSpinner } from "@/hooks/useWithSpinner";
+import { api } from "@/services/api";
+import { getImageSize } from "@/services/get-image-size";
 import {
   agreedToGuidelinesAtom,
   avatarDecorationRequestsAtom,
@@ -21,12 +30,12 @@ import {
   imgDataUrlAtom,
   nameAtom,
   remainingAvatarDecorationRequestLimitAtom,
-} from '@/states/avatar-decoration-request';
-import { tokenAtom } from '@/states/sessions';
-import { userAtom } from '@/states/user';
+} from "@/states/avatar-decoration-request";
+import { tokenAtom } from "@/states/sessions";
+import { userAtom } from "@/states/user";
 
-import avatarDecorationTemplate from '@/assets/avatar-decoration-template.png';
-import { URL_AVATAR_DECORATION_REQUEST_GUIDELINES } from '@/consts';
+import avatarDecorationTemplate from "@/assets/avatar-decoration-template.png";
+import { URL_AVATAR_DECORATION_REQUEST_GUIDELINES } from "@/consts";
 
 const uploadAreaStyle = css`
   padding: 16px;
@@ -54,7 +63,6 @@ const decorationTemplateStyle = css`
   left: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.7;
   z-index: 0;
 `;
 
@@ -82,14 +90,19 @@ const optionsStyle = css`
 `;
 
 const uploaderErrorMessageMap: Record<string, string> = {
-  [ErrorCode.FileTooLarge]: 'ファイルサイズは5MB以下である必要があります。',
-  [ErrorCode.FileInvalidType]: 'ファイル形式はPNGである必要があります。',
+  [ErrorCode.FileTooLarge]: "ファイルサイズは5MB以下である必要があります。",
+  [ErrorCode.FileInvalidType]: "ファイル形式はPNGである必要があります。",
 };
 
 const formSchema = z.object({
-  name: z.string().min(1, '名前を入力してください').max(50, '名前は50文字以内で入力してください'),
-  description: z.string().max(200, '説明は200文字以内で入力してください'),
-  agreedToGuidelines: z.boolean().refine(val => val === true, 'ガイドラインに同意してください'),
+  name: z
+    .string()
+    .min(1, "名前を入力してください")
+    .max(50, "名前は50文字以内で入力してください"),
+  description: z.string().max(200, "説明は200文字以内で入力してください"),
+  agreedToGuidelines: z
+    .boolean()
+    .refine((val) => val === true, "ガイドラインに同意してください"),
 });
 
 type FormSchema = z.infer<typeof formSchema>;
@@ -107,24 +120,36 @@ const AvatarDecorationRequestNewPage = () => {
   const [imgDataUrl, setImgDataUrl] = useAtom(imgDataUrlAtom);
   const [name, setName] = useAtom(nameAtom);
   const [description, setDescription] = useAtom(descriptionAtom);
-  const [agreedToGuidelines, setAgreedToGuidelines] = useAtom(agreedToGuidelinesAtom);
-  const [{data: user}] = useAtom(userAtom);
-  const [{data: limit}] = useAtom(remainingAvatarDecorationRequestLimitAtom);
+  const [agreedToGuidelines, setAgreedToGuidelines] = useAtom(
+    agreedToGuidelinesAtom,
+  );
+  const [{ data: user }] = useAtom(userAtom);
+  const [{ data: limit }] = useAtom(remainingAvatarDecorationRequestLimitAtom);
   const [token] = useAtom(tokenAtom);
   const setRequests = useSetAtom(avatarDecorationRequestsAtom);
 
   // Computed Values
   const isStaff = user?.canManageAvatarDecorations || user?.isEmperor;
-  const isShrimpiaPlus = user && user.shrimpiaPlus !== 'not-member';
-  const fileSizeInMB = useMemo(() => (file ? (file.size / 1024 / 1024).toPrecision(3) : 0), [file]);
-  const isFileSizeValid = useMemo(() => (file && file.size <= 5 * 1024 * 1024), [file]);
+  const isShrimpiaPlus = user && user.shrimpiaPlus !== "not-member";
+  const fileSizeInMB = useMemo(
+    () => (file ? (file.size / 1024 / 1024).toPrecision(3) : 0),
+    [file],
+  );
+  const isFileSizeValid = useMemo(
+    () => file && file.size <= 5 * 1024 * 1024,
+    [file],
+  );
 
   const navigate = useNavigate();
   const withSpinner = useWithSpinner();
 
-  const { register, handleSubmit, formState: { isValid, errors } } = useForm<FormSchema>({
+  const {
+    register,
+    handleSubmit,
+    formState: { isValid, errors },
+  } = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
-    mode: 'onChange',
+    mode: "onChange",
     defaultValues: {
       name,
       description,
@@ -136,20 +161,20 @@ const AvatarDecorationRequestNewPage = () => {
     multiple: false,
     maxSize: 5 * 1024 * 1024,
     accept: {
-      'image/png': ['.png'],
+      "image/png": [".png"],
     },
     onDropAccepted: async (files) => {
       if (!files || files.length === 0) return;
       const file = files[0];
-      
+
       // 画像サイズをチェック
       try {
         const size = await getImageSize(file);
         if (size.width !== 512 || size.height !== 512) {
-          setError(['画像サイズは512x512である必要があります。']);
+          setError(["画像サイズは512x512である必要があります。"]);
           return;
         }
-        
+
         const reader = new FileReader();
         reader.onload = () => {
           const dataUrl = reader.result as string;
@@ -159,11 +184,15 @@ const AvatarDecorationRequestNewPage = () => {
         };
         reader.readAsDataURL(file);
       } catch (e) {
-        setError(['画像の読み込みに失敗しました。']);
+        setError(["画像の読み込みに失敗しました。"]);
       }
     },
     onDropRejected: (fileRejections) => {
-      setError(fileRejections[0].errors.map(e => uploaderErrorMessageMap[e.code] || e.message));
+      setError(
+        fileRejections[0].errors.map(
+          (e) => uploaderErrorMessageMap[e.code] || e.message,
+        ),
+      );
     },
   });
 
@@ -174,49 +203,70 @@ const AvatarDecorationRequestNewPage = () => {
     await withSpinner(async () => {
       try {
         await api(token).createAvatarDecorationRequest(file, name, description);
-        
+
         // キャッシュを無効化して再取得
         setRequests();
-        
+
         // フォームをリセット
         setFile(null);
         setImgDataUrl(null);
-        setName('');
-        setDescription('');
+        setName("");
+        setDescription("");
         setAgreedToGuidelines(false);
-        
-        navigate('/avatar-decoration-request');
+
+        navigate("/avatar-decoration-request");
       } catch (e: any) {
-        setError([e.message || '申請に失敗しました。']);
+        setError([e.message || "申請に失敗しました。"]);
       }
     });
-  }, [file, token, name, description, withSpinner, navigate, setFile, setImgDataUrl, setName, setDescription, setAgreedToGuidelines, setRequests]);
+  }, [
+    file,
+    token,
+    name,
+    description,
+    withSpinner,
+    navigate,
+    setFile,
+    setImgDataUrl,
+    setName,
+    setDescription,
+    setAgreedToGuidelines,
+    setRequests,
+  ]);
 
-  const onSubmit = useCallback(async (data: FormSchema) => {
-    if (!file || !token) return;
-    
-    // ダイアログを表示
-    setShowConfirmDialog(true);
-  }, [file, token]);
+  const onSubmit = useCallback(
+    async (data: FormSchema) => {
+      if (!file || !token) return;
+
+      // ダイアログを表示
+      setShowConfirmDialog(true);
+    },
+    [file, token],
+  );
 
   return (
     <Container style={{ maxWidth: 960 }}>
       <h1 className="fs-3 mb-4">アバターデコレーションの申請</h1>
-      
+
       {!isShrimpiaPlus ? (
         <OnlyShrimpiaPlus>アバターデコレーションの申請</OnlyShrimpiaPlus>
       ) : (
         <>
-
           <div className="mb-4">
-            残り申請可能数: {
-              isStaff
-                ? <b>スタッフのため無制限</b>
-                : <b className={limit === 0 ? 'text-danger' : ''}>{limit}</b>
-            }<br/>
+            残り申請可能数:{" "}
+            {isStaff ? (
+              <b>スタッフのため無制限</b>
+            ) : (
+              <b className={limit === 0 ? "text-danger" : ""}>{limit}</b>
+            )}
+            <br />
             <small className="text-muted">
               月ごとのリクエスト可能数は、
-              <a href="https://docs.shrimpia.network/services/shrimpia-plus/" target="_blank" rel="noopener noreferrer">
+              <a
+                href="https://docs.shrimpia.network/services/shrimpia-plus/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 Shrimpia+
               </a>
               ページをご確認ください。
@@ -226,48 +276,93 @@ const AvatarDecorationRequestNewPage = () => {
           {limit > 0 && (
             <Card>
               <Card.Body>
-                {error?.length > 0 && error.map(e => (
-                  <Alert variant="danger" key={'error-' + e}>
-                    <i className="bi bi-exclamation-triangle-fill" /> {e}
-                  </Alert>
-                ))}
-                
+                {error?.length > 0 &&
+                  error.map((e) => (
+                    <Alert variant="danger" key={"error-" + e}>
+                      <i className="bi bi-exclamation-triangle-fill" /> {e}
+                    </Alert>
+                  ))}
+
                 <Alert variant="info">
-                    アップロードする前に、<br/>
-                    <a href={URL_AVATAR_DECORATION_REQUEST_GUIDELINES} target="_blank" rel="noopener noreferrer">
+                  アップロードする前に、
+                  <br />
+                  <a
+                    href={URL_AVATAR_DECORATION_REQUEST_GUIDELINES}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     アバターデコレーション申請ガイドライン
-                    </a>
-                    を必ずお読みください！
+                  </a>
+                  を必ずお読みください！
                 </Alert>
 
-                <div className={uploadAreaStyle} data-active={isDragActive ? '' : undefined} {...getRootProps()}>
+                <div
+                  className={uploadAreaStyle}
+                  data-active={isDragActive ? "" : undefined}
+                  {...getRootProps()}
+                >
                   <input {...getInputProps()} />
                   {file && (
                     <div className="mb-2">
                       <span>{file.name} - </span>
-                      <span className={isFileSizeValid ? 'text-success' : 'text-danger'}>
-                        {fileSizeInMB} MB <i className={`bi bi-${isFileSizeValid ? 'check' : 'x'}-circle-fill`} />
+                      <span
+                        className={
+                          isFileSizeValid ? "text-success" : "text-danger"
+                        }
+                      >
+                        {fileSizeInMB} MB{" "}
+                        <i
+                          className={`bi bi-${isFileSizeValid ? "check" : "x"}-circle-fill`}
+                        />
                       </span>
                     </div>
                   )}
                   {isDragActive ? (
-                    <span>そう、その調子！<br/>さあ、その画像をこちらへ…！</span>
+                    <span>
+                      そう、その調子！
+                      <br />
+                      さあ、その画像をこちらへ…！
+                    </span>
                   ) : (
                     <span>
-                      このエリアに画像をドロップするか、<br/>
+                      このエリアに画像をドロップするか、
+                      <br />
                       クリック（あるいはタップ）してください
                     </span>
                   )}
                 </div>
 
                 {imgDataUrl && file && (
-                  <form onSubmit={handleSubmit(onSubmit)} className="mt-4 vstack gap-3">
+                  <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="mt-4 vstack gap-3"
+                  >
                     <div className="vstack gap-1 text-center">
-                      <div>以下のプレビューを見て、表示に問題がないことを確認してください。</div>
+                      <div>
+                        以下のプレビューを見て、表示に問題がないことを確認してください。
+                      </div>
                       <div className={previewContainerStyle}>
-                        <Image src={avatarDecorationTemplate} alt="テンプレート" className={decorationTemplateStyle} fluid />
-                        {isShowingIcon && <Image src={user.avatarUrl} alt="ユーザーアイコン" className={avatarStyle} roundedCircle fluid />}
-                        <Image src={imgDataUrl} alt="プレビュー" className={decorationStyle} fluid />
+                        <Image
+                          src={avatarDecorationTemplate}
+                          alt="テンプレート"
+                          className={decorationTemplateStyle}
+                          fluid
+                        />
+                        {isShowingIcon && (
+                          <Image
+                            src={user.avatarUrl}
+                            alt="ユーザーアイコン"
+                            className={avatarStyle}
+                            roundedCircle
+                            fluid
+                          />
+                        )}
+                        <Image
+                          src={imgDataUrl}
+                          alt="プレビュー"
+                          className={decorationStyle}
+                          fluid
+                        />
                       </div>
                       <div className="mx-auto">
                         <Form.Switch
@@ -280,18 +375,22 @@ const AvatarDecorationRequestNewPage = () => {
                     </div>
 
                     <Form.Group>
-                      <Form.Label>デコレーション名 <span className="text-danger">*</span></Form.Label>
+                      <Form.Label>
+                        デコレーション名 <span className="text-danger">*</span>
+                      </Form.Label>
                       <Form.Control
                         type="text"
                         placeholder="例: キラキラ"
-                        {...register('name')}
+                        {...register("name")}
                         onChange={(e) => {
-                          register('name').onChange(e);
+                          register("name").onChange(e);
                           setName(e.target.value);
                         }}
                         isInvalid={!!errors.name}
                       />
-                      <Form.Control.Feedback type="invalid">{errors.name?.message}</Form.Control.Feedback>
+                      <Form.Control.Feedback type="invalid">
+                        {errors.name?.message}
+                      </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3">
@@ -300,14 +399,16 @@ const AvatarDecorationRequestNewPage = () => {
                         as="textarea"
                         rows={3}
                         placeholder="例: アイコンをキラキラさせるデコレーションです"
-                        {...register('description')}
+                        {...register("description")}
                         onChange={(e) => {
-                          register('description').onChange(e);
+                          register("description").onChange(e);
                           setDescription(e.target.value);
                         }}
                         isInvalid={!!errors.description}
                       />
-                      <Form.Control.Feedback type="invalid">{errors.description?.message}</Form.Control.Feedback>
+                      <Form.Control.Feedback type="invalid">
+                        {errors.description?.message}
+                      </Form.Control.Feedback>
                     </Form.Group>
 
                     <Form.Group className="mb-3">
@@ -316,27 +417,40 @@ const AvatarDecorationRequestNewPage = () => {
                         id="agreedToGuidelines"
                         label={
                           <>
-                            <a href={URL_AVATAR_DECORATION_REQUEST_GUIDELINES} target="_blank" rel="noopener noreferrer">
+                            <a
+                              href={URL_AVATAR_DECORATION_REQUEST_GUIDELINES}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
                               ガイドライン
                             </a>
                             を読み、同意しました
                           </>
                         }
-                        {...register('agreedToGuidelines')}
+                        {...register("agreedToGuidelines")}
                         onChange={(e) => {
-                          register('agreedToGuidelines').onChange(e);
+                          register("agreedToGuidelines").onChange(e);
                           setAgreedToGuidelines(e.target.checked);
                         }}
                         isInvalid={!!errors.agreedToGuidelines}
                       />
-                      <Form.Control.Feedback type="invalid">{errors.agreedToGuidelines?.message}</Form.Control.Feedback>
+                      <Form.Control.Feedback type="invalid">
+                        {errors.agreedToGuidelines?.message}
+                      </Form.Control.Feedback>
                     </Form.Group>
 
                     <Stack direction="horizontal" gap={2}>
-                      <Button variant="secondary" onClick={() => navigate('/avatar-decoration-request')}>
+                      <Button
+                        variant="secondary"
+                        onClick={() => navigate("/avatar-decoration-request")}
+                      >
                         キャンセル
                       </Button>
-                      <Button type="submit" variant="primary" disabled={!isValid}>
+                      <Button
+                        type="submit"
+                        variant="primary"
+                        disabled={!isValid}
+                      >
                         申請する
                       </Button>
                     </Stack>
@@ -349,12 +463,18 @@ const AvatarDecorationRequestNewPage = () => {
       )}
 
       {/* 確認ダイアログ */}
-      <Modal show={showConfirmDialog} onHide={() => setShowConfirmDialog(false)} centered>
+      <Modal
+        show={showConfirmDialog}
+        onHide={() => setShowConfirmDialog(false)}
+        centered
+      >
         <Modal.Header closeButton>
           <Modal.Title>申請の確認</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>以下の内容でアバターデコレーションを申請します。よろしいですか？</p>
+          <p>
+            以下の内容でアバターデコレーションを申請します。よろしいですか？
+          </p>
           <div className="vstack gap-2">
             <div>
               <strong>デコレーション名:</strong> {name}
@@ -367,15 +487,31 @@ const AvatarDecorationRequestNewPage = () => {
             {imgDataUrl && (
               <div className="text-center mt-3">
                 <div className={previewContainerStyle}>
-                  {isShowingIcon && user && <Image src={user.avatarUrl} alt="ユーザーアイコン" className={avatarStyle} roundedCircle fluid />}
-                  <Image src={imgDataUrl} alt="プレビュー" className={decorationStyle} fluid />
+                  {isShowingIcon && user && (
+                    <Image
+                      src={user.avatarUrl}
+                      alt="ユーザーアイコン"
+                      className={avatarStyle}
+                      roundedCircle
+                      fluid
+                    />
+                  )}
+                  <Image
+                    src={imgDataUrl}
+                    alt="プレビュー"
+                    className={decorationStyle}
+                    fluid
+                  />
                 </div>
               </div>
             )}
           </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowConfirmDialog(false)}>
+          <Button
+            variant="secondary"
+            onClick={() => setShowConfirmDialog(false)}
+          >
             キャンセル
           </Button>
           <Button variant="primary" onClick={handleConfirmSubmit}>
