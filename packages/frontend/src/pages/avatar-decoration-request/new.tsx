@@ -48,6 +48,16 @@ const previewContainerStyle = css`
   pointer-events: none;
 `;
 
+const decorationTemplateStyle = css`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.7;
+  z-index: 0;
+`;
+
 const avatarStyle = css`
   position: absolute;
   top: 50%;
@@ -55,7 +65,7 @@ const avatarStyle = css`
   translate: -50% -50%;
   width: 50%;
   height: 50%;
-  z-index: 0;
+  z-index: 1;
 `;
 
 const decorationStyle = css`
@@ -64,16 +74,6 @@ const decorationStyle = css`
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1;
-`;
-
-const decorationTemplateStyle = css`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0.7;
   z-index: 2;
 `;
 
@@ -265,9 +265,9 @@ const AvatarDecorationRequestNewPage = () => {
                     <div className="vstack gap-1 text-center">
                       <div>以下のプレビューを見て、表示に問題がないことを確認してください。</div>
                       <div className={previewContainerStyle}>
+                        <Image src={avatarDecorationTemplate} alt="テンプレート" className={decorationTemplateStyle} fluid />
                         {isShowingIcon && <Image src={user.avatarUrl} alt="ユーザーアイコン" className={avatarStyle} roundedCircle fluid />}
                         <Image src={imgDataUrl} alt="プレビュー" className={decorationStyle} fluid />
-                        <Image src={avatarDecorationTemplate} alt="テンプレート" className={decorationTemplateStyle} fluid />
                       </div>
                       <div className="mx-auto">
                         <Form.Switch
