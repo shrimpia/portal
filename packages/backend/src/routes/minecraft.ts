@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 import { MinecraftAccounts } from '../db/repository';
 import { sessionGuard } from '../middlewares/session-guard';
-import { generateMinecraftAuthCode } from '../services/generate-minecraft-auth-code';
+import { MINECRAFT_AUTH_CODE_TTL, generateMinecraftAuthCode, normalizeMinecraftAuthCode } from '../services/generate-minecraft-auth-code';
 
 import type { PortalEnv } from '../env';
 
@@ -15,13 +15,27 @@ const internalAuthRequestApiJsonSchema = z.object({
 });
 
 const userAuthRequestApiJsonSchema = z.object({
-  authCode: z.string(),
+  authCode: z.string().max(32),
 });
+
+/**
+ * 内部 API キーを定数時間で比較します。サーバー側のキーが未設定の場合は常に false を返します。
+ */
+const isValidInternalApiKey = (key: string | undefined, expected: string | undefined) => {
+  if (!key || !expected) return false;
+
+  const encoder = new TextEncoder();
+  const a = encoder.encode(key);
+  const b = encoder.encode(expected);
+  if (a.byteLength !== b.byteLength) return false;
+
+  return crypto.subtle.timingSafeEqual(a, b);
+};
 
 // Minecraft サーバーが利用する内部API。
 app.post('/internal-auth', async c => {
   const key = c.req.header('X-Internal-Api-Key');
-  if (key !== c.env.MINECRAFT_SERVER_ACCEPTING_KEY) {
+  if (!isValidInternalApiKey(key, c.env.MINECRAFT_SERVER_ACCEPTING_KEY)) {
     c.status(404);
     return c.text('Not Found');
   }
@@ -41,7 +55,7 @@ app.post('/internal-auth', async c => {
   // アカウントが存在しない、あるいは紐づけがない場合は認証コードを発行し、DBに記録する
   if (!account || account.user_id === null) {
     const authCode = await generateMinecraftAuthCode(c.env.DB);
-    await MinecraftAccounts.upsertMinecraftAccount(c.env.DB, playerId, playerName, authCode);
+    await MinecraftAccounts.upsertMinecraftAccount(c.env.DB, playerId, playerName, authCode, new Date(Date.now() + MINECRAFT_AUTH_CODE_TTL));
 
     return c.json({
       ok: false,
@@ -67,15 +81,14 @@ app.post('auth', sessionGuard, async c => {
     return c.json(parsed.error);
   }
 
-  const { authCode } = parsed.data;
-  const mcAccount = await MinecraftAccounts.getMinecraftAccountByAuthCode(c.env.DB, authCode);
-  if (!mcAccount || mcAccount.user_id !== null) {
+  // ポータルアカウントとマインクラフトアカウントを紐づける
+  const authCode = normalizeMinecraftAuthCode(parsed.data.authCode);
+  const bound = await MinecraftAccounts.bindPortalAccountByAuthCode(c.env.DB, authCode, c.portalUser!);
+  if (!bound) {
     c.status(404);
     return c.json({ error: 'Invalid auth code' });
   }
 
-  // ポータルアカウントとマインクラフトアカウントを紐づける
-  await MinecraftAccounts.bindPortalAccountToMinecraftAccount(c.env.DB, mcAccount.id, c.portalUser!);
   c.status(200);
   return c.json({ ok: true });
 });

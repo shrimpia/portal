@@ -7,6 +7,8 @@ import { useAPI } from "@/services/api";
 import { Suspense, useCallback, useState } from "react";
 import { Button, Card, Container, Form, InputGroup, Stack } from "react-bootstrap";
 
+const AUTH_CODE_LENGTH = 8;
+
 const MinecraftPage = () => {
   useLoginGuard();
   const [code, setCode] = useState('');
@@ -15,8 +17,8 @@ const MinecraftPage = () => {
   const withSpinner = useWithSpinner();
 
   const onCodeInput = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    // 数字のみを受け付ける
-    setCode(e.target.value.replace(/\D/g, ''));
+    // 英数字のみを受け付ける
+    setCode(e.target.value.toUpperCase().replace(/[^0-9A-Z]/g, ''));
   }, []);
 
   const handleAuthSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
@@ -64,8 +66,8 @@ const MinecraftPage = () => {
 
             <Form onSubmit={handleAuthSubmit}>
               <InputGroup>
-                <Form.Control type="text" placeholder="000000" maxLength={6} value={code} onChange={onCodeInput} />
-                <Button type="submit" variant="primary" disabled={code.length !== 6}>
+                <Form.Control type="text" placeholder="XXXXXXXX" maxLength={AUTH_CODE_LENGTH} value={code} onChange={onCodeInput} autoCapitalize="characters" autoComplete="off" />
+                <Button type="submit" variant="primary" disabled={code.length !== AUTH_CODE_LENGTH}>
                   <i className="bi bi-arrow-right me-2" />
                   認証
                 </Button>

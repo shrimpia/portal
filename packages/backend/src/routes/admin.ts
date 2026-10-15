@@ -6,7 +6,7 @@ import { AvatarDecorationRequests, Bucket, EmojiRequests, Hints, SurveyAnswers, 
 import { emperorGuard } from '../middlewares/emperor-guard';
 import { hintStaffGuard } from '../middlewares/hint-staff-guard';
 import { moeStaffGuard } from '../middlewares/moe-staff-guard';
-import { send400, send404, sendError } from '../services/error';
+import { send400, send404, sendAlreadyProcessedError, sendError } from '../services/error';
 import { generateEmojiRequestLicense } from '../services/generate-emoji-request-license';
 import { callMisskeyApi } from '../services/misskey-api';
 import { sendAvatarDecorationRequestApprovedNotification } from '../services/send-avatar-decoration-request-approved-notification';
@@ -56,6 +56,9 @@ app.post('/emoji-requests/:id/approve', moeStaffGuard, async (c) => {
   const emojiRequest = await EmojiRequests.readById(c.env.DB, id);
   if (!emojiRequest) {
     return send400(c, 'invalid param: id');
+  }
+  if (emojiRequest.status !== 'pending') {
+    return sendAlreadyProcessedError(c);
   }
 
   const author = await Users.readById(c.env.DB, emojiRequest.user_id);
@@ -107,6 +110,13 @@ app.post('/emoji-requests/:id/reject', moeStaffGuard, async (c) => {
   }
 
   const id = c.req.param('id');
+  const emojiRequest = await EmojiRequests.readById(c.env.DB, id);
+  if (!emojiRequest) {
+    return send400(c, 'invalid param: id');
+  }
+  if (emojiRequest.status !== 'pending') {
+    return sendAlreadyProcessedError(c);
+  }
 
   try {
     await EmojiRequests.updateStatus(c.env.DB, id, 'rejected');
@@ -258,6 +268,9 @@ app.post('/avatar-decoration-requests/:id/approve', moeStaffGuard, async (c) => 
   if (!decorationRequest) {
     return send400(c, 'invalid param: id');
   }
+  if (decorationRequest.status !== 'pending') {
+    return sendAlreadyProcessedError(c);
+  }
 
   const file = await Bucket.get(c.env.BUCKET, decorationRequest.image_key);
   if (!file) {
@@ -304,6 +317,13 @@ app.post('/avatar-decoration-requests/:id/reject', moeStaffGuard, async (c) => {
   }
 
   const id = c.req.param('id');
+  const decorationRequest = await AvatarDecorationRequests.readById(c.env.DB, id);
+  if (!decorationRequest) {
+    return send400(c, 'invalid param: id');
+  }
+  if (decorationRequest.status !== 'pending') {
+    return sendAlreadyProcessedError(c);
+  }
 
   try {
     await AvatarDecorationRequests.updateStatus(c.env.DB, id, 'rejected');

@@ -4,6 +4,27 @@ import { getMisskeyUser } from './misskey-api';
 
 import type { User } from '../db/models/user';
 
+/**
+ * Discord の Markdown として解釈される記号をエスケープします。
+ */
+const escapeMarkdown = (text: string) => text.replace(/[\\*_~`|>[\]()#-]/g, '\\$&');
+
+/**
+ * Discord Webhook にメッセージを送信します。ユーザー入力によるメンションは常に無効化されます。
+ */
+const postToDiscord = async (webhook: string, body: Record<string, unknown>) => {
+  await fetch(webhook, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      ...body,
+      allowed_mentions: { parse: [] },
+    }),
+  });
+};
+
 export const postNewEmojiRequestToDiscord = async (webhook: string, user: User, data: {
 	id: string,
 	name: string,
@@ -24,11 +45,11 @@ export const postNewEmojiRequestToDiscord = async (webhook: string, user: User, 
           },
           {
             'name': 'コメント',
-            'value': data.comment,
+            'value': escapeMarkdown(data.comment),
           },
         ],
         'author': {
-          'name': `${misskeyUser.name ?? misskeyUser.username} (@${misskeyUser.username})`,
+          'name': `${escapeMarkdown(misskeyUser.name ?? misskeyUser.username)} (@${misskeyUser.username})`,
           'icon_url': misskeyUser.avatarUrl,
         },
         'thumbnail': {
@@ -38,13 +59,7 @@ export const postNewEmojiRequestToDiscord = async (webhook: string, user: User, 
     ],
   };
 
-  await fetch(webhook, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
+  await postToDiscord(webhook, body);
 };
 
 export const postNewAvatarDecorationRequestToDiscord = async (webhook: string, user: User, data: {
@@ -56,22 +71,22 @@ export const postNewAvatarDecorationRequestToDiscord = async (webhook: string, u
   const misskeyUser = await getMisskeyUser(user.misskey_token);
   if (!misskeyUser) throw new Error('Failed to get Misskey account.');
   const body = {
-    'content': `🎨 新しいアバターデコレーション申請「${data.name}」が届いています！\n[**ポータルを開く**](${PORTAL_FRONTEND_URL}/admin/avatar-decoration-requests/${data.id})`,
+    'content': `🎨 新しいアバターデコレーション申請「${escapeMarkdown(data.name)}」が届いています！\n[**ポータルを開く**](${PORTAL_FRONTEND_URL}/admin/avatar-decoration-requests/${data.id})`,
     'embeds': [
       {
         'color': 15844367,
         'fields': [
           {
             'name': '名前',
-            'value': data.name,
+            'value': escapeMarkdown(data.name),
           },
           {
             'name': '説明',
-            'value': data.description || 'なし',
+            'value': escapeMarkdown(data.description) || 'なし',
           },
         ],
         'author': {
-          'name': `${misskeyUser.name ?? misskeyUser.username} (@${misskeyUser.username})`,
+          'name': `${escapeMarkdown(misskeyUser.name ?? misskeyUser.username)} (@${misskeyUser.username})`,
           'icon_url': misskeyUser.avatarUrl,
         },
         'thumbnail': {
@@ -81,11 +96,5 @@ export const postNewAvatarDecorationRequestToDiscord = async (webhook: string, u
     ],
   };
 
-  await fetch(webhook, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(body),
-  });
+  await postToDiscord(webhook, body);
 };

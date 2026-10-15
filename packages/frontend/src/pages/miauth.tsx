@@ -4,7 +4,21 @@ import { Card, Container, Spinner } from 'react-bootstrap';
 
 import { useQuery } from '@/hooks/useQuery';
 import { useAPI } from '@/services/api';
+import { MIAUTH_SESSION_STORAGE_KEY } from '@/services/navigate-to-miauth';
 import { tokenAtom } from '@/states/sessions';
+
+/**
+ * callback_to をポータル内の相対パスに正規化する。別オリジンや javascript: などの不正な値は '/' にする。
+ */
+const resolveCallback = (raw: string | null) => {
+  if (!raw) return '/';
+  try {
+    const url = new URL(raw, location.origin);
+    return url.origin === location.origin ? url.pathname + url.search + url.hash : '/';
+  } catch {
+    return '/';
+  }
+};
 
 const MiAuthPage = () => {
   const q = useQuery();
@@ -26,9 +40,16 @@ const MiAuthPage = () => {
       }
       if (ignore) return;
 
+      // 自分が開始したログインでなければ中断する（第三者のセッションでのログインを防ぐ）
+      if (session !== sessionStorage.getItem(MIAUTH_SESSION_STORAGE_KEY)) {
+        setError('ログインセッションが一致しません。もう一度ログインしてください。');
+        return;
+      }
+
       api.miauth(session).then(({ token }) => {
+        sessionStorage.removeItem(MIAUTH_SESSION_STORAGE_KEY);
         setToken(token);
-        location.href = callbackTo ?? '/';
+        location.href = resolveCallback(callbackTo);
       }).catch((err) => {
         setError(err.message);
       });

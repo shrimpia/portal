@@ -7,14 +7,26 @@ type AvatarDecorationRequestWithUserName = AvatarDecorationRequest & Pick<User, 
 };
 
 export class AvatarDecorationRequestRepository {
-  async create(db: D1Database, data: {name: string, description: string, imageKey: string, userId: string, createdAt: Date}) {
+  /**
+   * アバターデコレーションリクエストを追加します。
+   * 同月の申請数（却下を除く）が quota 以上の場合は追加しません。判定と追加は 1 文で行うため、同時リクエストでも上限を超えません。
+   * @returns 追加したレコードのID。上限に達していた場合は null
+   */
+  async createWithinQuota(db: D1Database, data: {name: string, description: string, imageKey: string, userId: string, createdAt: Date}, quota: number) {
     const id = crypto.randomUUID();
     const year = data.createdAt.getFullYear();
     const month = data.createdAt.getMonth() + 1;
-    await db.prepare('INSERT INTO avatar_decoration_request (id, name, description, image_key, user_id, created_year, created_month, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)')
-      .bind(id, data.name, data.description, data.imageKey, data.userId, year, month, data.createdAt.getTime())
+    const { meta } = await db.prepare(`
+      INSERT INTO avatar_decoration_request (id, name, description, image_key, user_id, created_year, created_month, created_at)
+        SELECT ?, ?, ?, ?, ?, ?, ?, ?
+        WHERE (
+          SELECT COUNT(*) FROM avatar_decoration_request
+            WHERE user_id = ? AND created_year = ? AND created_month = ? AND status <> 'rejected'
+        ) < ?
+    `)
+      .bind(id, data.name, data.description, data.imageKey, data.userId, year, month, data.createdAt.getTime(), data.userId, year, month, quota)
       .run();
-    return id;
+    return meta.changes > 0 ? id : null;
   }
 
   async readById(db: D1Database, id: string) {

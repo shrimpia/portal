@@ -1,6 +1,6 @@
 export class R2BucketRepository {
-  async upload(r2: R2Bucket, file: File) {
-    const obj = await r2.put(crypto.randomUUID(), file);
+  async upload(r2: R2Bucket, data: ArrayBuffer, contentType: string, key: string = crypto.randomUUID()) {
+    const obj = await r2.put(key, data, { httpMetadata: { contentType } });
     if (obj === null) throw new Error('object is null');
     return obj.key;
   }

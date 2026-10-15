@@ -2,9 +2,10 @@ import { Hono } from 'hono';
 
 import { Bucket, EmojiRequests } from '../db/repository';
 import { sessionGuard } from '../middlewares/session-guard';
+import { detectImageType } from '../services/detect-image-type';
 import { postNewEmojiRequestToDiscord } from '../services/discord';
 import { sendError, sendFailedToGetMisskeyUserError } from '../services/error';
-import { getRemainingRequestLimit  } from '../services/get-remaining-request-limit';
+import { getEmojiRequestQuota, getRemainingRequestLimit } from '../services/get-remaining-request-limit';
 import { isDuplicatedEmojiName } from '../services/is-duplicated-emoji-name';
 import { getMisskeyUser } from '../services/misskey-api';
 
@@ -51,8 +52,8 @@ app.post('/', sessionGuard, async (c) => {
     return sendFailedToGetMisskeyUserError(c);
   }
 
-  const limit = await getRemainingRequestLimit(c.env.DB, c.portalUser!);
-  if (limit < 1) {
+  const quota = getEmojiRequestQuota(user);
+  if (quota < 1) {
     return sendError(c, 400, 'リクエスト利用可能枠がもうありません');
   }
 
@@ -77,17 +78,32 @@ app.post('/', sessionGuard, async (c) => {
     return sendError(c, 400, 'Invalid image MIME type: ' + image.type);
   }
 
+  const imageData = await image.arrayBuffer();
+  const imageType = detectImageType(imageData);
+  if (!imageType) {
+    return sendError(c, 400, 'Invalid image file');
+  }
+
   const isDuplicated = await isDuplicatedEmojiName(name, c.env.KV, c.env.DB);
   if (isDuplicated) {
     return sendError(c, 400, 'Duplicated emoji name');
   }
 
-  const imageKey = await Bucket.upload(c.env.BUCKET, image);
-  const createdAt = new Date();
+  // 枠の判定とレコード追加を同時に行い、追加できた場合のみ画像をアップロードする
+  const imageKey = crypto.randomUUID();
+  const id = await EmojiRequests.createWithinQuota(c.env.DB, {
+    name, comment, imageKey, userId: c.portalUser!.id, createdAt: new Date(),
+  }, quota);
+  if (!id) {
+    return sendError(c, 400, 'リクエスト利用可能枠がもうありません');
+  }
 
-  const id = await EmojiRequests.create(c.env.DB, {
-    name, comment, imageKey, userId: c.portalUser!.id, createdAt,
-  });
+  try {
+    await Bucket.upload(c.env.BUCKET, imageData, imageType, imageKey);
+  } catch (e) {
+    await EmojiRequests.delete(c.env.DB, id);
+    throw e;
+  }
 
   await postNewEmojiRequestToDiscord(c.env.DISCORD_WEBHOOK_URL, c.portalUser!, {
     id,

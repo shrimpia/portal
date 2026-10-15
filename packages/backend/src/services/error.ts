@@ -24,6 +24,10 @@ export const sendFailedToGetMisskeyUserError = (c: Context) => {
   return sendError(c, 400, 'Failed to get Misskey user');
 };
 
+export const sendAlreadyProcessedError = (c: Context) => {
+  return sendError(c, 409, 'This request has already been processed');
+};
+
 export const send404 = (c: Context) => {
   return sendError(c, 404, 'Not Found');
 };

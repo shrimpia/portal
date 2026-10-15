@@ -7,10 +7,11 @@ import { Hono } from 'hono';
 import { URL_EMPIRE } from '../const';
 import { Bucket } from '../db/repository';
 import { sessionGuard } from '../middlewares/session-guard';
+import { detectImageType } from '../services/detect-image-type';
 import { toEmbed404, toEmbedMisskeyNote } from '../services/EmbedMisskeyNote';
 import { send400, sendFailedToGetMisskeyUserError } from '../services/error';
 import { getShrimpiaPlus } from '../services/get-shrimpia-plus';
-import { getMisskeyUser } from '../services/misskey-api';
+import { callMisskeyApi, getMisskeyUser } from '../services/misskey-api';
 import { sendMisskeyNotification } from '../services/send-misskey-notification';
 import { upsertUser } from '../services/upsert-user';
 
@@ -25,7 +26,8 @@ import survey from './survey';
 
 import type { PortalEnv } from '../env';
 import type { MisskeyNote } from '../types/note';
-import type { MisskeyUser } from '../types/user';
+
+const sessionIdPattern = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const app = new Hono<PortalEnv>();
 
@@ -68,11 +70,11 @@ app.get('/session', sessionGuard, async c => {
  * MiAuthのコールバック先。
  */
 app.post('/miauth', async c => {
-  const { sessionId } = await c.req.json<{sessionId: string}>();
-  if (sessionId == null) {
+  const { sessionId } = await c.req.json<{sessionId: unknown}>();
+  if (typeof sessionId !== 'string' || !sessionIdPattern.test(sessionId)) {
     c.status(400);
     return c.json({
-      error: 'Missing sessionId',
+      error: 'Invalid sessionId',
     });
   }
 
@@ -87,9 +89,21 @@ app.post('/miauth', async c => {
     });
   }
 
-  const data = await res.json() as { token: string, user: MisskeyUser };
+  const data = await res.json() as { token?: string };
+  if (typeof data.token !== 'string') {
+    c.status(400);
+    return c.json({
+      error: 'MiAuth session is not authorized',
+    });
+  }
 
-  const { portal_token } = await upsertUser(c.env.DB, data.token, data.user);
+  // check のレスポンスに含まれるユーザー情報は信用せず、取得したトークンで本人を確認する
+  const misskeyUser = await getMisskeyUser(data.token);
+  if (!misskeyUser) {
+    return sendFailedToGetMisskeyUserError(c);
+  }
+
+  const { portal_token } = await upsertUser(c.env.DB, data.token, misskeyUser);
 
   return c.json({
     token: portal_token,
@@ -109,40 +123,33 @@ app.get('test-notification', sessionGuard, async c => {
 });
 
 /**
- * ノート埋め込みHTMLを取得する
+ * ノート埋め込みHTMLを取得する。取得先は帝国のノートに限る。
  */
 app.get('/note-embed', async (c) => {
   const { url } = c.req.query();
-  if ((url === undefined) || (typeof url !== 'string')) {
+  if (typeof url !== 'string') {
     return send400(c, 'url is required');
   }
 
-  const match = url.match(/^https?:\/\/(.+?)\/notes\/(\w+)$/);
-  if (match === null) {
+  let parsed: URL;
+  try {
+    parsed = new URL(url);
+  } catch {
     return send400(c, 'invalid url');
   }
 
-  const domain = match[1];
-  const noteId = match[2];
+  const noteId = parsed.pathname.match(/^\/notes\/(\w+)$/)?.[1];
+  if (parsed.origin !== URL_EMPIRE || !noteId) {
+    return send400(c, 'invalid url');
+  }
 
-  const res = await fetch(`https://${domain}/api/notes/show`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      noteId,
-    }),
-  });
-
-  if (!res.ok) {
+  const note = await callMisskeyApi<MisskeyNote>('notes/show', { noteId }).catch(() => null);
+  if (!note) {
     c.status(404);
     return c.html(await toEmbed404());
   }
 
-  const note = await res.json<MisskeyNote>();
-
-  return c.html(await toEmbedMisskeyNote(note, domain));
+  return c.html(await toEmbedMisskeyNote(note, parsed.host));
 });
 
 /**
@@ -158,8 +165,19 @@ app.get('/uploaded/:key', async (c) => {
     return c.body(null);
   }
 
-  c.header('Content-Type', obj.type);
-  return c.body(await obj.arrayBuffer());
+  // 保存時の Content-Type は信用せず、中身から判定した画像形式でのみ配信する
+  const data = await obj.arrayBuffer();
+  const type = detectImageType(data);
+
+  c.header('X-Content-Type-Options', 'nosniff');
+  c.header('Content-Security-Policy', 'default-src \'none\'; sandbox');
+  if (type) {
+    c.header('Content-Type', type);
+  } else {
+    c.header('Content-Type', 'application/octet-stream');
+    c.header('Content-Disposition', 'attachment');
+  }
+  return c.body(data);
 });
 
 export default app;

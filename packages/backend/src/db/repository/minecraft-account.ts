@@ -27,9 +27,9 @@ export class MinecraftAccountRepository {
       })));
   }
 
-  async upsertMinecraftAccount(db: D1Database, playerId: string, playerName: string, authCode: string) {
-    await db.prepare('INSERT INTO minecraft_accounts (id, player_name, auth_code) VALUES (?, ?, ?) ON CONFLICT(id) DO UPDATE SET player_name = ?, auth_code = ?')
-      .bind(playerId, playerName, authCode, playerName, authCode)
+  async upsertMinecraftAccount(db: D1Database, playerId: string, playerName: string, authCode: string, expiresAt: Date) {
+    await db.prepare('INSERT INTO minecraft_accounts (id, player_name, auth_code, auth_code_expires_at) VALUES (?, ?, ?, ?) ON CONFLICT(id) DO UPDATE SET player_name = ?, auth_code = ?, auth_code_expires_at = ?')
+      .bind(playerId, playerName, authCode, expiresAt.getTime(), playerName, authCode, expiresAt.getTime())
       .run();
   }
 
@@ -45,11 +45,17 @@ export class MinecraftAccountRepository {
       .run();
   }
 
-  async bindPortalAccountToMinecraftAccount(db: D1Database, playerId: string, portalUser: User | User['id']) {
+  /**
+   * 有効な認証コードに合致する未連携の Minecraft アカウントを、ポータルアカウントに紐づけます。
+   * 照合と紐づけは 1 文で行い、使用した認証コードは失効させます。
+   * @returns 紐づけに成功したかどうか
+   */
+  async bindPortalAccountByAuthCode(db: D1Database, authCode: string, portalUser: User | User['id']) {
     const id = typeof portalUser === 'string' ? portalUser : portalUser.id;
 
-    await db.prepare('UPDATE minecraft_accounts SET user_id = ? WHERE id = ?')
-      .bind(id, playerId)
+    const { meta } = await db.prepare('UPDATE minecraft_accounts SET user_id = ?, auth_code_expires_at = NULL WHERE auth_code = ? AND user_id IS NULL AND auth_code_expires_at > ?')
+      .bind(id, authCode, Date.now())
       .run();
+    return meta.changes > 0;
   }
 }

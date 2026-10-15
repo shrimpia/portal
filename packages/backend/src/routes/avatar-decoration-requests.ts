@@ -2,9 +2,10 @@ import { Hono } from 'hono';
 
 import { AvatarDecorationRequests, Bucket } from '../db/repository';
 import { sessionGuard } from '../middlewares/session-guard';
+import { detectImageType } from '../services/detect-image-type';
 import { postNewAvatarDecorationRequestToDiscord } from '../services/discord';
 import { sendError, sendFailedToGetMisskeyUserError } from '../services/error';
-import { getRemainingAvatarDecorationRequestLimit } from '../services/get-remaining-avatar-decoration-request-limit';
+import { getAvatarDecorationRequestQuota, getRemainingAvatarDecorationRequestLimit } from '../services/get-remaining-avatar-decoration-request-limit';
 import { getMisskeyUser } from '../services/misskey-api';
 
 import type { PortalEnv } from '../env';
@@ -59,8 +60,8 @@ app.post('/', sessionGuard, async (c) => {
     return sendFailedToGetMisskeyUserError(c);
   }
 
-  const limit = await getRemainingAvatarDecorationRequestLimit(c.env.DB, c.portalUser!);
-  if (limit < 1) {
+  const quota = getAvatarDecorationRequestQuota(user);
+  if (quota < 1) {
     return sendError(c, 400, 'リクエスト利用可能枠がもうありません');
   }
 
@@ -88,16 +89,30 @@ app.post('/', sessionGuard, async (c) => {
     return sendError(c, 400, 'Invalid image MIME type: ' + image.type + ' (PNG only)');
   }
 
-  const imageKey = await Bucket.upload(c.env.BUCKET, image);
-  const createdAt = new Date();
+  const imageData = await image.arrayBuffer();
+  if (detectImageType(imageData) !== 'image/png') {
+    return sendError(c, 400, 'Invalid image file (PNG only)');
+  }
 
-  const id = await AvatarDecorationRequests.create(c.env.DB, {
+  // 枠の判定とレコード追加を同時に行い、追加できた場合のみ画像をアップロードする
+  const imageKey = crypto.randomUUID();
+  const id = await AvatarDecorationRequests.createWithinQuota(c.env.DB, {
     name: name.trim(),
     description: description.trim(),
     imageKey,
     userId: c.portalUser!.id,
-    createdAt,
-  });
+    createdAt: new Date(),
+  }, quota);
+  if (!id) {
+    return sendError(c, 400, 'リクエスト利用可能枠がもうありません');
+  }
+
+  try {
+    await Bucket.upload(c.env.BUCKET, imageData, 'image/png', imageKey);
+  } catch (e) {
+    await AvatarDecorationRequests.delete(c.env.DB, id);
+    throw e;
+  }
 
   await postNewAvatarDecorationRequestToDiscord(c.env.DISCORD_WEBHOOK_URL, c.portalUser!, {
     id,

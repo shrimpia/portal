@@ -16,7 +16,7 @@ app.onError((err, c) => {
   c.status(500);
   return c.json({
     ok: false,
-    error: err.message,
+    error: c.env.DEV ? err.message : 'Internal Server Error',
   });
 });
 
