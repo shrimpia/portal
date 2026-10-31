@@ -4,7 +4,7 @@ import { PORTAL_FRONTEND_URL } from '../const';
  * Discord Webhook にメッセージを送信します。メンションは常に無効化されます。
  */
 const postToDiscord = async (webhook: string, body: Record<string, unknown>) => {
-  await fetch(webhook, {
+  const res = await fetch(webhook, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -14,6 +14,9 @@ const postToDiscord = async (webhook: string, body: Record<string, unknown>) => 
       allowed_mentions: { parse: [] },
     }),
   });
+  if (!res.ok) {
+    throw new Error(`Failed to post to Discord: ${res.status} ${res.statusText}`);
+  }
 };
 
 /**
