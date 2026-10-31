@@ -65,6 +65,8 @@ binding = "KV"
 id = "bf1cf7ae214c4855a1fecd3e67926455"
 preview_id = "b4dde27e66c449018a18e51b00e4e6a2"
 
-# 毎日 18:00 (JST) に未処理の申請件数を Discord に通知する
+# Cron Triggers（処理の振り分けは src/worker.ts の scheduled で event.cron を見て行う）
+#   0 9  * * * : 毎日 18:00 (JST) に未処理の申請件数を Discord に通知する
+#   0 10 * * * : 毎日 19:00 (JST) に、その日登録された絵文字をポータル公式アカウントで投稿する
 [triggers]
-crons = ["0 9 * * *"]
+crons = ["0 9 * * *", "0 10 * * *"]

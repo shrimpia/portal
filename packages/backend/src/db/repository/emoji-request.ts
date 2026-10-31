@@ -146,6 +146,20 @@ export class EmojiRequestRepository {
       .then(it => it?.count ?? 0);
   }
 
+  /**
+   * 指定期間（from 以上 to 未満, ミリ秒）に承認された絵文字リクエストの絵文字名を、承認順で取得します。
+   */
+  async readApprovedNamesBetween(db: D1Database, from: number, to: number) {
+    return db.prepare(`
+      SELECT name FROM emoji_request
+        WHERE status = 'approved' AND processed_at >= ? AND processed_at < ?
+        ORDER BY processed_at ASC
+    `)
+      .bind(from, to)
+      .all<{name: string}>()
+      .then(e => e.results.map(r => r.name));
+  }
+
   async countByUserIdAndCreatedYearAndCreatedMonthWithoutRejected(db: D1Database, userId: string, createdYear: number, createdMonth: number) {
     return db.prepare('SELECT COUNT(*) as count FROM emoji_request WHERE user_id = ? AND created_year = ? AND created_month = ? AND status <> \'rejected\'')
       .bind(userId, createdYear, createdMonth)
