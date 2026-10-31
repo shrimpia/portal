@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 
 import index from './routes';
+import { postDailyEmojiSummary } from './services/post-daily-emoji-summary';
 
 import type { PortalEnv } from './env';
 
@@ -20,4 +21,9 @@ app.onError((err, c) => {
   });
 });
 
-export default app;
+export default {
+  fetch: app.fetch,
+  async scheduled(event: ScheduledEvent, env: PortalEnv['Bindings'], ctx: ExecutionContext) {
+    ctx.waitUntil(postDailyEmojiSummary(env, event.scheduledTime));
+  },
+};

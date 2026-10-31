@@ -20,6 +20,10 @@ compatibility_date = "2023-08-14"
 # binding = "MY_BUCKET"
 # bucket_name = "my-bucket"
 
+# 毎日 19:00 JST (10:00 UTC) に、その日登録された絵文字をポータル公式アカウントで投稿する
+[triggers]
+crons = ["0 10 * * *"]
+
 [[r2_buckets]]
 binding = "BUCKET"
 bucket_name = "shrimpia-portal"
