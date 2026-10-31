@@ -46,7 +46,7 @@ export const postDailyEmojiSummary = async (env: PortalEnv['Bindings'], schedule
   let replyId: string | undefined;
   for (const text of splitDailyEmojiSummaryText(names)) {
     const res = await callMisskeyApi<{createdNote: {id: string}}>('notes/create', {
-      i: env.MISSKEY_PORTAL_TOKEN,
+      i: env.MISSKEY_ADMIN_TOKEN,
       text,
       visibility: 'public',
       ...(replyId ? { replyId } : {}),
