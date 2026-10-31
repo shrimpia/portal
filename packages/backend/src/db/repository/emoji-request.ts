@@ -140,6 +140,12 @@ export class EmojiRequestRepository {
       .then(e => e.results);
   }
 
+  async countPendings(db: D1Database) {
+    return db.prepare('SELECT COUNT(*) as count FROM emoji_request WHERE status = \'pending\'')
+      .first<{count: number}>()
+      .then(it => it?.count ?? 0);
+  }
+
   /**
    * 指定期間（from 以上 to 未満, ミリ秒）に承認された絵文字リクエストの絵文字名を、承認順で取得します。
    */
