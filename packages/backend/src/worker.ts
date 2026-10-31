@@ -32,14 +32,14 @@ export default {
   async scheduled(event: ScheduledEvent, env: PortalEnv['Bindings'], ctx: ExecutionContext) {
     // wrangler.toml の crons と対応させること。cron ごとに実行する処理が異なる。
     switch (event.cron) {
-    case CRON_PENDING_REQUESTS_SUMMARY:
-      ctx.waitUntil(postPendingRequestsSummary(env));
-      break;
-    case CRON_DAILY_EMOJI_SUMMARY:
-      ctx.waitUntil(postDailyEmojiSummary(env, event.scheduledTime));
-      break;
-    default:
-      console.error(`未知の cron です: ${event.cron}`);
+      case CRON_PENDING_REQUESTS_SUMMARY:
+        ctx.waitUntil(postPendingRequestsSummary(env));
+        break;
+      case CRON_DAILY_EMOJI_SUMMARY:
+        ctx.waitUntil(postDailyEmojiSummary(env, event.scheduledTime));
+        break;
+      default:
+        console.error(`未知の cron です: ${event.cron}`);
     }
   },
 };
