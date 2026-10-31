@@ -32,6 +32,9 @@ export const splitDailyEmojiSummaryText = (names: string[]) => {
 /**
  * 直近24時間（scheduledTime の24時間前〜scheduledTime）に承認された絵文字を、ポータル公式アカウントで投稿する。
  * 該当がなければ何もしない。
+ *
+ * 注意: 複数ノートに分割した場合、途中のノートの投稿に失敗すると残りは投稿されない。
+ * Cron は再実行されず、次回の集計期間は今回分を含まないため、その日の漏れ分は拾われない（頻度が低いため許容）。
  */
 export const postDailyEmojiSummary = async (env: PortalEnv['Bindings'], scheduledTime: number) => {
   const names = await EmojiRequests.readApprovedNamesBetween(env.DB, scheduledTime - DAY_MS, scheduledTime);
