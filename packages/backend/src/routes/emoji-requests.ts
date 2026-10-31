@@ -3,7 +3,6 @@ import { Hono } from 'hono';
 import { Bucket, EmojiRequests } from '../db/repository';
 import { sessionGuard } from '../middlewares/session-guard';
 import { detectImageType } from '../services/detect-image-type';
-import { postNewEmojiRequestToDiscord } from '../services/discord';
 import { sendError, sendFailedToGetMisskeyUserError } from '../services/error';
 import { getEmojiRequestQuota, getRemainingRequestLimit } from '../services/get-remaining-request-limit';
 import { isDuplicatedEmojiName } from '../services/is-duplicated-emoji-name';
@@ -104,13 +103,6 @@ app.post('/', sessionGuard, async (c) => {
     await EmojiRequests.delete(c.env.DB, id);
     throw e;
   }
-
-  await postNewEmojiRequestToDiscord(c.env.DISCORD_WEBHOOK_URL, c.portalUser!, {
-    id,
-    name,
-    comment: comment.trim(),
-    imageUrl: new URL(c.req.url).origin + '/uploaded/' + imageKey,
-  });
 
   return c.json({
     ok: true,

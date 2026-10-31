@@ -140,6 +140,12 @@ export class EmojiRequestRepository {
       .then(e => e.results);
   }
 
+  async countPendings(db: D1Database) {
+    return db.prepare('SELECT COUNT(*) as count FROM emoji_request WHERE status = \'pending\'')
+      .first<{count: number}>()
+      .then(it => it?.count ?? 0);
+  }
+
   async countByUserIdAndCreatedYearAndCreatedMonthWithoutRejected(db: D1Database, userId: string, createdYear: number, createdMonth: number) {
     return db.prepare('SELECT COUNT(*) as count FROM emoji_request WHERE user_id = ? AND created_year = ? AND created_month = ? AND status <> \'rejected\'')
       .bind(userId, createdYear, createdMonth)

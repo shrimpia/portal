@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 
 import index from './routes';
+import { postPendingRequestsSummary } from './services/post-pending-requests-summary';
 
 import type { PortalEnv } from './env';
 
@@ -20,4 +21,9 @@ app.onError((err, c) => {
   });
 });
 
-export default app;
+export default {
+  fetch: app.fetch,
+  async scheduled(_event: ScheduledEvent, env: PortalEnv['Bindings'], ctx: ExecutionContext) {
+    ctx.waitUntil(postPendingRequestsSummary(env));
+  },
+};
