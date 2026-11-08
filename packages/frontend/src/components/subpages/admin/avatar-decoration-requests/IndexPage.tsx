@@ -1,7 +1,8 @@
 import { useAtom } from 'jotai';
-import { Alert, Col, Form, Row } from 'react-bootstrap';
+import { Col, Form, Row } from 'react-bootstrap';
 
 import { RequestCard } from '@/components/domains/avatar-decoration-request/admin/RequestCard';
+import { Alert } from '@/components/ui/Alert';
 import { adminAvatarDecorationRequestIsShowingTemplateAtom, adminPendingAvatarDecorationRequestsAtom } from '@/states/avatar-decoration-request';
 import { URL_AVATAR_DECORATION_REQUEST_GUIDELINES } from '@/consts';
 import { useState } from 'react';
@@ -31,8 +32,7 @@ export const IndexPage = () => {
           </Col>
         ))}
         {pendingList.length === 0 && (
-          <Alert variant="info">
-            <i className="bi bi-info-circle" />{' '}
+          <Alert variant="info" icon="bi-info-circle">
             処理待ちのアバターデコレーション申請はありません。
           </Alert>
         )}

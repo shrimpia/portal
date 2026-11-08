@@ -1,11 +1,11 @@
 import { css } from '@linaria/core';
 import { useAtom } from 'jotai';
 import { useCallback, useEffect, useMemo } from 'react';
-import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 
 import { MfmView } from '@/components/common/MfmView';
 import { EmojiRequestFormContainer } from '@/components/domains/emoji-request/EmojiRequestFormContainer';
+import { Button } from '@/components/ui/Button';
 import { useWithSpinner } from '@/hooks/useWithSpinner';
 import { useAPI } from '@/services/api';
 import { animatedInputFormAtom, basicInputFormAtom, detailInputFormAtom, fileAtom, imgDataUrlAtom, includingTextInputFormAtom } from '@/states/emoji-request';
@@ -158,7 +158,7 @@ const ConfirmForm: React.FC = () => {
       </dl>
 
       <div className={commandButtonsStyle}>
-        <Button variant="secondary" onClick={returnToFormTop}>
+        <Button onClick={returnToFormTop}>
           <i className="bi bi-arrow-left me-2" />
           入力しなおす
         </Button>

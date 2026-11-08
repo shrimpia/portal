@@ -1,8 +1,9 @@
 import { useAtom } from 'jotai';
 import React, { useCallback, useMemo, useState } from 'react';
-import { Button, Card, Form, Stack } from 'react-bootstrap';
+import { Card, Form, Stack } from 'react-bootstrap';
 
 import { AdminContainer } from '@/components/domains/admin/AdminContainer';
+import { Button } from '@/components/ui/Button';
 import { useAPI } from '@/services/api';
 import { allHintsAtom } from '@/states/hints';
 import { userAtom } from '@/states/user';
@@ -80,7 +81,7 @@ const HintEditor: React.FC<{id?: string | null}> = ({ id }) => {
           )}
           <Stack direction="horizontal" gap={2}>
             {id && (
-              <Button variant="outline-danger" onClick={() => deleteThisItem()}>
+              <Button variant="danger" onClick={() => deleteThisItem()}>
                 <i className="bi bi-trash me-2" />
                 削除する
               </Button>

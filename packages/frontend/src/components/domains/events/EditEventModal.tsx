@@ -1,12 +1,14 @@
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Alert, Button, Form, Modal, Stack } from "react-bootstrap";
+import { Form, Modal, Stack } from "react-bootstrap";
 import DatePicker, { registerLocale } from "react-datepicker";
 
 import type { EventDraft, EventDto } from "@/types/event";
 
 import "react-datepicker/dist/react-datepicker.css";
 
+import { Alert } from '@/components/ui/Alert';
+import { Button } from '@/components/ui/Button';
 import { userAtom } from "@/states/user";
 
 import { ja } from "date-fns/locale/ja";
@@ -99,15 +101,10 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
       <Modal.Body>
         <Stack gap={3}>
           {!isUpdateMode && (
-            <Alert variant="warning">
-              <div className="d-flex gap-2">
-                <i className="bi bi-exclamation-triangle-fill" />
-                <div>
-                  イベントはシュリンピア全体に公開されます。
-                  <br />
-                  サーバールールに反するイベントや、サービス・コンテンツ等の宣伝を目的としたイベントは禁止されます。
-                </div>
-              </div>
+            <Alert variant="warning" icon="bi-exclamation-triangle-fill">
+              イベントはシュリンピア全体に公開されます。
+              <br />
+              サーバールールに反するイベントや、サービス・コンテンツ等の宣伝を目的としたイベントは禁止されます。
             </Alert>
           )}
           {errors.length > 0 && (
@@ -207,7 +204,7 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
         </Stack>
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary" onClick={p.onHide}>
+        <Button onClick={p.onHide}>
           キャンセル
         </Button>
         <Button variant="primary" disabled={!canPost} onClick={onClickSave}>

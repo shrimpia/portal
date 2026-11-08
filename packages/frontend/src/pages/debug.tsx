@@ -1,9 +1,10 @@
 import { useAtom } from 'jotai';
 import { useMemo, useState } from 'react';
-import { Button, Container, Form, Stack } from 'react-bootstrap';
+import { Container, Form, Stack } from 'react-bootstrap';
 
 import { MfmView } from '@/components/common/MfmView';
 import { Stepper } from '@/components/common/Stepper';
+import { Button } from '@/components/ui/Button';
 import { shrimpiaPlusEmulationAtom } from '@/states/debug';
 import { useLoginGuard } from '@/hooks/useLoginGuard';
 

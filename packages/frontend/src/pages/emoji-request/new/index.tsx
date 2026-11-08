@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { css } from '@linaria/core';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useMemo, useState } from 'react';
-import { Alert, Col, Form, Row } from 'react-bootstrap';
+import { Col, Form, Row } from 'react-bootstrap';
 import { ErrorCode, useDropzone } from 'react-dropzone';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
@@ -12,6 +12,7 @@ import type { UploadFormSchema } from '@/form-schemas/emoji-request/upload';
 import { EmojiNoteView } from '@/components/common/EmojiNoteView';
 import { EmojiRequestFormContainer } from '@/components/domains/emoji-request/EmojiRequestFormContainer';
 import { SubmitButton } from '@/components/domains/emoji-request/SubmitButton';
+import { Alert } from '@/components/ui/Alert';
 import { uploadFormSchema } from '@/form-schemas/emoji-request/upload';
 import { animatedInputFormAtom, basicInputFormAtom, detailInputFormAtom, fileAtom, imgDataUrlAtom, includingTextInputFormAtom, uploadFormAtom } from '@/states/emoji-request';
 
@@ -99,8 +100,8 @@ const EmojiRequestNewPage = () => {
       </Alert>
       
       {error?.length > 0 && error.map(e => (
-        <Alert variant="danger" key={'error-' + e}>
-          <i className="bi bi-exclamation-triangle-fill" /> {e}
+        <Alert variant="danger" icon="bi-exclamation-triangle-fill" key={'error-' + e}>
+          {e}
         </Alert>
       ))}
       

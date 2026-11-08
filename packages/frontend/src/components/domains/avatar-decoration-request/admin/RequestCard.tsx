@@ -1,7 +1,7 @@
 import { css } from "@linaria/core";
 import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
-import { Button, Card, Image, Spinner, Stack, Table } from "react-bootstrap";
+import { Card, Image, Spinner, Stack, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
 import type { AvatarDecorationRequest } from "@/types/avatar-decoration-request";
@@ -10,6 +10,7 @@ import avatarDecorationTemplate from "@/assets/avatar-decoration-template.png";
 import { AutoCollapse } from "@/components/common/AutoCollapse";
 import { MfmView } from "@/components/common/MfmView";
 import { UserLinkView } from "@/components/common/UserLinkView";
+import { Button } from '@/components/ui/Button';
 import { useWithSpinner } from "@/hooks/useWithSpinner";
 import { useAPI } from "@/services/api";
 import { getImageSize } from "@/services/get-image-size";
@@ -262,10 +263,10 @@ export const RequestCard: React.FC<RequestCardProps> = ({
 
           {r.status === "pending" && (
             <Stack direction="horizontal" gap={3}>
-              <Button variant="success" onClick={approve}>
+              <Button variant="primary" onClick={approve}>
                 <i className="bi bi-check2" /> 承認
               </Button>
-              <Button variant="primary" onClick={reject}>
+              <Button variant="danger" onClick={reject}>
                 <i className="bi bi-x-lg" /> 却下
               </Button>
             </Stack>

@@ -1,13 +1,13 @@
 import { useAtom } from 'jotai';
 import groupBy from 'lodash.groupby';
 import { useMemo, useEffect, useRef, type PropsWithChildren } from 'react';
-import { Button, Container, Spinner } from 'react-bootstrap';
+import { Container, Spinner } from 'react-bootstrap';
 import Masonry from 'react-masonry-css';
 
 import { RequestsListItem } from './RequestsListItem';
 
+import { Button } from '@/components/ui/Button';
 import { emojiRequestsAtom } from '@/states/emoji-request';
-
 
 export type RequestsListProp = PropsWithChildren;
 
@@ -61,7 +61,7 @@ export const RequestsList: React.FC<RequestsListProp> = ({ children }) => {
       ))}
       {hasNextPage && (
         <div ref={loadMoreRef} className="text-center mb-4">
-          <Button variant="outline-primary" onClick={() => fetchNextPage()}>
+          <Button variant="ghost" onClick={() => fetchNextPage()}>
             {isFetching ? <Spinner variant="dark" size="sm" /> : 'もっと読み込む'}
           </Button>
         </div>

@@ -1,11 +1,12 @@
 import { ErrorBoundary } from "@/components/common/ErrorBoundary";
 import { LoadingView } from "@/components/common/LoadingView";
 import { MinecraftAccountList } from "@/components/domains/minecraft/MinecraftAccountList";
+import { Button } from '@/components/ui/Button';
 import { useLoginGuard } from "@/hooks/useLoginGuard";
 import { useWithSpinner } from "@/hooks/useWithSpinner";
 import { useAPI } from "@/services/api";
 import { Suspense, useCallback, useState } from "react";
-import { Button, Card, Container, Form, InputGroup, Stack } from "react-bootstrap";
+import { Card, Container, Form, InputGroup, Stack } from "react-bootstrap";
 
 const AUTH_CODE_LENGTH = 8;
 

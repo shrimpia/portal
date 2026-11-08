@@ -1,12 +1,13 @@
 import { LoadingView } from "@/components/common/LoadingView";
 import { MfmView } from "@/components/common/MfmView";
 import { AdminContainer } from "@/components/domains/admin/AdminContainer";
+import { Button } from '@/components/ui/Button';
 import { useAPI } from "@/services/api";
 import { surveyAnswersAtom } from "@/states/surveys";
 import { SurveyAnswer } from "@/types/survey-answer";
 import { useAtomValue } from "jotai";
 import React, { Suspense, useEffect, useMemo, useState } from "react";
-import { Button, Card, Form, Stack } from "react-bootstrap";
+import { Card, Form, Stack } from "react-bootstrap";
 
 const convertBody = (body: string) => {
   // 評価: \d+ で始まる行を、星評価に変換する（例: 3 -> ★★★☆☆）

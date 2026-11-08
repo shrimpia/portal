@@ -1,7 +1,8 @@
+import { Button } from '@/components/ui/Button';
 import { useLoginGuard } from "@/hooks/useLoginGuard";
 import { useAPI } from "@/services/api";
 import { useMemo, useState } from "react";
-import { Button, Card, Container, Form } from "react-bootstrap";
+import { Card, Container, Form } from "react-bootstrap";
 
 const SurveyPage = () => {
   useLoginGuard();
@@ -59,7 +60,7 @@ const SurveyPage = () => {
         <li>個人情報等の機密とされる情報を書き込まないよう注意してください。</li>
       </ul>
       <Button
-        variant="link"
+        variant="ghost"
         as="a"
         href="https://go.shrimpia.network/tos-beta"
         target="_blank"
@@ -118,8 +119,8 @@ const SurveyPage = () => {
           </Form>
         </Card.Body>
         <Card.Footer>
-          <Button onClick={submit}>送信</Button>
-          <Button variant="secondary" className="ms-2" onClick={reset}>
+          <Button variant="primary" onClick={submit}>送信</Button>
+          <Button className="ms-2" onClick={reset}>
             リセット
           </Button>
         </Card.Footer>

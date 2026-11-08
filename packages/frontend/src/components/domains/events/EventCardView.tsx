@@ -1,7 +1,7 @@
 import { format } from 'date-fns';
 import { useAtom } from 'jotai';
 import React, { useCallback, useState } from 'react';
-import { Button, Card } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 
 import { EditEventModal } from './EditEventModal';
 
@@ -9,6 +9,7 @@ import type { EventDraft, EventDto } from '@/types/event';
 
 import { MfmView } from '@/components/common/MfmView';
 import { UserLinkView } from '@/components/common/UserLinkView';
+import { Button } from '@/components/ui/Button';
 import { useWithSpinner } from '@/hooks/useWithSpinner';
 import { useAPI } from '@/services/api';
 import { userAtom } from '@/states/user';
@@ -76,10 +77,10 @@ export const EventCardView: React.FC<EventCardViewProp> = ({ event }) => {
         </div>
         {(event.authorName === user?.username || user?.isEmperor) && (
           <div className="d-flex gap-3 justify-content-end">
-            <Button variant="outline-danger" className="border-0" onClick={onClickDelete}>
+            <Button variant="danger" onClick={onClickDelete}>
               <i className="bi bi-trash" /> 削除
             </Button>
-            <Button variant="outline-primary" className="border-0" onClick={onClickEdit}>
+            <Button variant="ghost" onClick={onClickEdit}>
               <i className="bi bi-pencil" /> 編集
             </Button>
           </div>

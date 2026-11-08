@@ -1,10 +1,11 @@
 
 import { useAtom } from 'jotai';
 import React, { useMemo } from 'react';
-import { Alert, Container } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 
 import type { PropsWithChildren } from 'react';
 
+import { Alert } from '@/components/ui/Alert';
 import { userAtom } from '@/states/user';
 import { useLoginGuard } from '@/hooks/useLoginGuard';
 import { Session } from '@/types/session';
@@ -46,8 +47,7 @@ export const AdminContainer: React.FC<AdminContainerProps> = ({ mode, children }
   return (
     <Container>
       {isAllowed ? children : (
-        <Alert variant="danger">
-          <Alert.Heading>権限がありません。</Alert.Heading>
+        <Alert variant="danger" title="権限がありません。">
           <p>
             本ページの閲覧には、<strong>{allowedRoleName}</strong> 権限が必要です。<br/>
             スタッフにも関わらず権限が付与されていない場合は、お手数ですが管理者までお問い合わせください。

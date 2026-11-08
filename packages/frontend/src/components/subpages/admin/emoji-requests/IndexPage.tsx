@@ -1,7 +1,8 @@
 import { useAtom } from 'jotai';
-import { Alert, Col, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 
 import { RequestCard } from '@/components/domains/emoji-request/admin/RequestCard';
+import { Alert } from '@/components/ui/Alert';
 import { URL_EMOJI_REQUEST_GUIDELINES } from '@/consts';
 import { adminPendingEmojiRequestsAtom } from '@/states/emoji-request';
 
@@ -22,8 +23,7 @@ export const IndexPage = () => {
           </Col>
         ))}
         {pendingList.length === 0 && (
-          <Alert variant="info">
-            <i className="bi bi-info-circle" />{' '}
+          <Alert variant="info" icon="bi-info-circle">
             処理待ちの絵文字申請はありません。
           </Alert>
         )}

@@ -26,6 +26,8 @@ export const useApplyTheme = () => {
     const html = document.documentElement as HTMLHtmlElement;
     if (!html) return;
 
+    // bootstrap 用(移行完了後に削除)とデザインシステム用
     html.dataset.bsTheme = currentTheme;
+    html.dataset.theme = currentTheme;
   });
 };

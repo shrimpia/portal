@@ -1,8 +1,9 @@
 import { useAtom } from 'jotai';
-import { Button, Form } from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { RequestCard } from '@/components/domains/avatar-decoration-request/admin/RequestCard';
+import { Button } from '@/components/ui/Button';
 import { adminAvatarDecorationRequestIsShowingTemplateAtom, adminCurrentAvatarDecorationRequestAtom } from '@/states/avatar-decoration-request';
 
 export const DetailsPage = () => {
@@ -17,7 +18,7 @@ export const DetailsPage = () => {
         onChange={e => setIsShowingTemplate(e.target.checked)}
       />
 
-      <Button as={Link as any} to="/admin/avatar-decoration-requests" className="mb-3" variant="outline-primary">
+      <Button as={Link} to="/admin/avatar-decoration-requests" className="mb-3" variant="ghost">
         <i className="bi bi-arrow-left" /> 一覧に戻る
       </Button>
       <RequestCard details request={item} showPreview={isShowingTemplate} />

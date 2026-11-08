@@ -1,13 +1,14 @@
 import { isWithinInterval } from 'date-fns';
 import { useAtom } from 'jotai';
 import { useCallback, useMemo, useState } from 'react';
-import { Button, Offcanvas, Stack } from 'react-bootstrap';
+import { Offcanvas, Stack } from 'react-bootstrap';
 
 import type { EventDraft, EventDto } from '@/types/event';
 
 import { CalendarView } from '@/components/common/CalendarView';
 import { EditEventModal } from '@/components/domains/events/EditEventModal';
 import { EventCardView } from '@/components/domains/events/EventCardView';
+import { Button } from '@/components/ui/Button';
 import { useSaveEvent } from '@/hooks/useRegisterEvent';
 import { allEventsAtom } from '@/states/events';
 
@@ -110,17 +111,17 @@ export const EventCalendarView: React.FC = () => {
         <h2 className="fs-4">
           {year}年{month + 1}月
         </h2>
-        <Button variant="outline-primary" className="border-0 ms-2" onClick={showHelp}>
+        <Button variant="ghost" className="ms-2" onClick={showHelp}>
           <i className="bi bi-question-circle" />
         </Button>
         <Stack direction="horizontal" className="ms-auto" gap={1}>
-          <Button variant="outline-primary" className="border-0" onClick={onClickBackMonth}>
+          <Button variant="ghost" onClick={onClickBackMonth}>
             <i className="bi bi-chevron-left" />
           </Button>
-          <Button variant={isToday ? 'primary' : 'outline-primary'} onClick={onClickToday}>
+          <Button variant={isToday ? 'primary' : 'ghost'} onClick={onClickToday}>
             今日
           </Button>
-          <Button variant="outline-primary" className="border-0" onClick={onClickNextMonth}>
+          <Button variant="ghost" onClick={onClickNextMonth}>
             <i className="bi bi-chevron-right" />
           </Button>
         </Stack>
@@ -163,7 +164,7 @@ export const EventCalendarView: React.FC = () => {
               イベントはありません
             </div>
           )}
-          <Button variant="primary" className="mt-3 d-block w-100" onClick={onClickAddEvent}>
+          <Button block variant="primary" className="mt-3" onClick={onClickAddEvent}>
             <i className="bi bi-plus-lg" /> イベントを追加
           </Button>
         </Offcanvas.Body>

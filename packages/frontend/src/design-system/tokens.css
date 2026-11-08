@@ -1,0 +1,101 @@
+/* Lutica Design System — generated from tokens.json (Lutica Design System artifact). Do not edit by hand. */
+:root, [data-theme="light"] {
+  --background: #ffe5e4;
+  --panel: #f8eeed;
+  --panel-raised: #fffafa;
+  --panel-button: #fffafa;
+  --border: #9a7a7b;
+  --foreground: #393535;
+  --foreground-strong: #000000;
+  --divider: #dcbcbc;
+  --dimmed: #495a6b;
+  --brand: #f24149;
+  --primary: #d30e17;
+  --on-primary: #ffffff;
+  --link: var(--primary);
+  --success: #187a24;
+  --warning: #876300;
+  --danger: #9f070e;
+  --shadow-sm: 0 1px 2px rgba(60, 20, 22, 0.08);
+  --shadow-control: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -1px 0 rgba(60, 20, 22, 0.08), 0 1px 3px rgba(60, 20, 22, 0.14);
+  --shadow-inset: inset 0 1px 2px rgba(60, 20, 22, 0.14);
+  --shadow-md: 0 4px 12px rgba(60, 20, 22, 0.10);
+  --shadow-lg: 0 12px 32px rgba(60, 20, 22, 0.16);
+}
+[data-theme="dark"] {
+  --background: #0f0f1a;
+  --panel: #161625;
+  --panel-raised: #1b1b2c;
+  --panel-button: #2e2e45;
+  --border: #6b6580;
+  --foreground: #c9baba;
+  --foreground-strong: #e1e1e1;
+  --divider: #303046;
+  --dimmed: #a59ea3;
+  --brand: #f24149;
+  --primary: var(--brand);
+  --on-primary: #000000;
+  --link: var(--primary);
+  --success: #6f8e4d;
+  --warning: #ecbd15;
+  --danger: #f44336;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-control: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-inset: inset 0 1px 3px rgba(0, 0, 0, 0.45);
+  --shadow-md: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 4px 12px rgba(0, 0, 0, 0.35);
+  --shadow-lg: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-full: 9999px;
+  --size-control: 40px;
+  --size-control-sm: 32px;
+  --size-indicator: 20px;
+  --size-rim: 3px;
+  --size-progress: 6px;
+  --size-navbar: 56px;
+  --text-tiny: 11px;
+  --text-small: 0.8rem;
+  --text-ui: 14px;
+  --text-body: 16px;
+  --text-h6: 14px;
+  --text-h5: 16px;
+  --text-h4: 18px;
+  --text-h3: 20px;
+  --text-h2: 24px;
+  --text-h1: 32px;
+  --font-sans: "Koruri", sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@font-face {
+  font-family: "Koruri";
+  src: url("./fonts/Koruri-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Koruri";
+  src: url("./fonts/Koruri-semibold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Koruri";
+  src: url("./fonts/Koruri-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}

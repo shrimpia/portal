@@ -9,7 +9,8 @@ import { useApplyTheme } from '@/hooks/useApplyTheme';
 import routes from '~react-pages';
 
 import 'bootstrap-icons/font/bootstrap-icons.min.css';
-import '@/fonts.scss';
+import '@/design-system/tokens.css';
+import '@/design-system/bundle.css';
 import '@/App.scss';
 
 function App() {

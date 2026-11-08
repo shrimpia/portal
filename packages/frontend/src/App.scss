@@ -22,6 +22,8 @@ $shrimpianLightDanger: #F20A15;
 
 // Bootstrap Customize
 $font-family-sans-serif: "Koruri", sans-serif;
+// Koruri には 500 が無いので、見出しは Semibold(600) を使う
+$headings-font-weight: 600;
 $body-color: $shrimpianLightForeground;
 $body-bg: $shrimpianLightBackground;
 $body-color-dark: $shrimpianDarkForeground;
@@ -117,4 +119,11 @@ html {
     padding: 2px;
     border-radius: 4px;
     background-color: var(--sh-card-bg);
+}
+
+// bootstrap との併存中だけ必要。bootstrap の `a:hover` が lu-button の文字色に勝ってしまうのを防ぐ
+a.lu-button {
+    &:hover, &:focus { color: var(--foreground); text-decoration: none; }
+    &.lu-button--primary:hover, &.lu-button--danger:hover { color: var(--on-primary); }
+    &.lu-button--ghost:hover { color: var(--link); }
 }

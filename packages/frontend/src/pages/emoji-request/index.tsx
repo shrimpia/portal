@@ -1,10 +1,12 @@
 
 import { useAtom } from 'jotai';
-import { Alert, Button, Container, Nav, Stack } from 'react-bootstrap';
+import { Container, Nav, Stack } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { OnlyShrimpiaPlus } from '@/components/common/OnlyShrimpiaPlus';
 import { RequestsList } from '@/components/domains/emoji-request/RequestsList';
+import { Alert } from '@/components/ui/Alert';
+import { Button } from '@/components/ui/Button';
 import { URL_EMOJI_REQUEST_GUIDELINES, URL_SHRIMPIA_PLUS } from '@/consts';
 import { filterAtom } from '@/states/emoji-request';
 import { remainingEmojiRequestLimitAtom, userAtom } from '@/states/user';
@@ -37,25 +39,24 @@ const EmojiRequestPage = () => {
       {!isShrimpiaPlus && (limit === 0 ? (
         <OnlyShrimpiaPlus>カスタム絵文字の追加申請</OnlyShrimpiaPlus>
       ) : (
-        <Alert variant="info">
-          <Alert.Heading>いまだけ絵文字追加をお試し！</Alert.Heading>
+        <Alert variant="info" title="いまだけ絵文字追加をお試し！">
           <p>今月に限り、Shrimpia+限定機能である絵文字申請を1件だけお試しいただけます！</p>
           <p>Shrimpia+に参加して、より多くの絵文字を申請しましょう！</p>
-          <Button as="a" variant="warning" href={URL_SHRIMPIA_PLUS} target="_blank" rel="noreferrer noopener">Shrimpia+ に参加する</Button>
+          <Button as="a" variant="primary" href={URL_SHRIMPIA_PLUS} target="_blank" rel="noreferrer noopener">Shrimpia+ に参加する</Button>
         </Alert>
       ))}
       <Stack className="mb-3" direction="horizontal" gap={3}>
         {user && (limit > 0) ? (
-          <Button as={Link as any} to="/emoji-request/new" className="fw-bold">
+          <Button variant="primary" as={Link} to="/emoji-request/new">
             <i className="bi bi-plus" /> 申請する （残り{isEmojiStaff(user!) ? '∞' : limit}件）
           </Button>
         ) : (
-          <Button disabled className="fw-bold" variant="secondary">
+          <Button disabled>
             <i className="bi bi-plus" /> 申請可能数がありません
           </Button>
         )}
         {user?.canManageCustomEmojis && (
-          <Button as={Link as any} to="/admin/emoji-requests" variant="outline-primary">
+          <Button as={Link} to="/admin/emoji-requests" variant="ghost">
             <i className="bi bi-gear-fill" /> 管理…
           </Button>
         )}

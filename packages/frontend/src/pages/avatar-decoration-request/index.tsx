@@ -1,11 +1,12 @@
 import { useAtom } from 'jotai';
 import { Suspense } from 'react';
-import { Button, Container, Nav, Stack } from 'react-bootstrap';
+import { Container, Nav, Stack } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { LoadingView } from '@/components/common/LoadingView';
 import { OnlyShrimpiaPlus } from '@/components/common/OnlyShrimpiaPlus';
 import { AvatarDecorationRequestsList } from '@/components/domains/avatar-decoration-request/RequestsList';
+import { Button } from '@/components/ui/Button';
 import { useLoginGuard } from '@/hooks/useLoginGuard';
 import { filterAtom } from '@/states/avatar-decoration-request';
 import { userAtom } from '@/states/user';
@@ -38,16 +39,16 @@ const AvatarDecorationRequestPage = () => {
       )}
       <Stack className="mb-3" direction="horizontal" gap={3}>
         {user && isShrimpiaPlus ? (
-          <Button as={Link as any} to="/avatar-decoration-request/new" className="fw-bold">
+          <Button variant="primary" as={Link} to="/avatar-decoration-request/new">
             <i className="bi bi-plus" /> 申請する
           </Button>
         ) : (
-          <Button disabled className="fw-bold" variant="secondary">
+          <Button disabled>
             <i className="bi bi-plus" /> 申請する
           </Button>
         )}
         {user?.canManageCustomEmojis && (
-          <Button as={Link as any} to="/admin/avatar-decoration-requests" variant="outline-primary">
+          <Button as={Link} to="/admin/avatar-decoration-requests" variant="ghost">
             <i className="bi bi-gear-fill" /> 管理…
           </Button>
         )}

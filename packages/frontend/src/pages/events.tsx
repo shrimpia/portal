@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { Suspense, useCallback, useState } from "react";
-import { Button, Container, Nav } from "react-bootstrap";
+import { Container, Nav } from "react-bootstrap";
 
 import type { EventDraft } from "@/types/event";
 
@@ -8,6 +8,7 @@ import { LoadingView } from "@/components/common/LoadingView";
 import { EditEventModal } from "@/components/domains/events/EditEventModal";
 import { EventCalendarView } from "@/components/subpages/events/EventCalendarView";
 import { EventListView } from "@/components/subpages/events/EventListView";
+import { Button } from '@/components/ui/Button';
 import { useSaveEvent } from "@/hooks/useRegisterEvent";
 import { viewModeAtom } from "@/states/events";
 import { useLoginGuard } from "@/hooks/useLoginGuard";
@@ -52,7 +53,7 @@ const EventsPage: React.FC = () => {
             </Nav.Link>
           </Nav.Item>
         </Nav>
-        <Button className="ms-auto" onClick={() => setShow(true)}>
+        <Button variant="primary" className="ms-auto" onClick={() => setShow(true)}>
           <i className="bi bi-plus-lg" /> イベントを追加
         </Button>
       </div>

@@ -2,22 +2,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { css } from "@linaria/core";
 import { useAtom, useSetAtom } from "jotai";
 import { useCallback, useMemo, useState } from "react";
-import {
-  Alert,
-  Button,
-  Card,
-  Container,
-  Form,
-  Image,
-  Modal,
-  Stack,
-} from "react-bootstrap";
+import { Card, Container, Form, Image, Modal, Stack } from "react-bootstrap";
 import { ErrorCode, useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { z } from "zod";
 
 import { OnlyShrimpiaPlus } from "@/components/common/OnlyShrimpiaPlus";
+import { Alert } from '@/components/ui/Alert';
+import { Button } from '@/components/ui/Button';
 import { useLoginGuard } from "@/hooks/useLoginGuard";
 import { useWithSpinner } from "@/hooks/useWithSpinner";
 import { api } from "@/services/api";
@@ -278,8 +271,8 @@ const AvatarDecorationRequestNewPage = () => {
               <Card.Body>
                 {error?.length > 0 &&
                   error.map((e) => (
-                    <Alert variant="danger" key={"error-" + e}>
-                      <i className="bi bi-exclamation-triangle-fill" /> {e}
+                    <Alert variant="danger" icon="bi-exclamation-triangle-fill" key={"error-" + e}>
+                      {e}
                     </Alert>
                   ))}
 
@@ -441,7 +434,6 @@ const AvatarDecorationRequestNewPage = () => {
 
                     <Stack direction="horizontal" gap={2}>
                       <Button
-                        variant="secondary"
                         onClick={() => navigate("/avatar-decoration-request")}
                       >
                         キャンセル
@@ -509,7 +501,6 @@ const AvatarDecorationRequestNewPage = () => {
         </Modal.Body>
         <Modal.Footer>
           <Button
-            variant="secondary"
             onClick={() => setShowConfirmDialog(false)}
           >
             キャンセル

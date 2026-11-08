@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Button, Card, Spinner, Stack, Table } from 'react-bootstrap';
+import { Card, Spinner, Stack, Table } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 
 import type { EmojiRequest } from '@/types/emoji-request';
@@ -10,6 +10,7 @@ import { MfmView } from '@/components/common/MfmView';
 import { UserLinkView } from '@/components/common/UserLinkView';
 import { EmojiPreview } from '@/components/domains/emoji-request/EmojiPreview';
 import { parseComment } from '@/components/domains/emoji-request/ParsedCommentView';
+import { Button } from '@/components/ui/Button';
 import { useWithSpinner } from '@/hooks/useWithSpinner';
 import { useAPI } from '@/services/api';
 import { getImageSize } from '@/services/get-image-size';
@@ -188,8 +189,8 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
           
           {r.status === 'pending' && (
             <Stack direction="horizontal" gap={3}>
-              <Button variant="success" onClick={approve}><i className="bi bi-check2" /> 承認</Button>
-              <Button variant="primary" onClick={reject}><i className="bi bi-x-lg" /> 却下</Button>
+              <Button variant="primary" onClick={approve}><i className="bi bi-check2" /> 承認</Button>
+              <Button variant="danger" onClick={reject}><i className="bi bi-x-lg" /> 却下</Button>
             </Stack>
           )}
         </Stack>

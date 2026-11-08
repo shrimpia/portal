@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Button, Stack } from 'react-bootstrap';
+import { Stack } from 'react-bootstrap';
 
 import shrimpia from '@/assets/shrimpia.svg';
+import { Button } from '@/components/ui/Button';
 import { navigateToMiAuth } from '@/services/navigate-to-miauth';
 
 import './WelcomePage.scss';
@@ -30,7 +31,7 @@ export const IndexWelcomePage = () => {
         <img src={shrimpia} className="sh-icon-shrimpia-planet" />
         シュリンピアポータル
       </h1>
-      <Button variant="primary" size="lg" onClick={login}>
+      <Button variant="primary" onClick={login}>
         Misskeyでログイン
       </Button>
     </Stack>

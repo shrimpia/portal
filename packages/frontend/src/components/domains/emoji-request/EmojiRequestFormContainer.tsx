@@ -1,7 +1,7 @@
 import { css } from '@linaria/core';
 import { useAtom } from 'jotai';
 import { Suspense, useCallback, useEffect, useMemo } from 'react';
-import { Alert, Button, Card, Container } from 'react-bootstrap';
+import { Card, Container } from 'react-bootstrap';
 import { useLocation, useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
 
@@ -11,6 +11,7 @@ import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { LoadingView } from '@/components/common/LoadingView';
 import { OnlyShrimpiaPlus } from '@/components/common/OnlyShrimpiaPlus';
 import { Stepper } from '@/components/common/Stepper';
+import { Button } from '@/components/ui/Button';
 import { isEmojiStaff } from '@/services/is-staff';
 import { wizardPages } from '@/states/emoji-request';
 import { remainingEmojiRequestLimitAtom, userAtom } from '@/states/user';
@@ -89,7 +90,7 @@ export const EmojiRequestFormContainer: React.FC<PropsWithChildren<{
             <Card>
               <Card.Body>
                 {p.step !== 0 && (
-                  <Button variant="link me-3" onClick={goBack}>
+                  <Button variant="ghost" className="me-3" onClick={goBack}>
                     <i className="bi bi-arrow-left" /> 戻る
                   </Button>
                 )}
