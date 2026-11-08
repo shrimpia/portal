@@ -4,6 +4,7 @@ import Masonry from 'react-masonry-css';
 
 import { EventCardView } from '@/components/domains/events/EventCardView';
 import { allEventsAtom } from '@/states/events';
+import { masonryColumnStyle, masonryStyle } from '@/components/common/masonry';
 
 export const EventListView: React.FC = () => {
   const [{data: allEvents}] = useAtom(allEventsAtom);
@@ -18,12 +19,12 @@ export const EventListView: React.FC = () => {
       default: 3,
       992: 2,
       768: 1,
-    }} className="d-flex gap-3" columnClassName="d-flex flex-column gap-3">
+    }} className={masonryStyle} columnClassName={masonryColumnStyle}>
       {futureEvents.map((event) => (
         <EventCardView key={event.id} event={event} />
       ))}
     </Masonry>
   ) : (
-    <div className="text-center">イベントはありません</div>
+    <div className="lu-text-center">イベントはありません</div>
   );
 };

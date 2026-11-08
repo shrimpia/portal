@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { css } from '@linaria/core';
 import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { useCallback, useMemo, useState } from 'react';
-import { Alert, Col, Form, Row } from 'react-bootstrap';
 import { ErrorCode, useDropzone } from 'react-dropzone';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
@@ -12,17 +11,20 @@ import type { UploadFormSchema } from '@/form-schemas/emoji-request/upload';
 import { EmojiNoteView } from '@/components/common/EmojiNoteView';
 import { EmojiRequestFormContainer } from '@/components/domains/emoji-request/EmojiRequestFormContainer';
 import { SubmitButton } from '@/components/domains/emoji-request/SubmitButton';
+import { Alert } from '@/components/ui/Alert';
+import { Checkbox } from '@/components/ui/Choice';
+import { Grid } from '@/components/ui/Grid';
 import { uploadFormSchema } from '@/form-schemas/emoji-request/upload';
 import { animatedInputFormAtom, basicInputFormAtom, detailInputFormAtom, fileAtom, imgDataUrlAtom, includingTextInputFormAtom, uploadFormAtom } from '@/states/emoji-request';
 
 const uploadAreaStyle = css`
   padding: 16px;
   border-radius: 8px;
-  border: 2px dashed var(--bs-border-color);
+  border: 2px dashed var(--border);
   cursor: pointer;
 
   &[data-active] {
-    border-color: var(--bs-primary);
+    border-color: var(--primary);
   }
 `;
 
@@ -94,20 +96,20 @@ const EmojiRequestNewPage = () => {
   }, [file, navigate, setData]);
   return (
     <EmojiRequestFormContainer step={0}>
-      <Alert variant="info">
+      <Alert className="lu-mb-4" variant="info">
         アップロードする前に、<br/><a href="https://docs.shrimpia.network/emoji-guideline" target="_blank" rel="noopener noreferrer">絵文字申請ガイドライン</a>を必ずお読みください！
       </Alert>
       
       {error?.length > 0 && error.map(e => (
-        <Alert variant="danger" key={'error-' + e}>
-          <i className="bi bi-exclamation-triangle-fill" /> {e}
+        <Alert className="lu-mb-4" variant="danger" icon="bi-exclamation-triangle-fill" key={'error-' + e}>
+          {e}
         </Alert>
       ))}
       
       <div className={uploadAreaStyle} data-active={isDragActive ? '' : undefined} {...getRootProps()}>
         <input {...getInputProps()} />
         {file && (
-          <div className="mb-2">
+          <div className="lu-mb-2">
             <span>{file.name} - </span>
             <span className={isFileSizeValid ? 'text-success' : 'text-danger'}>
               {fileSizeInKB} KB <i className={`bi bi-${isFileSizeValid ? 'check' : 'x'}-circle-fill`} />
@@ -122,36 +124,24 @@ const EmojiRequestNewPage = () => {
       </div>
       
       {imgDataUrl && file && (
-        <div className="mt-4">
-          <p className="text-center my-5">以下のプレビューを見て、表示に問題がないことを確認してください。</p>
+        <div className="lu-mt-6">
+          <p className="lu-text-center lu-my-12">以下のプレビューを見て、表示に問題がないことを確認してください。</p>
                     
           <form onSubmit={handleSubmit(onSubmit)}>
-            <Row className="">
-              <Col lg={6} sm={12} className="mb-2">
-                <h2 className="fs-5">ダークテーマ</h2>
+            <Grid halves>
+              <div>
+                <h2>ダークテーマ</h2>
                 <EmojiNoteView emojiUrl={imgDataUrl} theme="dark" />
-                <Form.Check>
-                  <Form.Check.Input id="isNotDifficultToReadInDarkMode" type="checkbox" {...register('isReadableInDark', { required: true })} />
-                  <Form.Check.Label htmlFor="isNotDifficultToReadInDarkMode">文字が潰れていない</Form.Check.Label>
-                </Form.Check>
-                <Form.Check>
-                  <Form.Check.Input id="somePartsAreNotHiddenInDarkMode" type="checkbox" {...register('isNotHiddenInDark', { required: true })} />
-                  <Form.Check.Label htmlFor="somePartsAreNotHiddenInDarkMode">画像の一部が隠れていない</Form.Check.Label>
-                </Form.Check>
-              </Col>
-              <Col lg={6} sm={12}>
-                <h2 className="fs-5">ライトテーマ</h2>
+                <Checkbox {...register('isReadableInDark', { required: true })}>文字が潰れていない</Checkbox>
+                <Checkbox {...register('isNotHiddenInDark', { required: true })}>画像の一部が隠れていない</Checkbox>
+              </div>
+              <div>
+                <h2>ライトテーマ</h2>
                 <EmojiNoteView emojiUrl={imgDataUrl} theme="light" />
-                <Form.Check>
-                  <Form.Check.Input id="isNotDifficultToReadInLightMode" type="checkbox" {...register('isReadableInLight', { required: true })} />
-                  <Form.Check.Label htmlFor="isNotDifficultToReadInLightMode">文字が潰れていない</Form.Check.Label>
-                </Form.Check>
-                <Form.Check>
-                  <Form.Check.Input id="somePartsAreNotHiddenInLightMode" type="checkbox" {...register('isNotHiddenInLight', { required: true })} />
-                  <Form.Check.Label htmlFor="somePartsAreNotHiddenInLightMode">画像の一部が隠れていない</Form.Check.Label>
-                </Form.Check>
-              </Col>
-            </Row>
+                <Checkbox {...register('isReadableInLight', { required: true })}>文字が潰れていない</Checkbox>
+                <Checkbox {...register('isNotHiddenInLight', { required: true })}>画像の一部が隠れていない</Checkbox>
+              </div>
+            </Grid>
             <SubmitButton disabled={!isValid}>次へ進む</SubmitButton>
           </form>
         </div>

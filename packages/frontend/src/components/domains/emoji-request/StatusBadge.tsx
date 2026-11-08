@@ -1,11 +1,13 @@
-import { Badge } from 'react-bootstrap';
+
+import { Chip } from '@/components/ui/Chip';
+import type { ChipVariant } from '@/components/ui/Chip';
 
 export type StatusBadgeProps = {
   status: 'pending' | 'approved' | 'rejected';
   className?: string;
 };
 
-const statusMap = {
+const statusMap: Record<StatusBadgeProps['status'], { variant: ChipVariant; icon: string; text: string }> = {
   approved: {
     variant: 'success',
     icon: 'check2',
@@ -27,8 +29,8 @@ export const StatusBadge: React.FC<StatusBadgeProps> = ({ status, className }) =
   const { variant, icon, text } = statusMap[status];
 
   return (
-    <Badge bg={variant} className={className}>
+    <Chip variant={variant} className={className}>
       <i className={`bi bi-${icon}`} /> {text}
-    </Badge>
+    </Chip>
   );
 };

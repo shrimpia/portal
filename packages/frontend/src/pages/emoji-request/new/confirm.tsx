@@ -1,11 +1,11 @@
 import { css } from '@linaria/core';
 import { useAtom } from 'jotai';
 import { useCallback, useEffect, useMemo } from 'react';
-import { Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 
 import { MfmView } from '@/components/common/MfmView';
 import { EmojiRequestFormContainer } from '@/components/domains/emoji-request/EmojiRequestFormContainer';
+import { Button } from '@/components/ui/Button';
 import { useWithSpinner } from '@/hooks/useWithSpinner';
 import { useAPI } from '@/services/api';
 import { animatedInputFormAtom, basicInputFormAtom, detailInputFormAtom, fileAtom, imgDataUrlAtom, includingTextInputFormAtom } from '@/states/emoji-request';
@@ -23,7 +23,7 @@ const confirmationListStyle = css`
     padding-left: 0.5rem;
     
     &:not(:first-child) {
-      border-top: 1px solid var(--bs-border-color);
+      border-top: 1px solid var(--border);
       padding-top: 0.2rem;
     }
   }
@@ -107,11 +107,11 @@ const ConfirmForm: React.FC = () => {
     }
   }, [imgData, basicInput, detailInput, navigate]);
 
-  const noInput = useMemo(() => <span className="text-muted">(入力なし)</span>, []);
+  const noInput = useMemo(() => <span className="lu-text-dimmed">(入力なし)</span>, []);
   
   return (!imgData || !basicInput || !detailInput) ? null : (
     <EmojiRequestFormContainer step={3}>
-      <p className="text-center mb-5">登録内容が正しいかどうか、今一度ご確認ください。</p>
+      <p className="lu-text-center lu-mb-12">登録内容が正しいかどうか、今一度ご確認ください。</p>
       <dl className={confirmationListStyle}>
         <dt>アップロードした画像</dt>
         <dd>
@@ -158,12 +158,12 @@ const ConfirmForm: React.FC = () => {
       </dl>
 
       <div className={commandButtonsStyle}>
-        <Button variant="secondary" onClick={returnToFormTop}>
-          <i className="bi bi-arrow-left me-2" />
+        <Button onClick={returnToFormTop}>
+          <i className="bi bi-arrow-left lu-me-2" />
           入力しなおす
         </Button>
         <Button variant="primary" onClick={submitRequest}>
-          <i className="bi bi-check2 me-2" />
+          <i className="bi bi-check2 lu-me-2" />
           この内容で申請する
         </Button>
       </div>

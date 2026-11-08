@@ -1,16 +1,19 @@
 import { useAtomValue } from 'jotai';
-import { Modal, Spinner } from 'react-bootstrap';
 
+import { Dialog } from '@/components/ui/Dialog';
+import { Spinner } from '@/components/ui/Spinner';
 import { isShowingGlobalSpinnerAtom } from '@/states/screen';
+
+const noop = () => {};
 
 export const ModalSpinner: React.FC = () => {
   const show = useAtomValue(isShowingGlobalSpinnerAtom);
 
   return show ? (
-    <Modal show={show} centered backdrop="static" keyboard={false}>
-      <Modal.Body className="text-center">
-        <Spinner animation="border" variant="primary" />
-      </Modal.Body>
-    </Modal>
+    <Dialog open={show} onClose={noop} dismissible={false}>
+      <div className="lu-text-center">
+        <Spinner />
+      </div>
+    </Dialog>
   ) : null;
 };

@@ -1,10 +1,11 @@
 import { useLayoutEffect, useState } from 'react';
 import React from 'react';
-import { Button } from 'react-bootstrap';
 
 import type { PropsWithChildren } from 'react';
 
 import './AutoCollapse.scss';
+
+import { Button } from '@/components/ui/Button';
 
 export type AutoCollapseProp = PropsWithChildren<{
     height?: number;
@@ -31,7 +32,7 @@ export const AutoCollapse: React.FC<AutoCollapseProp> = ({ children, height = 11
       </div>
   
       {isCollapsed && (
-        <Button variant="secondary" size="sm" onClick={() => setIsCollapsed(!isCollapsed)}>
+        <Button size="sm" onClick={() => setIsCollapsed(!isCollapsed)}>
           もっと見る
         </Button>
       )}

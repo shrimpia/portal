@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAtom, useAtomValue } from 'jotai';
 import React, { useCallback, useEffect } from 'react';
-import { Card, Form, Nav, Stack } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 
@@ -11,6 +10,13 @@ import { MfmView } from '@/components/common/MfmView';
 import { EmojiPreview } from '@/components/domains/emoji-request/EmojiPreview';
 import { EmojiRequestFormContainer } from '@/components/domains/emoji-request/EmojiRequestFormContainer';
 import { SubmitButton } from '@/components/domains/emoji-request/SubmitButton';
+import { Card } from '@/components/ui/Card';
+import { Checkbox, Radio } from '@/components/ui/Choice';
+import { FieldCaption, FieldTitle } from '@/components/ui/Field';
+import { Stack } from '@/components/ui/Stack';
+import { TabBar } from '@/components/ui/TabBar';
+import { Textarea } from '@/components/ui/Textarea';
+import { Textfield } from '@/components/ui/Textfield';
 import { URL_EMOJI_REQUEST_GUIDELINES } from '@/consts';
 import { detailInputAnimatedFormSchema, detailInputFormSchema, detailInputIncludingTextFormSchema } from '@/form-schemas/emoji-request/detail-input';
 import { imgDataUrlAtom, basicInputFormAtom, animatedInputFormAtom, includingTextInputFormAtom, detailInputFormAtom } from '@/states/emoji-request';
@@ -84,159 +90,128 @@ const DetailForm: React.FC = () => {
 
   return !basicInput ? null : (
     <EmojiRequestFormContainer step={2}>
-      <Stack gap={3}>
-        <div className="d-flex justify-content-center">
+      <Stack gap={4}>
+        <Stack direction="horizontal" justify="center">
           <EmojiPreview src={url ?? ''} />
-        </div>
-        <p className="text-center mb-5">
+        </Stack>
+        <p className="lu-text-center lu-mb-12">
           最後に、登録中の絵文字 <code>:{basicInput.name}:</code> の詳細情報を入力してください。<br/>
           入力内容が正しくない、あるいは不足している場合は却下の対象となります。
         </p>
 
         {basicInput.hasAnimation && (
           <Card>
-            <Card.Body>
-              <Card.Title>アニメーション画像についての確認事項</Card.Title>
-              <Form.Check>
-                <Form.Check.Input
-                  type="checkbox"
-                  id="doesNotContainExcessiveFlashing" 
-                  isInvalid={animatedForm.formState.errors.doesNotContainExcessiveFlashing != null}
-                  {...animatedForm.register('doesNotContainExcessiveFlashing')} 
-                />
-                <Form.Check.Label htmlFor="doesNotContainExcessiveFlashing">
-                  過度な点滅や激しい動きを含まない
-                </Form.Check.Label>
-                <Form.Control.Feedback type="invalid">
-                    この項目をオンにしないと登録できません！
-                </Form.Control.Feedback>
-                <Form.Text muted className="d-block">
+            <Card.Title>アニメーション画像についての確認事項</Card.Title>
+            <Checkbox
+              error={animatedForm.formState.errors.doesNotContainExcessiveFlashing != null && 'この項目をオンにしないと登録できません！'}
+              caption={
+                <>
                   <a href="https://ja.wikipedia.org/wiki/%E5%85%89%E9%81%8E%E6%95%8F%E6%80%A7%E7%99%BA%E4%BD%9C" target="_blank" rel="noopener noreferrer">
                     光過敏性発作
                   </a>
                   を誘発しないよう考慮されているか、今一度ご確認ください。
-                </Form.Text>
-              </Form.Check>
-            </Card.Body>
+                </>
+              }
+              {...animatedForm.register('doesNotContainExcessiveFlashing')}
+            >
+              過度な点滅や激しい動きを含まない
+            </Checkbox>
           </Card>
         )}
 
         {basicInput.hasText && (
           <Card>
-            <Card.Body>
-              <Card.Title>テキストについての確認事項</Card.Title>
-              <Stack gap={3}>
-                <Form.Group>
-                  <Form.Check type="radio" id="handwritten" label="手書きのみ" value="handwritten"  {...includingTextForm.register('fontUsage', { required: true })} />
-                  <Form.Check type="radio" id="font" label="フォントを使用している" value="font"  {...includingTextForm.register('fontUsage', { required: true })} />
-                </Form.Group>
-                {fontUsage === 'font' && (
-                  <>
-                    <Form.Group controlId="fontName">
-                      <Form.Label className="fw-bold">使用しているフォントの名前</Form.Label>
-                      <Form.Control type="text" placeholder="例: M PLUS Rounded 1c" isInvalid={includingTextForm.formState.errors.fontName != null} {...includingTextForm.register('fontName')} />
-                      <Form.Control.Feedback type="invalid">
-                        必ず入力してください！
-                      </Form.Control.Feedback>
-                      <Form.Text muted className="ms-2 d-block">
-                        MEGAMOJI等のツールを用いて作成した場合は、ツール内における呼称でOKです。<br/>
-                      </Form.Text>
-                    </Form.Group>
-                    <Form.Group controlId="fontSource">
-                      <Form.Label className="fw-bold">フォントの入手元</Form.Label>
-                      <Form.Control type="text" placeholder="例: Adobe Fonts" isInvalid={includingTextForm.formState.errors.fontSource != null} {...includingTextForm.register('fontSource')} />
-                      <Form.Control.Feedback type="invalid">
-                        必ず入力してください！
-                      </Form.Control.Feedback>
-                      <Form.Text muted className="ms-2 d-block">
+            <Card.Title>テキストについての確認事項</Card.Title>
+            <Stack gap={4}>
+              <div role="radiogroup" aria-label="フォントの使用">
+                <Radio value="handwritten" {...includingTextForm.register('fontUsage', { required: true })}>手書きのみ</Radio>
+                <Radio value="font" {...includingTextForm.register('fontUsage', { required: true })}>フォントを使用している</Radio>
+              </div>
+              {fontUsage === 'font' && (
+                <>
+                  <Textfield
+                    title="使用しているフォントの名前"
+                    placeholder="例: M PLUS Rounded 1c"
+                    invalid={includingTextForm.formState.errors.fontName != null}
+                    caption={includingTextForm.formState.errors.fontName != null ? '必ず入力してください！' : 'MEGAMOJI等のツールを用いて作成した場合は、ツール内における呼称でOKです。'}
+                    {...includingTextForm.register('fontName')}
+                  />
+                  <Textfield
+                    title="フォントの入手元"
+                    placeholder="例: Adobe Fonts"
+                    invalid={includingTextForm.formState.errors.fontSource != null}
+                    caption={includingTextForm.formState.errors.fontSource != null ? '必ず入力してください！' : (
+                      <>
                         サブスクリプションの場合は、サービス名を記入してください。<br/>
                         ツール内蔵のフォントを用いた場合は、ツールのURLを入力してください。<br/>
-                        フリー、あるいは購入したフォントの場合は、その入手元URLを記入してください。<br/>
-                      </Form.Text>
-                    </Form.Group>
-                  </>
-                )}
-                <Form.Group controlId="yomigana">
-                  <Form.Label className="fw-bold">読み仮名</Form.Label>
-                  <Form.Control type="text" placeholder="例: かいしゃくちがい" {...includingTextForm.register('yomigana')} />
-                  <Form.Text muted className="ms-2 d-block">
-                    漢字を含む場合は、こちらに正しい読みを入力してください。タグ付けの参考にします。
-                  </Form.Text>
-                </Form.Group>
-              </Stack>
-            </Card.Body>
+                        フリー、あるいは購入したフォントの場合は、その入手元URLを記入してください。
+                      </>
+                    )}
+                    {...includingTextForm.register('fontSource')}
+                  />
+                </>
+              )}
+              <Textfield
+                title="読み仮名"
+                placeholder="例: かいしゃくちがい"
+                caption="漢字を含む場合は、こちらに正しい読みを入力してください。タグ付けの参考にします。"
+                {...includingTextForm.register('yomigana')}
+              />
+            </Stack>
           </Card>
         )}
 
         <Card>
-          <Card.Body>
-            <Stack gap={3}>
-              <Form.Group controlId="authorInfo">
-                <Form.Label className="fw-bold">オリジナルの作者情報</Form.Label>
-                <Form.Control type="text" {...detailForm.register('authorInfo')} />
-                <Form.Text muted className="ms-2 d-block">
+          <Stack gap={4}>
+            <Textfield
+              title="オリジナルの作者情報"
+              caption={
+                <>
                   代理申請の場合、オリジナル作者のノートURLを入力してください。<br/>
                   他者の作成したコンテンツの場合、著作元の名前および、アップロードしたコンテンツのライセンス表記のあるURL等を入力してください。
-                </Form.Text>
-              </Form.Group>
-              <Form.Group controlId="comment">
-                <Form.Label className="fw-bold">自由記述欄</Form.Label>
-                <Form.Text className="ms-2 d-block">
-                  その他、フォームに記入しきれなかった情報や、
-                  アップロードした画像に何らかの元ネタがある場合など、絵文字の意図が伝わるような追加情報がありましたら、その旨を記入してください。<br/>
-                  （一部のMFMが利用できます。）
-                </Form.Text>
-                
-                <Nav variant="underline" activeKey={commentFormType} className="ms-2" onSelect={key => setCommentFormType(key as 'editor' | 'preview')}>
-                  <Nav.Item>
-                    <Nav.Link eventKey="editor">エディタ</Nav.Link>
-                  </Nav.Item>
-                  <Nav.Item>
-                    <Nav.Link eventKey="preview">プレビュー</Nav.Link>
-                  </Nav.Item>
-                </Nav>
-                {commentFormType === 'editor' ? (
-                  <>
-                    <Form.Control as="textarea" rows={6} {...detailForm.register('comment')} />
-                    <Form.Text className="text-danger">
-                      {detailForm.formState.errors.comment?.message}
-                    </Form.Text>
-                  </>
-                ) : (
-                  <Card>
-                    <Card.Body>
-                      <MfmView>{comment ?? ''}</MfmView>
-                    </Card.Body>
-                  </Card>
-                )}
-              </Form.Group>
-            </Stack>
-          </Card.Body>
+                </>
+              }
+              {...detailForm.register('authorInfo')}
+            />
+            <div>
+              <FieldTitle>自由記述欄</FieldTitle>
+              <FieldCaption>
+                その他、フォームに記入しきれなかった情報や、
+                アップロードした画像に何らかの元ネタがある場合など、絵文字の意図が伝わるような追加情報がありましたら、その旨を記入してください。<br/>
+                （一部のMFMが利用できます。）
+              </FieldCaption>
+
+              <TabBar value={commentFormType} onChange={setCommentFormType} className="lu-ms-2" aria-label="表示の切り替え">
+  <TabBar.Tab value="editor">エディタ</TabBar.Tab>
+  <TabBar.Tab value="preview">プレビュー</TabBar.Tab>
+</TabBar>
+              {commentFormType === 'editor' ? (
+                <Textarea
+                  rows={6}
+                  invalid={detailForm.formState.errors.comment != null}
+                  caption={detailForm.formState.errors.comment?.message}
+                  {...detailForm.register('comment')}
+                />
+              ) : (
+                <Card>
+                  <MfmView>{comment ?? ''}</MfmView>
+                </Card>
+              )}
+            </div>
+          </Stack>
         </Card>
 
         <Card>
-          <Card.Body>
-            <Form.Check>
-              <Form.Check.Input
-                type="checkbox"
-                id="agreeToGuideline" 
-                isInvalid={detailForm.formState.errors.agreeToGuideline != null}
-                {...detailForm.register('agreeToGuideline')}
-              />
-              <Form.Check.Label htmlFor="agreeToGuideline">
-                この申請が
-                <a href={URL_EMOJI_REQUEST_GUIDELINES} target="_blank" rel="noopener noreferrer">
-                  絵文字申請ガイドライン
-                </a>
-                に準拠していることを確認しました
-              </Form.Check.Label>
-              {detailForm.formState.errors.agreeToGuideline && (
-                <Form.Control.Feedback type="invalid">
-                  この項目をオンにしないと登録できません！
-                </Form.Control.Feedback>
-              )}
-            </Form.Check>
-          </Card.Body>
+          <Checkbox
+            error={detailForm.formState.errors.agreeToGuideline && 'この項目をオンにしないと登録できません！'}
+            {...detailForm.register('agreeToGuideline')}
+          >
+            この申請が
+            <a href={URL_EMOJI_REQUEST_GUIDELINES} target="_blank" rel="noopener noreferrer">
+              絵文字申請ガイドライン
+            </a>
+            に準拠していることを確認しました
+          </Checkbox>
         </Card>
           
         <SubmitButton type="button" onClick={onClick}>入力項目を確認する</SubmitButton>

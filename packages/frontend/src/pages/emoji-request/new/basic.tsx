@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAtom, useAtomValue } from 'jotai';
 import React, { useCallback, useEffect, useMemo } from 'react';
-import { Card, Form, Stack } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 
@@ -11,6 +10,10 @@ import { MfmView } from '@/components/common/MfmView';
 import { EmojiPreview } from '@/components/domains/emoji-request/EmojiPreview';
 import { EmojiRequestFormContainer } from '@/components/domains/emoji-request/EmojiRequestFormContainer';
 import { SubmitButton } from '@/components/domains/emoji-request/SubmitButton';
+import { Card } from '@/components/ui/Card';
+import { Checkbox } from '@/components/ui/Choice';
+import { Stack } from '@/components/ui/Stack';
+import { Textfield } from '@/components/ui/Textfield';
 import { basicInputFormSchema } from '@/form-schemas/emoji-request/basic-input';
 import { useAPI } from '@/services/api';
 import { fileAtom, imgDataUrlAtom, basicInputFormAtom, emojiNameDuplicationCheckStateAtom } from '@/states/emoji-request';
@@ -34,22 +37,18 @@ const BasicForm: React.FC = () => {
       case 'initial':
         return null;
       case 'loading':
-        return (
-          <Form.Text className="text-muted ms-2">
-            検証中…
-          </Form.Text>
-        );
+        return '検証中…';
       case 'valid':
         return (
-          <Form.Text className="text-success ms-2">
+          <>
             <i className="bi bi-check-circle-fill" /> <MfmView>:iizo:</MfmView>
-          </Form.Text>
+          </>
         );
       case 'invalid':
         return (
-          <Form.Text className="text-danger ms-2">
+          <>
             <i className="bi bi-exclamation-triangle-fill" /> この名前はすでに登録、あるいは申請されています。
-          </Form.Text>
+          </>
         );
     }
   }, [emojiNameState]);
@@ -91,59 +90,45 @@ const BasicForm: React.FC = () => {
 
   return !file ? null : (
     <EmojiRequestFormContainer step={1}>
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <Stack gap={3}>
-          <div className="d-flex justify-content-center">
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Stack gap={4}>
+          <Stack direction="horizontal" justify="center">
             <EmojiPreview src={url ?? ''} />
-          </div>
-          <p className="text-center mb-5">
+          </Stack>
+          <p className="lu-text-center lu-mb-12">
             アップロードした絵文字について、情報を入力してください。<br/>
             入力内容が正しくない、あるいは不足している場合は却下の対象となります。
           </p>
-          <Form.Group controlId="name">
-            <Form.Label className="fw-bold">名前</Form.Label>
-            <Form.Control
-              type="text"
-              autoComplete="off"
-              placeholder="例: lutica_dadakone"
-              {...register('name')}
-              isInvalid={errors.name != null || emojiNameState === 'invalid'}
-              onBlur={onBlurNameInput}
-            />
-            <Stack>
-              {errors.name && (
-                <Form.Text className="text-danger ms-2">
-                  <i className="bi bi-exclamation-triangle-fill" /> 1文字以上32文字以内の小文字の英数字とアンダースコア(_)のみが利用できます
-                </Form.Text>
-              )}
-              {!errors.name && emojiNameStateMessage}
-            </Stack>
-          </Form.Group>
+          <Textfield
+            title="名前"
+            autoComplete="off"
+            placeholder="例: lutica_dadakone"
+            {...register('name')}
+            invalid={errors.name != null || emojiNameState === 'invalid'}
+            onBlur={onBlurNameInput}
+            caption={errors.name ? (
+              <>
+                <i className="bi bi-exclamation-triangle-fill" /> 1文字以上32文字以内の小文字の英数字とアンダースコア(_)のみが利用できます
+              </>
+            ) : emojiNameStateMessage}
+          />
       
           <Card>
-            <Card.Body>
-              <p>アップロードした画像に対し、当てはまる項目をオンにしてください。</p>
-              <Stack gap={2}>
-                <Form.Check>
-                  <Form.Check.Input id="hasText" type="checkbox" {...register('hasText')} />
-                  <Form.Check.Label htmlFor="hasText">
-                    <b>テキストを含む</b><br/>
-                  </Form.Check.Label>
-                </Form.Check>
-      
-                <Form.Check>
-                  <Form.Check.Input id="hasAnimation" type="checkbox" {...register('hasAnimation')} />
-                  <Form.Check.Label htmlFor="hasAnimation">
-                    <b>アニメーションする</b>
-                  </Form.Check.Label>
-                </Form.Check>
-              </Stack>
-            </Card.Body>
+            <p>アップロードした画像に対し、当てはまる項目をオンにしてください。</p>
+            <Stack gap={2}>
+              <Checkbox {...register('hasText')}>
+                <b>テキストを含む</b>
+              </Checkbox>
+    
+              <Checkbox {...register('hasAnimation')}>
+                <b>アニメーションする</b>
+              </Checkbox>
+            </Stack>
           </Card>
 
           <SubmitButton disabled={!isValid || emojiNameState !== 'valid'}>次へ進む</SubmitButton>
         </Stack>
-      </Form>
+      </form>
     </EmojiRequestFormContainer>
   );
 };

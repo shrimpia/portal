@@ -1,8 +1,12 @@
 import { useAtom } from 'jotai';
 import React, { useCallback, useMemo, useState } from 'react';
-import { Button, Card, Form, Stack } from 'react-bootstrap';
 
 import { AdminContainer } from '@/components/domains/admin/AdminContainer';
+import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Switch } from '@/components/ui/Choice';
+import { Stack } from '@/components/ui/Stack';
+import { Textfield } from '@/components/ui/Textfield';
 import { useAPI } from '@/services/api';
 import { allHintsAtom } from '@/states/hints';
 import { userAtom } from '@/states/user';
@@ -56,42 +60,44 @@ const HintEditor: React.FC<{id?: string | null}> = ({ id }) => {
 
   return (
     <Card>
-      <Card.Body>
-        {!id && <Card.Title><i className="bi bi-plus"/> 新規作成</Card.Title>}
-        <Stack gap={3}>
-          <Form.Group>
-            <Form.Control type="text" placeholder="" value={content} onChange={e => setContent(e.target.value)} isInvalid={isInvalid} />
-            <Form.Text className={`ms-2 ${isInvalid ? 'text-danger' : 'text-muted'}`}>残り{80 - content.length}文字</Form.Text>
-          </Form.Group>
-          <Form.Group>
-            <Form.Control type="text" placeholder="URL" value={url ?? ''} onChange={e => setUrl(!e.target.value ? null : e.target.value)} />
-            <Form.Text className="ms-2 text-muted">ヘッドラインをタップしたときのリンクURL。不要な場合は空欄にします。</Form.Text>
-          </Form.Group>
+      {!id && <Card.Title><i className="bi bi-plus"/> 新規作成</Card.Title>}
+      <Stack gap={4}>
+        <Textfield
+          value={content}
+          onChange={e => setContent(e.target.value)}
+          invalid={isInvalid}
+          caption={`残り${80 - content.length}文字`}
+        />
+        <Textfield
+          placeholder="URL"
+          value={url ?? ''}
+          onChange={e => setUrl(!e.target.value ? null : e.target.value)}
+          caption="ヘッドラインをタップしたときのリンクURL。不要な場合は空欄にします。"
+        />
+        {id && (
+          <Switch
+            className="lu-mb-2"
+            disabled={!isEmperor}
+            checked={hint?.is_published}
+            onChange={() => setVisibility(!(hint?.is_published))}
+            caption="管理者のみが操作できます。"
+          >
+            <b>公開にする</b>
+          </Switch>
+        )}
+        <Stack direction="horizontal" gap={2}>
           {id && (
-            <Form.Group className="mb-2">
-              <Form.Switch>
-                <Form.Check.Input id="isDecoMoji" type="checkbox" disabled={!isEmperor} checked={hint?.is_published} onChange={() => setVisibility(!(hint?.is_published))} />
-                <Form.Check.Label htmlFor="isDecoMoji">
-                  <b>公開にする</b><br/>
-                  <Form.Text muted>管理者のみが操作できます。</Form.Text>
-                </Form.Check.Label>
-              </Form.Switch>
-            </Form.Group>
-          )}
-          <Stack direction="horizontal" gap={2}>
-            {id && (
-              <Button variant="outline-danger" onClick={() => deleteThisItem()}>
-                <i className="bi bi-trash me-2" />
-                削除する
-              </Button>
-            )}
-            <Button variant="primary" onClick={submit} disabled={isInvalid}>
-              <i className="bi bi-save me-2" />
-              {id ? '更新する' : '作成する'}
+            <Button variant="danger" onClick={() => deleteThisItem()}>
+              <i className="bi bi-trash lu-me-2" />
+              削除する
             </Button>
-          </Stack>
+          )}
+          <Button variant="primary" onClick={submit} disabled={isInvalid}>
+            <i className="bi bi-save lu-me-2" />
+            {id ? '更新する' : '作成する'}
+          </Button>
         </Stack>
-      </Card.Body>
+      </Stack>
     </Card>
   );
 };
@@ -102,11 +108,11 @@ const IndexPage = () => {
   
   return user ? (
     <AdminContainer mode="staff">
-      <h1 className="fs-3 mb-5">ヒント管理</h1>
-      <div className="mb-5">
+      <h1 className="lu-mb-12">ヒント管理</h1>
+      <div className="lu-mb-12">
         <HintEditor />
       </div>
-      <Stack gap={3}>
+      <Stack gap={4}>
         {hints.map(hint => (
           <HintEditor key={hint.id} id={hint.id} />
         ))}

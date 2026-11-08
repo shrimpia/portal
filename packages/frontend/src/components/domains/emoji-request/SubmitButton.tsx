@@ -1,6 +1,8 @@
 import { css } from '@linaria/core';
 import React from 'react';
-import { Button } from 'react-bootstrap';
+
+import { Button } from '@/components/ui/Button';
+import { classNames } from '@/util/class-names';
 
 const commandButtonsStyle = css`
   display: flex;
@@ -13,7 +15,7 @@ export type SubmitButtonProp = React.ButtonHTMLAttributes<HTMLButtonElement>;
 export const SubmitButton: React.FC<SubmitButtonProp> = (p) => {
   return (
     <div className={commandButtonsStyle}>
-      <Button type="submit" {...p} className={`px-5 ${p.className}`}>
+      <Button variant="primary" type="submit" {...p} className={classNames('lu-px-12', p.className)}>
         <i className="bi bi-arrow-right me"/> {p.children}
       </Button>
     </div>

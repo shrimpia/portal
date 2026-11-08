@@ -1,8 +1,9 @@
 import { useAtom } from 'jotai';
-import { Button, Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { RequestCard } from '@/components/domains/avatar-decoration-request/admin/RequestCard';
+import { Button } from '@/components/ui/Button';
+import { Switch } from '@/components/ui/Choice';
 import { adminAvatarDecorationRequestIsShowingTemplateAtom, adminCurrentAvatarDecorationRequestAtom } from '@/states/avatar-decoration-request';
 
 export const DetailsPage = () => {
@@ -11,13 +12,14 @@ export const DetailsPage = () => {
 
   return item ? (
     <>
-      <Form.Switch className="mb-3"
-        label="プレビュー画像にテンプレートを表示"
+      <Switch className="lu-mb-4"
         checked={isShowingTemplate}
         onChange={e => setIsShowingTemplate(e.target.checked)}
-      />
+      >
+        プレビュー画像にテンプレートを表示
+      </Switch>
 
-      <Button as={Link as any} to="/admin/avatar-decoration-requests" className="mb-3" variant="outline-primary">
+      <Button as={Link} to="/admin/avatar-decoration-requests" className="lu-mb-4" variant="ghost">
         <i className="bi bi-arrow-left" /> 一覧に戻る
       </Button>
       <RequestCard details request={item} showPreview={isShowingTemplate} />

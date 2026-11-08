@@ -1,7 +1,9 @@
 import { useSetAtom } from 'jotai';
 import { useEffect, useState } from 'react';
-import { Card, Container, Spinner } from 'react-bootstrap';
 
+import { Card } from '@/components/ui/Card';
+import { Container } from '@/components/ui/Container';
+import { Spinner } from '@/components/ui/Spinner';
 import { useQuery } from '@/hooks/useQuery';
 import { useAPI } from '@/services/api';
 import { MIAUTH_SESSION_STORAGE_KEY } from '@/services/navigate-to-miauth';
@@ -61,21 +63,19 @@ const MiAuthPage = () => {
   }, [api, session, setToken]);
 
   return (
-    <Container className="my-4">
+    <Container className="lu-my-6">
       {error ? (
         <>
           <h1>エラーが発生しました</h1>
           <Card>
-            <Card.Body>
-              {error}
-            </Card.Body>
+            {error}
           </Card>
         </>
       ) : (
         <>
           <h1>ログイン処理中です。</h1>
           <p>これには時間がかかる場合があります。<br />ブラウザを閉じずに、そのままお待ちください。</p>
-          <Spinner variant="primary" />
+          <Spinner />
         </>
       )}
     </Container>

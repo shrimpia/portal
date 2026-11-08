@@ -1,13 +1,15 @@
 import { isWithinInterval } from 'date-fns';
 import { useAtom } from 'jotai';
 import { useCallback, useMemo, useState } from 'react';
-import { Button, Offcanvas, Stack } from 'react-bootstrap';
 
 import type { EventDraft, EventDto } from '@/types/event';
 
 import { CalendarView } from '@/components/common/CalendarView';
 import { EditEventModal } from '@/components/domains/events/EditEventModal';
 import { EventCardView } from '@/components/domains/events/EventCardView';
+import { Button } from '@/components/ui/Button';
+import { Drawer } from '@/components/ui/Drawer';
+import { Stack } from '@/components/ui/Stack';
 import { useSaveEvent } from '@/hooks/useRegisterEvent';
 import { allEventsAtom } from '@/states/events';
 
@@ -106,33 +108,29 @@ export const EventCalendarView: React.FC = () => {
 
   return (
     <>
-      <header className="d-flex mb-2">
-        <h2 className="fs-4">
+      <Stack as="header" direction="horizontal" align="center" className="lu-mb-2">
+        <h2>
           {year}年{month + 1}月
         </h2>
-        <Button variant="outline-primary" className="border-0 ms-2" onClick={showHelp}>
+        <Button variant="ghost" className="lu-ms-2" onClick={showHelp}>
           <i className="bi bi-question-circle" />
         </Button>
-        <Stack direction="horizontal" className="ms-auto" gap={1}>
-          <Button variant="outline-primary" className="border-0" onClick={onClickBackMonth}>
+        <Stack direction="horizontal" className="lu-ms-auto" gap={1}>
+          <Button variant="ghost" onClick={onClickBackMonth}>
             <i className="bi bi-chevron-left" />
           </Button>
-          <Button variant={isToday ? 'primary' : 'outline-primary'} onClick={onClickToday}>
+          <Button variant={isToday ? 'primary' : 'ghost'} onClick={onClickToday}>
             今日
           </Button>
-          <Button variant="outline-primary" className="border-0" onClick={onClickNextMonth}>
+          <Button variant="ghost" onClick={onClickNextMonth}>
             <i className="bi bi-chevron-right" />
           </Button>
         </Stack>
-      </header>
+      </Stack>
       <CalendarView year={year} month={month} events={calendarEvents} onClick={onClickDayCell} />
 
-      <Offcanvas show={isHelpShow} onHide={() => setHelpShow(false)} placement="end">
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>ヘルプ</Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          <Stack gap={3}>
+      <Drawer open={isHelpShow} onClose={() => setHelpShow(false)} title="ヘルプ">
+          <Stack gap={4}>
             <p>
               カレンダー上の日付をクリックすると、その日のイベント一覧が表示されます。イベント一覧の下部にある「イベントを追加」ボタンをクリックすると、イベントを追加できます。
             </p>
@@ -143,31 +141,23 @@ export const EventCalendarView: React.FC = () => {
               なお、カレンダーには見かけ上前月・翌月の枠がありますが、前月・翌月のイベントは仕様上表示されません。ご了承ください。
             </p>
           </Stack>
-        </Offcanvas.Body>
-      </Offcanvas>
+        </Drawer>
 
-      <Offcanvas show={isFlyoutShow} onHide={() => setFlyoutShow(false)} placement="end">
-        <Offcanvas.Header closeButton>
-          <Offcanvas.Title>
-            {year}年{month + 1}月{flyoutData?.day}日
-          </Offcanvas.Title>
-        </Offcanvas.Header>
-        <Offcanvas.Body>
-          <Stack gap={3}>
+      <Drawer open={isFlyoutShow} onClose={() => setFlyoutShow(false)} title={<>{year}年{month + 1}月{flyoutData?.day}日</>}>
+          <Stack gap={4}>
             {flyoutData?.events.map((event) => (
               <EventCardView event={event} key={event.id} />
             ))}
           </Stack>
           {flyoutData?.events.length === 0 && (
-            <div className="text-center text-muted">
+            <div className="lu-text-center lu-text-dimmed">
               イベントはありません
             </div>
           )}
-          <Button variant="primary" className="mt-3 d-block w-100" onClick={onClickAddEvent}>
+          <Button block variant="primary" className="lu-mt-4" onClick={onClickAddEvent}>
             <i className="bi bi-plus-lg" /> イベントを追加
           </Button>
-        </Offcanvas.Body>
-      </Offcanvas>
+        </Drawer>
       <EditEventModal show={show} initialDate={flyoutToday} onHide={() => setShow(false)} onSave={onSave} />
     </>
   );

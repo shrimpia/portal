@@ -97,7 +97,7 @@ export const CalendarView: React.FC<CalendarViewProp> = ({ year, month, events, 
   }, []);
 
   return (
-    <div className="calendar rounded shadow">
+    <div className="calendar">
       {weekdays.map((weekday, i) => (
         <div key={weekday} className={`cell-weekday ${i === 0 || i === 6 ? 'holiday' : ''}`}>{weekday}</div>
       ))}

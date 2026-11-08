@@ -26,6 +26,6 @@ export const useApplyTheme = () => {
     const html = document.documentElement as HTMLHtmlElement;
     if (!html) return;
 
-    html.dataset.bsTheme = currentTheme;
+    html.dataset.theme = currentTheme;
   });
 };

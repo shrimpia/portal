@@ -1,5 +1,8 @@
-import { Badge, Card, Stack } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+
+import { Card } from '@/components/ui/Card';
+import { Chip } from '@/components/ui/Chip';
+import { Stack } from '@/components/ui/Stack';
 
 export type LinkCardProp = {
     title: string;
@@ -11,17 +14,17 @@ export type LinkCardProp = {
 
 export const LinkCard = (p: LinkCardProp) => {
   return (
-    <Card as={Link} to={p.to} className="border border-0 shadow text-decoration-none sh-card-hover">
-      <Stack direction="horizontal" className="align-items-center" gap={3}>
-        {p.icon && <i className={`${p.icon} fs-2 ms-4 sh-app-icon-color`} />}
-        <Card.Body>
-          <Card.Title>{p.title} {p.new && <Badge style={{ fontSize: '0.7rem', verticalAlign: '0.3rem' }}>NEW</Badge>}</Card.Title>
+    <Card as={Link} to={p.to} link>
+      <Stack direction="horizontal" align="center" gap={4}>
+        {p.icon && <i className={`${p.icon} sh-app-icon-color`} style={{ fontSize: '2rem', marginInline: 'var(--space-2)' }} />}
+        <div>
+          <Card.Title>{p.title} {p.new && <Chip style={{ verticalAlign: '0.2rem' }}>NEW</Chip>}</Card.Title>
           {p.children && (
-            <Card.Text className="text-muted">
+            <Card.Text className="lu-text-dimmed">
               {p.children}
             </Card.Text>
           )}
-        </Card.Body>
+        </div>
       </Stack>
     </Card>
   );

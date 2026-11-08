@@ -1,17 +1,36 @@
+import { css } from "@linaria/core";
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Alert, Button, Form, Modal, Stack } from "react-bootstrap";
 import DatePicker, { registerLocale } from "react-datepicker";
 
 import type { EventDraft, EventDto } from "@/types/event";
 
 import "react-datepicker/dist/react-datepicker.css";
 
+import { Alert } from '@/components/ui/Alert';
+import { Button } from '@/components/ui/Button';
+import { Checkbox } from '@/components/ui/Choice';
+import { Dialog } from '@/components/ui/Dialog';
+import { Control, Well } from '@/components/ui/Control';
+import { FieldTitle } from '@/components/ui/Field';
+import { Stack } from '@/components/ui/Stack';
+import { Textarea } from '@/components/ui/Textarea';
+import { Textfield } from '@/components/ui/Textfield';
 import { userAtom } from "@/states/user";
 
 import { ja } from "date-fns/locale/ja";
 
 registerLocale("ja", ja);
+
+// Control の中で、日時の入力欄が幅を等分するようにする
+const pickerWrapperStyle = css`
+  flex: 1 1 0;
+  min-width: 0;
+
+  .react-datepicker__input-container {
+    display: block;
+  }
+`;
 
 export type EditEventModalProp = {
   show: boolean;
@@ -90,29 +109,30 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
   }, [p.initialDate, p.initialEvent]);
 
   return (
-    <Modal show={p.show} onHide={p.onHide}>
-      <Modal.Header closeButton>
-        <Modal.Title>
-          {isUpdateMode ? "イベント編集" : "イベントを新規登録"}
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Stack gap={3}>
+    <Dialog
+      open={p.show}
+      onClose={p.onHide}
+      title={isUpdateMode ? "イベント編集" : "イベントを新規登録"}
+      actions={
+        <>
+          <Button onClick={p.onHide}>キャンセル</Button>
+          <Button variant="primary" disabled={!canPost} onClick={onClickSave}>
+            {isUpdateMode ? "更新" : "登録"}
+          </Button>
+        </>
+      }
+    >
+        <Stack gap={4}>
           {!isUpdateMode && (
-            <Alert variant="warning">
-              <div className="d-flex gap-2">
-                <i className="bi bi-exclamation-triangle-fill" />
-                <div>
-                  イベントはシュリンピア全体に公開されます。
-                  <br />
-                  サーバールールに反するイベントや、サービス・コンテンツ等の宣伝を目的としたイベントは禁止されます。
-                </div>
-              </div>
+            <Alert variant="warning" icon="bi-exclamation-triangle-fill">
+              イベントはシュリンピア全体に公開されます。
+              <br />
+              サーバールールに反するイベントや、サービス・コンテンツ等の宣伝を目的としたイベントは禁止されます。
             </Alert>
           )}
           {errors.length > 0 && (
             <Alert variant="danger">
-              <ul className="mb-0 ps-3">
+              <ul className="lu-mb-0 lu-ps-4">
                 {errors.map((e) => (
                   <li key={e}>{e}</li>
                 ))}
@@ -120,10 +140,8 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
             </Alert>
           )}
           <div>
-            <Form.Label htmlFor="name" className="fw-bold">
-              イベント名
-            </Form.Label>
-            <Form.Control
+            <Textfield
+              title="イベント名"
               value={name}
               id="name"
               type="text"
@@ -133,34 +151,33 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
             />
           </div>
           <div>
-            <Form.Label className="fw-bold">日時</Form.Label>
-            <div className="d-flex align-items-center">
+            <Control title="日時">
               <DatePicker
                 dateFormat={isAllDay ? "y年M月d日" : "y年M月d日 HH:mm"}
                 locale="ja"
                 showTimeSelect={!isAllDay}
                 selected={startDate}
-                className="form-control"
+                customInput={<Well aria-label="開始" />}
+                wrapperClassName={pickerWrapperStyle}
                 onChange={(date) => setStartDate(date ?? new Date())}
                 onBlur={checkErrors}
               />
-              <div className="mx-2">～</div>
+              <Control.Separator>～</Control.Separator>
               <DatePicker
                 dateFormat={isAllDay ? "y年M月d日" : "y年M月d日 HH:mm"}
                 locale="ja"
                 showTimeSelect={!isAllDay}
                 selected={endDate}
-                className="form-control"
+                customInput={<Well aria-label="終了" />}
+                wrapperClassName={pickerWrapperStyle}
                 onChange={(date) => setEndDate(date ?? new Date())}
                 onBlur={checkErrors}
               />
-            </div>
-            <Form.Check
+            </Control>
+            <Checkbox
               checked={isAllDay}
-              type="checkbox"
               id="isAllDay"
-              label="終日予定にする"
-              className="mt-2 ms-2"
+              className="lu-mt-2 lu-ms-2"
               onChange={(e) => {
                 setAllDay(e.target.checked);
                 if (e.target.checked) {
@@ -176,44 +193,32 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
                   });
                 }
               }}
-            />
+            >
+              終日予定にする
+            </Checkbox>
           </div>
-          <div>
-            <Form.Label htmlFor="description" className="fw-bold">
-              説明
-            </Form.Label>
-            <Form.Control
-              value={description}
-              id="description"
-              as="textarea"
-              rows={7}
-              placeholder="例：お絵描き大会を開催します。"
-              onChange={(e) => setDescription(e.target.value)}
-            />
-            <Form.Text muted>一部のMFMが使用できます。</Form.Text>
-          </div>
+          <Textarea
+            title="説明"
+            value={description}
+            id="description"
+            rows={7}
+            placeholder="例：お絵描き大会を開催します。"
+            onChange={(e) => setDescription(e.target.value)}
+            caption="一部のMFMが使用できます。"
+          />
           {user?.isEmperor && (
             <div>
-              <Form.Label className="fw-bold">その他の設定</Form.Label>
-              <Form.Check
-                type="checkbox"
+              <FieldTitle>その他の設定</FieldTitle>
+              <Checkbox
                 id="isOfficial"
-                label="公式イベント（管理者のみ設定可能）"
                 checked={isOfficial}
                 onChange={(e) => setOfficial(e.target.checked)}
-              />
+              >
+                公式イベント（管理者のみ設定可能）
+              </Checkbox>
             </div>
           )}
         </Stack>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={p.onHide}>
-          キャンセル
-        </Button>
-        <Button variant="primary" disabled={!canPost} onClick={onClickSave}>
-          {isUpdateMode ? "更新" : "登録"}
-        </Button>
-      </Modal.Footer>
-    </Modal>
+      </Dialog>
   );
 };
