@@ -1,3 +1,4 @@
+import { css } from "@linaria/core";
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import DatePicker, { registerLocale } from "react-datepicker";
@@ -10,6 +11,7 @@ import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { Checkbox } from '@/components/ui/Choice';
 import { Dialog } from '@/components/ui/Dialog';
+import { Control, Well } from '@/components/ui/Control';
 import { FieldTitle } from '@/components/ui/Field';
 import { Stack } from '@/components/ui/Stack';
 import { Textarea } from '@/components/ui/Textarea';
@@ -19,6 +21,16 @@ import { userAtom } from "@/states/user";
 import { ja } from "date-fns/locale/ja";
 
 registerLocale("ja", ja);
+
+// Control の中で、日時の入力欄が幅を等分するようにする
+const pickerWrapperStyle = css`
+  flex: 1 1 0;
+  min-width: 0;
+
+  .react-datepicker__input-container {
+    display: block;
+  }
+`;
 
 export type EditEventModalProp = {
   show: boolean;
@@ -139,28 +151,29 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
             />
           </div>
           <div>
-            <FieldTitle>日時</FieldTitle>
-            <Stack direction="horizontal" align="center">
+            <Control title="日時">
               <DatePicker
                 dateFormat={isAllDay ? "y年M月d日" : "y年M月d日 HH:mm"}
                 locale="ja"
                 showTimeSelect={!isAllDay}
                 selected={startDate}
-                customInput={<Textfield />}
+                customInput={<Well aria-label="開始" />}
+                wrapperClassName={pickerWrapperStyle}
                 onChange={(date) => setStartDate(date ?? new Date())}
                 onBlur={checkErrors}
               />
-              <div className="lu-mx-2">～</div>
+              <Control.Separator>～</Control.Separator>
               <DatePicker
                 dateFormat={isAllDay ? "y年M月d日" : "y年M月d日 HH:mm"}
                 locale="ja"
                 showTimeSelect={!isAllDay}
                 selected={endDate}
-                customInput={<Textfield />}
+                customInput={<Well aria-label="終了" />}
+                wrapperClassName={pickerWrapperStyle}
                 onChange={(date) => setEndDate(date ?? new Date())}
                 onBlur={checkErrors}
               />
-            </Stack>
+            </Control>
             <Checkbox
               checked={isAllDay}
               id="isAllDay"

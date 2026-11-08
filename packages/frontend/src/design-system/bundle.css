@@ -9,6 +9,30 @@
   --lu-duration-slow: 0.25s; /* glows, the checkbox stroke, progress */
 }
 
+/* ---------- Surface ----------
+   Every surface hands its own colour down as --surface, so what sits on it
+   (an Alert's tint) is built from the surface it really stands on.
+   --lu-tint-l is the lightness of that tint. It is declared on the same
+   selectors as the theme tokens, so a themed subtree gets its own. */
+
+:where(:root, [data-theme]) {
+  --surface: var(--background);
+}
+:root, [data-theme="light"] {
+  --lu-tint-l: 0.93;
+}
+[data-theme="dark"] {
+  --lu-tint-l: 0.28;
+}
+.lu-card {
+  --surface: var(--panel);
+}
+.lu-dialog,
+.lu-drawer,
+.lu-menu__panel {
+  --surface: var(--panel-raised);
+}
+
 /* ---------- Base elements (whole page, zero specificity) ----------
    Only size, colour, weight and lines: no article-style decoration.
    Any class (a component, an app's own styles) overrides these. */
@@ -1051,7 +1075,8 @@
   box-sizing: border-box;
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
-  background: color-mix(in oklab, var(--lu-alert-color) 24%, var(--panel));
+  /* the status colour's hue at a fixed lightness and 30% of its chroma, 70% over the surface it stands on */
+  background: color-mix(in oklab, oklch(from var(--lu-alert-color) var(--lu-tint-l) calc(c * 0.3) h) 70%, var(--surface, var(--panel)));
   color: var(--foreground);
   font-family: var(--font-sans);
   font-size: var(--text-ui);
@@ -1553,5 +1578,124 @@
   }
   .lu-spinner {
     animation-duration: 2s;
+  }
+}
+
+/* ---------- Control / Well ----------
+   A bare raised frame (the control level: panel-button + shadow-control) for
+   putting several recessed wells side by side, e.g. a start and an end joined
+   by a separator. Like Textfield it takes a small title on the frame and a
+   caption just under it; the well is Textfield's recessed input on its own. */
+
+.lu-control {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: 100%;
+  box-sizing: border-box;
+  width: 100%;
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+.lu-control::before {
+  content: "";
+  grid-row: 1 / 3;
+  grid-column: 1;
+  z-index: -1;
+  border-radius: var(--radius-md);
+  background: var(--panel-button);
+  box-shadow: var(--shadow-control);
+  transition: background-color var(--lu-duration) ease-out;
+}
+.lu-control:hover:not(:has(:disabled))::before {
+  background: color-mix(in oklab, var(--panel-button) 94%, var(--foreground));
+}
+.lu-control__title {
+  transition: color var(--lu-duration) ease-out;
+  grid-row: 1;
+  grid-column: 1;
+  padding: var(--space-3) var(--space-3) var(--space-1);
+  font-size: var(--text-small);
+  font-weight: 600;
+  line-height: 1;
+  text-box: trim-both cap alphabetic;
+}
+.lu-control__body {
+  grid-row: 2;
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--size-rim);
+}
+.lu-control__body > .lu-well {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.lu-control__sep {
+  flex: none;
+  color: var(--dimmed);
+  font-size: var(--text-ui);
+  line-height: 1;
+}
+.lu-control__caption {
+  transition: color var(--lu-duration) ease-out;
+  grid-row: 3;
+  grid-column: 1;
+  padding: var(--space-1) var(--space-3) 0;
+  color: var(--dimmed);
+  font-size: var(--text-small);
+  line-height: 1.5;
+}
+.lu-control:has([aria-invalid="true"]) > .lu-control__caption {
+  color: var(--danger);
+}
+.lu-control:has([aria-invalid="true"]) > .lu-control__title {
+  color: color-mix(in oklab, var(--danger) 75%, var(--foreground-strong));
+}
+.lu-control:has(:disabled) {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* the recessed well (Textfield's input without its frame) */
+.lu-well {
+  box-sizing: border-box;
+  width: 100%;
+  height: calc(var(--size-control) - 2 * var(--size-rim));
+  margin: 0;
+  padding: 0 calc(var(--space-3) - var(--size-rim));
+  border: none;
+  border-radius: calc(var(--radius-md) - var(--size-rim));
+  background: var(--panel);
+  box-shadow: var(--shadow-inset);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: 1.5;
+  outline: none; /* the glow shows focus */
+  transition: box-shadow var(--lu-duration-slow) ease-out, color var(--lu-duration) ease-out;
+}
+.lu-well::placeholder {
+  color: var(--dimmed);
+  opacity: 1;
+}
+.lu-well:focus {
+  box-shadow:
+    0 0 0 1px color-mix(in oklab, var(--primary) 70%, transparent),
+    0 0 10px 2px color-mix(in oklab, var(--primary) 45%, transparent),
+    var(--shadow-inset);
+}
+.lu-well[aria-invalid="true"] {
+  color: var(--danger);
+}
+.lu-well:disabled {
+  cursor: not-allowed;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lu-control::before, .lu-control__title, .lu-control__caption, .lu-well {
+    transition: none;
   }
 }
