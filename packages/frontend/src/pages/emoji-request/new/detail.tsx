@@ -161,18 +161,21 @@ const DetailForm: React.FC = () => {
           </Card>
         )}
 
+        
+        <Textfield
+          title="オリジナルの作者情報"
+          caption={
+            <>
+              代理申請の場合、オリジナル作者のノートURLを入力してください。<br/>
+              他者の作成したコンテンツの場合、著作元の名前および、アップロードしたコンテンツのライセンス表記のあるURL等を入力してください。
+            </>
+          }
+          {...detailForm.register('authorInfo')}
+        />
+        
+
         <Card>
           <Stack gap={4}>
-            <Textfield
-              title="オリジナルの作者情報"
-              caption={
-                <>
-                  代理申請の場合、オリジナル作者のノートURLを入力してください。<br/>
-                  他者の作成したコンテンツの場合、著作元の名前および、アップロードしたコンテンツのライセンス表記のあるURL等を入力してください。
-                </>
-              }
-              {...detailForm.register('authorInfo')}
-            />
             <div>
               <FieldTitle>自由記述欄</FieldTitle>
               <FieldCaption>
@@ -201,18 +204,16 @@ const DetailForm: React.FC = () => {
           </Stack>
         </Card>
 
-        <Card>
-          <Checkbox
-            error={detailForm.formState.errors.agreeToGuideline && 'この項目をオンにしないと登録できません！'}
-            {...detailForm.register('agreeToGuideline')}
-          >
-            この申請が
-            <a href={URL_EMOJI_REQUEST_GUIDELINES} target="_blank" rel="noopener noreferrer">
-              絵文字申請ガイドライン
-            </a>
-            に準拠していることを確認しました
-          </Checkbox>
-        </Card>
+        <Checkbox
+          error={detailForm.formState.errors.agreeToGuideline && 'この項目をオンにしないと登録できません！'}
+          {...detailForm.register('agreeToGuideline')}
+        >
+          この申請が
+          <a href={URL_EMOJI_REQUEST_GUIDELINES} target="_blank" rel="noopener noreferrer">
+            絵文字申請ガイドライン
+          </a>
+          に準拠していることを確認しました
+        </Checkbox>
           
         <SubmitButton type="button" onClick={onClick}>入力項目を確認する</SubmitButton>
 

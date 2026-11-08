@@ -88,7 +88,7 @@ export const EmojiRequestFormContainer: React.FC<PropsWithChildren<{
             </small>
           </div>
           {limit > 0 && (
-            <Card>
+            <div className="lu-py-3 lu-px-1">
               {p.step !== 0 && (
                 <Button variant="ghost" className="lu-me-4" onClick={goBack}>
                   <i className="bi bi-arrow-left" /> 戻る
@@ -105,7 +105,7 @@ export const EmojiRequestFormContainer: React.FC<PropsWithChildren<{
                   </Suspense>
                 </ErrorBoundary>
               </div>
-            </Card>
+            </div>
           )}
         </>
       )}
