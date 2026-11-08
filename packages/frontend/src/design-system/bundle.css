@@ -1001,6 +1001,9 @@
   color: var(--foreground);
   font-family: var(--font-sans);
   overflow: auto;
+  /* 閉じるフェード中も向きと間隔を保つため、[open] ではなくここに置く */
+  flex-direction: column;
+  gap: var(--space-4);
   opacity: 0;
   translate: 0 var(--space-2);
   transition:
@@ -1011,8 +1014,6 @@
 }
 .lu-dialog[open] {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
   opacity: 1;
   translate: 0 0;
 }
@@ -1302,6 +1303,9 @@
   color: var(--foreground);
   font-family: var(--font-sans);
   overflow: auto;
+  /* 閉じるフェード中も向きと間隔を保つため、[open] ではなくここに置く */
+  flex-direction: column;
+  gap: var(--space-4);
   opacity: 0;
   translate: var(--space-8) 0;
   transition:
@@ -1312,8 +1316,6 @@
 }
 .lu-drawer[open] {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
   opacity: 1;
   translate: 0 0;
 }
