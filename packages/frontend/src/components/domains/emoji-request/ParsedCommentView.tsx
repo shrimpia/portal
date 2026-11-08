@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { Table } from 'react-bootstrap';
 
 import { MfmView } from '@/components/common/MfmView';
 
@@ -59,15 +58,15 @@ export const ParsedCommentView: React.FC<ParsedCommentViewProps> = ({ comment, c
     kana: null,
     description: '',
   }, [comment]);
-  const noText = useMemo(() => <span className="text-muted">未記入</span>, []);
+  const noText = useMemo(() => <span className="lu-text-dimmed">未記入</span>, []);
 
   return (
-    <Table striped hover borderless className="mb-0 w-auto" style={{ '--bs-table-bg': 'transparent' } as React.CSSProperties}>
+    <table style={{ width: 'auto', marginBottom: 0 }}>
       <tbody>
         {customData.map((data, index) => (
           <tr key={index}>
             <th>
-              {data.icon && <i className={`bi ${data.icon} me-1`} />}
+              {data.icon && <i className={`bi ${data.icon} lu-me-1`} />}
               {data.label}
             </th>
             <td>{data.value}</td>
@@ -96,6 +95,6 @@ export const ParsedCommentView: React.FC<ParsedCommentViewProps> = ({ comment, c
           <td>{parsed.description.trim() ? <MfmView>{parsed.description}</MfmView> : noText}</td>
         </tr>
       </tbody>
-    </Table>
+    </table>
   );
 };

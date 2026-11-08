@@ -1,8 +1,9 @@
 import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Container } from '@/components/ui/Container';
 import { useLoginGuard } from "@/hooks/useLoginGuard";
 import { useAPI } from "@/services/api";
 import { useMemo, useState } from "react";
-import { Card, Container, Form } from "react-bootstrap";
 
 const SurveyPage = () => {
   useLoginGuard();
@@ -45,13 +46,13 @@ const SurveyPage = () => {
 
   return (
     <Container>
-      <h1 className="fs-3 mb-3">投書箱（β）</h1>
+      <h1 className="lu-mb-4">投書箱（β）</h1>
       <p>投書箱へようこそ。ここでは、シュリンピアのユーザーから、管理者へのメッセージを匿名で送信することができます。</p>
 
       <p>
         現在は意見を募集していません。
       </p>
-      {/* <ul className="mt-3">
+      {/* <ul className="lu-mt-4">
         <li>いただいたご意見は、サーバールールの改善に役立てられます。内容は管理者以外には公開されません。</li>
         <li>いただいたご意見の全てが反映されるわけではないことにご留意ください。</li>
         <li>また、ご意見の内容が如何なるものであれど、あなたに不利益が生じることはありません。</li>
@@ -68,59 +69,57 @@ const SurveyPage = () => {
       >
         サーバールールを確認する
       </Button>
-      <Card className="mt-3">
-        <Card.Body>
-          <Form as="div" className="mb-3">
-            <Form.Group className="mb-3">
-              <Form.Label>評価</Form.Label>
-              <div className="sh-star-buttons">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={star}
-                    type="button"
-                    className={`sh-star-button ${star <= evaluation ? "selected" : ""}`}
-                    onClick={() => setEvaluation(star)}
-                    aria-label={`${star}星`}
-                  >
-                    <i className={`bi bi-star${star <= evaluation ? "-fill" : ""}`}></i>
-                  </button>
-                ))}
-              </div>
-            </Form.Group>
+      <Card className="lu-mt-4">
+        <Form as="div" className="lu-mb-4">
+          <Form.Group className="lu-mb-4">
+            <Form.Label>評価</Form.Label>
+            <div className="sh-star-buttons">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  type="button"
+                  className={`sh-star-button ${star <= evaluation ? "selected" : ""}`}
+                  onClick={() => setEvaluation(star)}
+                  aria-label={`${star}星`}
+                >
+                  <i className={`bi bi-star${star <= evaluation ? "-fill" : ""}`}></i>
+                </button>
+              ))}
+            </div>
+          </Form.Group>
 
-            <Form.Group className="mb-3">
-              <Form.Label>コメント</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                placeholder="思いの丈をお聞かせください"
-                maxLength={3000}
+          <Form.Group className="lu-mb-4">
+            <Form.Label>コメント</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows={3}
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
+              placeholder="思いの丈をお聞かせください"
+              maxLength={3000}
+            />
+          </Form.Group>
+
+          <Form.Group className="lu-mb-4">
+            <Form.Check>
+              <Form.Check.Input
+                type="checkbox"
+                id="isAnonymous"
+                checked={withUserId}
+                onChange={(e) => setWithUserId(e.target.checked)}
               />
-            </Form.Group>
-
-            <Form.Group className="mb-3">
-              <Form.Check>
-                <Form.Check.Input
-                  type="checkbox"
-                  id="isAnonymous"
-                  checked={withUserId}
-                  onChange={(e) => setWithUserId(e.target.checked)}
-                />
-                <Form.Check.Label htmlFor="isAnonymous">
-                  ユーザー名を送信する
-                </Form.Check.Label>
-                <Form.Text muted className="d-block">
-                  デフォルトでは、このアンケートは匿名で送信されます。
-                </Form.Text>
-              </Form.Check>
-            </Form.Group>
-          </Form>
-        </Card.Body>
+              <Form.Check.Label htmlFor="isAnonymous">
+                ユーザー名を送信する
+              </Form.Check.Label>
+              <Form.Text muted className="d-block">
+                デフォルトでは、このアンケートは匿名で送信されます。
+              </Form.Text>
+            </Form.Check>
+          </Form.Group>
+        </Form>
         <Card.Footer>
           <Button variant="primary" onClick={submit}>送信</Button>
-          <Button className="ms-2" onClick={reset}>
+          <Button className="lu-ms-2" onClick={reset}>
             リセット
           </Button>
         </Card.Footer>

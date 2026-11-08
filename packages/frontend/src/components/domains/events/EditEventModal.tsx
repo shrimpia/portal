@@ -1,6 +1,5 @@
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { Form, Modal, Stack } from "react-bootstrap";
 import DatePicker, { registerLocale } from "react-datepicker";
 
 import type { EventDraft, EventDto } from "@/types/event";
@@ -9,6 +8,12 @@ import "react-datepicker/dist/react-datepicker.css";
 
 import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
+import { Checkbox } from '@/components/ui/Choice';
+import { Dialog } from '@/components/ui/Dialog';
+import { FieldTitle } from '@/components/ui/Field';
+import { Stack } from '@/components/ui/Stack';
+import { Textarea } from '@/components/ui/Textarea';
+import { Textfield } from '@/components/ui/Textfield';
 import { userAtom } from "@/states/user";
 
 import { ja } from "date-fns/locale/ja";
@@ -92,14 +97,20 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
   }, [p.initialDate, p.initialEvent]);
 
   return (
-    <Modal show={p.show} onHide={p.onHide}>
-      <Modal.Header closeButton>
-        <Modal.Title>
-          {isUpdateMode ? "イベント編集" : "イベントを新規登録"}
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Stack gap={3}>
+    <Dialog
+      open={p.show}
+      onClose={p.onHide}
+      title={isUpdateMode ? "イベント編集" : "イベントを新規登録"}
+      actions={
+        <>
+          <Button onClick={p.onHide}>キャンセル</Button>
+          <Button variant="primary" disabled={!canPost} onClick={onClickSave}>
+            {isUpdateMode ? "更新" : "登録"}
+          </Button>
+        </>
+      }
+    >
+        <Stack gap={4}>
           {!isUpdateMode && (
             <Alert variant="warning" icon="bi-exclamation-triangle-fill">
               イベントはシュリンピア全体に公開されます。
@@ -109,7 +120,7 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
           )}
           {errors.length > 0 && (
             <Alert variant="danger">
-              <ul className="mb-0 ps-3">
+              <ul className="lu-mb-0 lu-ps-4">
                 {errors.map((e) => (
                   <li key={e}>{e}</li>
                 ))}
@@ -117,10 +128,8 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
             </Alert>
           )}
           <div>
-            <Form.Label htmlFor="name" className="fw-bold">
-              イベント名
-            </Form.Label>
-            <Form.Control
+            <Textfield
+              title="イベント名"
               value={name}
               id="name"
               type="text"
@@ -130,34 +139,32 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
             />
           </div>
           <div>
-            <Form.Label className="fw-bold">日時</Form.Label>
-            <div className="d-flex align-items-center">
+            <FieldTitle>日時</FieldTitle>
+            <Stack direction="horizontal" align="center">
               <DatePicker
                 dateFormat={isAllDay ? "y年M月d日" : "y年M月d日 HH:mm"}
                 locale="ja"
                 showTimeSelect={!isAllDay}
                 selected={startDate}
-                className="form-control"
+                customInput={<Textfield />}
                 onChange={(date) => setStartDate(date ?? new Date())}
                 onBlur={checkErrors}
               />
-              <div className="mx-2">～</div>
+              <div className="lu-mx-2">～</div>
               <DatePicker
                 dateFormat={isAllDay ? "y年M月d日" : "y年M月d日 HH:mm"}
                 locale="ja"
                 showTimeSelect={!isAllDay}
                 selected={endDate}
-                className="form-control"
+                customInput={<Textfield />}
                 onChange={(date) => setEndDate(date ?? new Date())}
                 onBlur={checkErrors}
               />
-            </div>
-            <Form.Check
+            </Stack>
+            <Checkbox
               checked={isAllDay}
-              type="checkbox"
               id="isAllDay"
-              label="終日予定にする"
-              className="mt-2 ms-2"
+              className="lu-mt-2 lu-ms-2"
               onChange={(e) => {
                 setAllDay(e.target.checked);
                 if (e.target.checked) {
@@ -173,44 +180,32 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
                   });
                 }
               }}
-            />
+            >
+              終日予定にする
+            </Checkbox>
           </div>
-          <div>
-            <Form.Label htmlFor="description" className="fw-bold">
-              説明
-            </Form.Label>
-            <Form.Control
-              value={description}
-              id="description"
-              as="textarea"
-              rows={7}
-              placeholder="例：お絵描き大会を開催します。"
-              onChange={(e) => setDescription(e.target.value)}
-            />
-            <Form.Text muted>一部のMFMが使用できます。</Form.Text>
-          </div>
+          <Textarea
+            title="説明"
+            value={description}
+            id="description"
+            rows={7}
+            placeholder="例：お絵描き大会を開催します。"
+            onChange={(e) => setDescription(e.target.value)}
+            caption="一部のMFMが使用できます。"
+          />
           {user?.isEmperor && (
             <div>
-              <Form.Label className="fw-bold">その他の設定</Form.Label>
-              <Form.Check
-                type="checkbox"
+              <FieldTitle>その他の設定</FieldTitle>
+              <Checkbox
                 id="isOfficial"
-                label="公式イベント（管理者のみ設定可能）"
                 checked={isOfficial}
                 onChange={(e) => setOfficial(e.target.checked)}
-              />
+              >
+                公式イベント（管理者のみ設定可能）
+              </Checkbox>
             </div>
           )}
         </Stack>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button onClick={p.onHide}>
-          キャンセル
-        </Button>
-        <Button variant="primary" disabled={!canPost} onClick={onClickSave}>
-          {isUpdateMode ? "更新" : "登録"}
-        </Button>
-      </Modal.Footer>
-    </Modal>
+      </Dialog>
   );
 };

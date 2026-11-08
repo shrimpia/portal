@@ -1,6 +1,5 @@
 import { useAtom, useSetAtom } from 'jotai';
 import { useEffect } from 'react';
-import { Container, Image, Stack } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
 import { AutoCollapse } from '@/components/common/AutoCollapse';
@@ -8,6 +7,9 @@ import { MfmView } from '@/components/common/MfmView';
 import { UserLinkView } from '@/components/common/UserLinkView';
 import { ParsedCommentView } from '@/components/domains/emoji-request/ParsedCommentView';
 import { StatusBadge } from '@/components/domains/emoji-request/StatusBadge';
+import { Container } from '@/components/ui/Container';
+import { Image } from '@/components/ui/Image';
+import { Stack } from '@/components/ui/Stack';
 import { currentRequestIdAtom, publicCurrentEmojiRequestAtom } from '@/states/emoji-request';
 
 const EmojiRequestDetailPage = () => {
@@ -22,15 +24,15 @@ const EmojiRequestDetailPage = () => {
   if (!request) {
     return (
       <Container>
-        <p className="text-muted">申請が見つかりませんでした。</p>
+        <p className="lu-text-dimmed">申請が見つかりませんでした。</p>
       </Container>
     );
   }
 
   return (
     <Container>
-      <Stack direction="vertical" className="align-items-start" gap={3}>
-        <Image src={request.url} alt={request.name} className="bg-dark rounded p-2" style={{ height: 64 }} />
+      <Stack align="start" gap={4}>
+        <Image src={request.url} alt={request.name} backdrop style={{ height: 64 }} />
         <div>
           <ParsedCommentView comment={request.comment} customData={[{
             label: '絵文字コード',
@@ -48,9 +50,9 @@ const EmojiRequestDetailPage = () => {
         </div>
         {request.staffComment && (
           <div>
-            <h2 className="fs-6 fw-bold">スタッフからのコメント</h2>
+            <h6>スタッフからのコメント</h6>
             <AutoCollapse>
-              <div className="text-muted border-start px-2"><MfmView>{request.staffComment}</MfmView></div>
+              <blockquote className="lu-m-0"><MfmView>{request.staffComment}</MfmView></blockquote>
             </AutoCollapse>
           </div>
         )}

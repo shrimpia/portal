@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Stack } from 'react-bootstrap';
 
 import shrimpia from '@/assets/shrimpia.svg';
+import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
+import { Stack } from '@/components/ui/Stack';
 import { navigateToMiAuth } from '@/services/navigate-to-miauth';
 
 import './WelcomePage.scss';
@@ -25,8 +26,8 @@ export const IndexWelcomePage = () => {
   }, []);
 
   return (
-    <Stack gap={3} direction="vertical" className="min-vw-100 min-vh-100 justify-content-center align-items-center">
-      {error && <div className="text-danger px-2 py-1 bg-dark">{error}</div>}
+    <Stack gap={4} justify="center" align="center" style={{ minWidth: "100vw", minHeight: "100vh" }}>
+      {error && <Alert variant="danger">{error}</Alert>}
       <h1 className="sh-app-title">
         <img src={shrimpia} className="sh-icon-shrimpia-planet" />
         シュリンピアポータル

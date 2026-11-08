@@ -1,7 +1,9 @@
-import { Spinner, Stack } from 'react-bootstrap';
+
+import { Spinner } from '@/components/ui/Spinner';
+import { Stack } from '@/components/ui/Stack';
 
 export const LoadingView: React.FC = () => (
-  <Stack className="align-items-center">
-    <Spinner variant="primary" />
+  <Stack align="center">
+    <Spinner />
   </Stack>
 );

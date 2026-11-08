@@ -1,129 +1,57 @@
-// Shrimpia Color Set
-$shrimpianDarkForeground: #c9baba;
-$shrimpianDarkBackground: #0f0f1a;
-$shrimpianDarkPrimary: #F24149;
-$shrimpianDarkPanel: #161625;
-$shrimpianDarkLink: #F24149;
-$shrimpianDarkDimmed: #a59ea3;
-$shrimpianDarkWarning: #ecbd15;
-$shrimpianDarkSuccess: #6f8e4d;
-$shrimpianDarkDanger: #f44336;
-
-$shrimpianLightForeground: #000000;
-$shrimpianLightBackground: #FFE5E4;
-$shrimpianLightPrimary: #F24149;
-$shrimpianLightPanel: #F8EEED;
-$shrimpianLightLink: #F24149;
-$shrimpianLightDimmed: #495a6b;
-$shrimpianLightWarning: #ffd154;
-$shrimpianLightSuccess: #21A430;
-$shrimpianLightDanger: #F20A15;
-
-
-// Bootstrap Customize
-$font-family-sans-serif: "Koruri", sans-serif;
-// Koruri には 500 が無いので、見出しは Semibold(600) を使う
-$headings-font-weight: 600;
-$body-color: $shrimpianLightForeground;
-$body-bg: $shrimpianLightBackground;
-$body-color-dark: $shrimpianDarkForeground;
-$body-bg-dark: $shrimpianDarkBackground;
-$body-secondary-color:      $shrimpianLightDimmed !default;
-$body-secondary-color-dark: $shrimpianDarkDimmed !default;
-
-$card-bg: var(--sh-card-bg);
-
-$primary:        $shrimpianDarkPrimary !default;
-$success:        $shrimpianDarkSuccess !default;
-$warning:        $shrimpianDarkWarning !default;
-$danger:         $shrimpianDarkDanger !default;
-
-// ...Finally, import Bootstrap
-@import "bootstrap/scss/bootstrap";
+// ページ全体の下地。色・フォント・見出しの大きさは design-system/ が持つので、ここでは余白だけを整える
+*, *::before, *::after {
+    box-sizing: border-box;
+}
 
 :root {
     scroll-behavior: smooth;
 }
 
-// Custom Styles
 body {
-    background-attachment: fixed;
-    background-size: cover;
-    background-position: center;
-    background-image: none;
+    margin: 0;
 }
 
-html {
-    --sh-card-bg: #{$shrimpianLightPanel};
-    --sh-app-icon-color: #{$shrimpianLightPrimary};
-    --sh-primary: var(--bs-primary);
-
-    body {
-        // background-image: url("./assets/bg-light.png");
-    }
-
-    &[data-bs-theme="dark"] {
-        --sh-card-bg: #{$shrimpianDarkPanel};
-
-        body {
-            // background-image: url("./assets/bg-dark.png");
-        }
-    }
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: var(--space-2);
 }
 
-.sh-container {
-    padding: 0 16px;
-    margin: 0 auto;
-    margin-top: 80px;
-    max-width: 1024px;
-    &.wide {
-        max-width: auto;
-    }
+p {
+    margin-top: 0;
+    margin-bottom: var(--space-4);
 }
 
-.fs-small {
-    font-size: 0.8rem;
+ul, ol {
+    margin-top: 0;
+    margin-bottom: var(--space-4);
+    padding-left: 2rem;
 }
 
-.sh-card-hover {
-    transition: all 0.2s ease-out;
-    &:hover {
-      transform: scale(1.01);
-      box-shadow: var(--bs-box-shadow-lg) !important;
-    }
+img, svg {
+    vertical-align: middle;
 }
 
+// ポータル固有のスタイル
 .sh-app-icon-color {
-    color: var(--sh-app-icon-color);
+    color: var(--brand);
 }
 
 .sh-star-buttons {
     display: flex;
-    gap: 8px;
-    
+    gap: var(--space-2);
+
     > .sh-star-button {
         appearance: none;
         background: none;
         border: none;
         cursor: pointer;
-        color: var(--sh-primary);
+        color: var(--primary);
         font-size: 1.5rem;
     }
 }
 
-.form-select, .form-control, .form-check-input {
-    background-color: var(--sh-card-bg);
-}
-
-.sh-emoji-code {
-    padding: 2px;
-    border-radius: 4px;
-    background-color: var(--sh-card-bg);
-}
-
-// bootstrap との併存中だけ必要。bootstrap の `a:hover` が lu-button の文字色に勝ってしまうのを防ぐ
-a.lu-button {
-    &:hover, &:focus { color: var(--foreground); text-decoration: none; }
-    &.lu-button--primary:hover, &.lu-button--danger:hover { color: var(--on-primary); }
-    &.lu-button--ghost:hover { color: var(--link); }
+@keyframes sh-glow {
+    50% {
+        opacity: 0.4;
+    }
 }

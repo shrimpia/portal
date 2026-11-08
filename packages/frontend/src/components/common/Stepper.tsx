@@ -38,23 +38,23 @@ const stepStyle = css`
   &[data-state='todo'] {
     .circle {
       background-color: transparent;
-      color: var(--sh-primary);
+      color: var(--primary);
     }
   }
 
   &[data-state='active'] {
     .circle {
       background-color: transparent;
-      color: var(--sh-primary);
-      border-color: var(--sh-primary);
+      color: var(--primary);
+      border-color: var(--primary);
     }
   }
 
   &[data-state='done'] {
     .circle {
-      background-color: var(--sh-primary);
+      background-color: var(--primary);
       color: white;
-      border-color: var(--sh-primary);
+      border-color: var(--primary);
       cursor: pointer;
     }
   }
@@ -62,11 +62,11 @@ const stepStyle = css`
 
 const lineStyle = css`
   flex: 1;
-  border-top: 1px solid var(--bs-border-color);
+  border-top: 1px solid var(--border);
   margin-top: 15px;
 
   &[data-state='done'] {
-    border-top: 2px solid var(--sh-primary);
+    border-top: 2px solid var(--primary);
   }
 `;
 

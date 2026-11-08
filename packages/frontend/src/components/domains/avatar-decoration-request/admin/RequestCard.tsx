@@ -1,7 +1,6 @@
 import { css } from "@linaria/core";
 import { useAtom } from "jotai";
 import React, { useEffect, useState } from "react";
-import { Card, Image, Spinner, Stack, Table } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 
 import type { AvatarDecorationRequest } from "@/types/avatar-decoration-request";
@@ -11,6 +10,10 @@ import { AutoCollapse } from "@/components/common/AutoCollapse";
 import { MfmView } from "@/components/common/MfmView";
 import { UserLinkView } from "@/components/common/UserLinkView";
 import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Image } from '@/components/ui/Image';
+import { Spinner } from '@/components/ui/Spinner';
+import { Stack } from '@/components/ui/Stack';
 import { useWithSpinner } from "@/hooks/useWithSpinner";
 import { useAPI } from "@/services/api";
 import { getImageSize } from "@/services/get-image-size";
@@ -55,7 +58,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({
   const withSpinner = useWithSpinner();
 
   const staffComment = r.staffComment?.trim();
-  const noText = <span className="text-muted">未記入</span>;
+  const noText = <span className="lu-text-dimmed">未記入</span>;
 
   const approve = () => {
     const confirmed = confirm(
@@ -121,158 +124,150 @@ export const RequestCard: React.FC<RequestCardProps> = ({
 
   return (
     <Card>
-      <Card.Body>
-        <Card.Title>{r.name}</Card.Title>
-        <Stack gap={3}>
-          <div className={previewContainerStyle}>
-            {showPreview && (
-              <Image
-                src={avatarDecorationTemplate}
-                alt="テンプレート"
-                className={overlayImageStyle}
-                fluid
-              />
-            )}
+      <Card.Title>{r.name}</Card.Title>
+      <Stack gap={4}>
+        <div className={previewContainerStyle}>
+          {showPreview && (
             <Image
-              src={r.url}
-              alt={r.name}
-              className="bg-dark rounded p-2"
-              style={{ width: "100%" }}
+              src={avatarDecorationTemplate}
+              alt="テンプレート"
+              className={overlayImageStyle}
               fluid
             />
-          </div>
-          <div>
-            {!details ? (
-              <Stack gap={3}>
+          )}
+          <Image
+            src={r.url}
+            alt={r.name}
+            backdrop
+            style={{ width: "100%" }}
+            fluid
+          />
+        </div>
+        <div>
+          {!details ? (
+            <Stack gap={4}>
+              <div>
+                <h6>申請者</h6>
+                <UserLinkView username={r.username} />
+              </div>
+              {r.description && (
                 <div>
-                  <h2 className="fs-6 fw-bold">申請者</h2>
-                  <UserLinkView username={r.username} />
+                  <h6>説明</h6>
+                  <AutoCollapse>
+                    <div className="lu-text-dimmed border-start lu-px-2 lu-mb-0">
+                      <MfmView>{r.description}</MfmView>
+                    </div>
+                  </AutoCollapse>
                 </div>
-                {r.description && (
-                  <div>
-                    <h2 className="fs-6 fw-bold">説明</h2>
-                    <AutoCollapse>
-                      <div className="text-muted border-start px-2 mb-0">
-                        <MfmView>{r.description}</MfmView>
-                      </div>
-                    </AutoCollapse>
-                  </div>
-                )}
-              </Stack>
-            ) : (
-              <Table
-                striped
-                hover
-                borderless
-                className="mb-0 w-auto"
-                style={{ "--bs-table-bg": "transparent" } as any}
-              >
-                <tbody>
-                  <tr>
-                    <th>
-                      <i className="bi bi-card-image" /> ファイル形式
-                    </th>
-                    <td>
-                      {type != null ? (
-                        type || (
-                          <span className="text-muted">
-                            取得できませんでした。
-                          </span>
-                        )
-                      ) : (
-                        <Spinner size="sm" />
-                      )}
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>
-                      <i className="bi bi-pie-chart-fill" /> ファイルサイズ
-                    </th>
-                    <td>
-                      {fileSizeInMB != null ? (
-                        `${fileSizeInMB} MB`
-                      ) : (
-                        <Spinner size="sm" />
-                      )}
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>
-                      <i className="bi bi-aspect-ratio-fill" /> 画像の大きさ
-                    </th>
-                    <td>
-                      {imageSize != null ? imageSize : <Spinner size="sm" />}
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>
-                      <i className="bi bi-person-circle" /> 申請者
-                    </th>
-                    <td>
-                      <UserLinkView username={r.username} />
-                    </td>
-                  </tr>
-                  <tr>
-                    <th>
-                      <i className="bi bi-chat-left-heart-fill" /> 説明
-                    </th>
-                    <td>
-                      {r.description ? (
-                        <MfmView>{r.description}</MfmView>
-                      ) : (
-                        noText
-                      )}
-                    </td>
-                  </tr>
-                  {r.status !== "pending" && (
-                    <>
-                      <tr>
-                        <th>
-                          <i className="bi bi-eye-fill" /> 作業スタッフ
-                        </th>
-                        <td>
-                          <UserLinkView username={r.processerName} />
-                        </td>
-                      </tr>
-                      <tr>
-                        <th>
-                          <i className="bi bi-chat-right-heart-fill" />{" "}
-                          スタッフからのコメント
-                        </th>
-                        <td>
-                          {staffComment ? (
-                            <MfmView>{staffComment}</MfmView>
-                          ) : (
-                            noText
-                          )}
-                        </td>
-                      </tr>
-                    </>
-                  )}
-                </tbody>
-              </Table>
-            )}
-          </div>
-          {!details && (
-            <div>
-              <Link to={`/admin/avatar-decoration-requests/${r.id}`}>
-                詳細を見る
-              </Link>
-            </div>
-          )}
-
-          {r.status === "pending" && (
-            <Stack direction="horizontal" gap={3}>
-              <Button variant="primary" onClick={approve}>
-                <i className="bi bi-check2" /> 承認
-              </Button>
-              <Button variant="danger" onClick={reject}>
-                <i className="bi bi-x-lg" /> 却下
-              </Button>
+              )}
             </Stack>
+          ) : (
+            <table style={{ width: 'auto', marginBottom: 0 }}>
+              <tbody>
+                <tr>
+                  <th>
+                    <i className="bi bi-card-image" /> ファイル形式
+                  </th>
+                  <td>
+                    {type != null ? (
+                      type || (
+                        <span className="lu-text-dimmed">
+                          取得できませんでした。
+                        </span>
+                      )
+                    ) : (
+                      <Spinner size="sm" />
+                    )}
+                  </td>
+                </tr>
+                <tr>
+                  <th>
+                    <i className="bi bi-pie-chart-fill" /> ファイルサイズ
+                  </th>
+                  <td>
+                    {fileSizeInMB != null ? (
+                      `${fileSizeInMB} MB`
+                    ) : (
+                      <Spinner size="sm" />
+                    )}
+                  </td>
+                </tr>
+                <tr>
+                  <th>
+                    <i className="bi bi-aspect-ratio-fill" /> 画像の大きさ
+                  </th>
+                  <td>
+                    {imageSize != null ? imageSize : <Spinner size="sm" />}
+                  </td>
+                </tr>
+                <tr>
+                  <th>
+                    <i className="bi bi-person-circle" /> 申請者
+                  </th>
+                  <td>
+                    <UserLinkView username={r.username} />
+                  </td>
+                </tr>
+                <tr>
+                  <th>
+                    <i className="bi bi-chat-left-heart-fill" /> 説明
+                  </th>
+                  <td>
+                    {r.description ? (
+                      <MfmView>{r.description}</MfmView>
+                    ) : (
+                      noText
+                    )}
+                  </td>
+                </tr>
+                {r.status !== "pending" && (
+                  <>
+                    <tr>
+                      <th>
+                        <i className="bi bi-eye-fill" /> 作業スタッフ
+                      </th>
+                      <td>
+                        <UserLinkView username={r.processerName} />
+                      </td>
+                    </tr>
+                    <tr>
+                      <th>
+                        <i className="bi bi-chat-right-heart-fill" />{" "}
+                        スタッフからのコメント
+                      </th>
+                      <td>
+                        {staffComment ? (
+                          <MfmView>{staffComment}</MfmView>
+                        ) : (
+                          noText
+                        )}
+                      </td>
+                    </tr>
+                  </>
+                )}
+              </tbody>
+            </table>
           )}
-        </Stack>
-      </Card.Body>
+        </div>
+        {!details && (
+          <div>
+            <Link to={`/admin/avatar-decoration-requests/${r.id}`}>
+              詳細を見る
+            </Link>
+          </div>
+        )}
+
+        {r.status === "pending" && (
+          <Stack direction="horizontal" gap={4}>
+            <Button variant="primary" onClick={approve}>
+              <i className="bi bi-check2" /> 承認
+            </Button>
+            <Button onClick={reject}>
+              <i className="bi bi-x-lg" /> 却下
+            </Button>
+          </Stack>
+        )}
+      </Stack>
     </Card>
   );
 };

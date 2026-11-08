@@ -1,16 +1,16 @@
 import { useAtom } from 'jotai';
-import { Stack } from 'react-bootstrap';
 
 import { LinkCard } from '@/components/common/LinkCard';
 import { AdminContainer } from '@/components/domains/admin/AdminContainer';
+import { Stack } from '@/components/ui/Stack';
 import { userAtom } from '@/states/user';
 
 const IndexPage = () => {
   const [{data: user}] = useAtom(userAtom);
   return user ? (
     <AdminContainer mode="staff">
-      <h1 className="fs-3 mb-5">Staff Portal</h1>
-      <Stack direction="vertical" gap={3}>
+      <h1 className="lu-mb-12">Staff Portal</h1>
+      <Stack gap={4}>
         <LinkCard
           title="絵文字申請の管理"
           to="/admin/emoji-requests"

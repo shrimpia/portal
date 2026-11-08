@@ -1,4 +1,6 @@
-import { Card, Stack } from 'react-bootstrap';
+
+import { Card } from '@/components/ui/Card';
+import { Stack } from '@/components/ui/Stack';
 
 export type LinkCardExternalProp = {
     title: string;
@@ -9,18 +11,18 @@ export type LinkCardExternalProp = {
 
 export const LinkCardExternal = (p: LinkCardExternalProp) => {
   return (
-    <Card as="a" href={p.to} target="_blank" rel="noopener noreferrer" className="border border-0 shadow text-decoration-none sh-card-hover">
-      <Stack direction="horizontal" className="align-items-center" gap={3}>
-        {p.icon && <i className={`${p.icon} fs-2 ms-4 sh-app-icon-color`} />}
-        <Card.Body>
+    <Card as="a" href={p.to} target="_blank" rel="noopener noreferrer" link>
+      <Stack direction="horizontal" align="center" gap={4}>
+        {p.icon && <i className={`${p.icon} sh-app-icon-color`} style={{ fontSize: '2rem', marginInline: 'var(--space-2)' }} />}
+        <div>
           <Card.Title>{p.title}</Card.Title>
           {p.children && (
-            <Card.Text className="text-muted">
+            <Card.Text className="lu-text-dimmed">
               {p.children}
             </Card.Text>
           )}
-        </Card.Body>
-        <i className="bi bi-box-arrow-up-right mx-4" />
+        </div>
+        <i className="bi bi-box-arrow-up-right lu-ms-auto lu-me-2" />
       </Stack>
     </Card>
   );

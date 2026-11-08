@@ -1,12 +1,14 @@
 import { useAtom } from 'jotai';
 import { Suspense } from 'react';
-import { Container, Nav, Stack } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { LoadingView } from '@/components/common/LoadingView';
 import { OnlyShrimpiaPlus } from '@/components/common/OnlyShrimpiaPlus';
 import { AvatarDecorationRequestsList } from '@/components/domains/avatar-decoration-request/RequestsList';
 import { Button } from '@/components/ui/Button';
+import { Container } from '@/components/ui/Container';
+import { Stack } from '@/components/ui/Stack';
+import { TabBar } from '@/components/ui/TabBar';
 import { useLoginGuard } from '@/hooks/useLoginGuard';
 import { filterAtom } from '@/states/avatar-decoration-request';
 import { userAtom } from '@/states/user';
@@ -21,7 +23,7 @@ const AvatarDecorationRequestPage = () => {
 
   return (
     <Container>
-      <h1 className="fs-3 mb-4">
+      <h1 className="lu-mb-6">
         アバターデコレーションの申請
       </h1>
       <p>
@@ -37,7 +39,7 @@ const AvatarDecorationRequestPage = () => {
       {!isShrimpiaPlus && (
         <OnlyShrimpiaPlus>アバターデコレーションの申請</OnlyShrimpiaPlus>
       )}
-      <Stack className="mb-3" direction="horizontal" gap={3}>
+      <Stack className="lu-mb-4" direction="horizontal" gap={4}>
         {user && isShrimpiaPlus ? (
           <Button variant="primary" as={Link} to="/avatar-decoration-request/new">
             <i className="bi bi-plus" /> 申請する
@@ -53,18 +55,10 @@ const AvatarDecorationRequestPage = () => {
           </Button>
         )}
       </Stack>
-      <Nav variant="underline" className="mb-3" activeKey={filter} onSelect={key => setFilter(key as 'mine' | 'all')}>
-        <Nav.Item>
-          <Nav.Link eventKey="mine">
-            自分の申請
-          </Nav.Link>
-        </Nav.Item>
-        <Nav.Item>
-          <Nav.Link eventKey="all">
-            みんなの申請
-          </Nav.Link>
-        </Nav.Item>
-      </Nav>
+      <TabBar value={filter} onChange={setFilter} className="lu-mb-4" aria-label="表示の切り替え">
+  <TabBar.Tab value="mine">自分の申請</TabBar.Tab>
+  <TabBar.Tab value="all">みんなの申請</TabBar.Tab>
+</TabBar>
       <Suspense fallback={<LoadingView />}>
         <AvatarDecorationRequestsList>
           まだアバターデコレーションを申請していません。

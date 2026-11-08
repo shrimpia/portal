@@ -1,6 +1,5 @@
 import { useAtom } from 'jotai';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Card, Spinner, Stack, Table } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 
 import type { EmojiRequest } from '@/types/emoji-request';
@@ -11,6 +10,9 @@ import { UserLinkView } from '@/components/common/UserLinkView';
 import { EmojiPreview } from '@/components/domains/emoji-request/EmojiPreview';
 import { parseComment } from '@/components/domains/emoji-request/ParsedCommentView';
 import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Spinner } from '@/components/ui/Spinner';
+import { Stack } from '@/components/ui/Stack';
 import { useWithSpinner } from '@/hooks/useWithSpinner';
 import { useAPI } from '@/services/api';
 import { getImageSize } from '@/services/get-image-size';
@@ -34,7 +36,7 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
   const comment = useMemo(() => parseComment(r.comment), [r.comment]);
   const staffComment = useMemo(() => r.staffComment?.trim(), [r.staffComment]);
 
-  const noText = useMemo(() => <span className="text-muted">未記入</span>, []);
+  const noText = useMemo(() => <span className="lu-text-dimmed">未記入</span>, []);
 
   const approve = () => {
     const tag = prompt(`絵文字の申請 :${r.name}: を承認し、Misskeyに追加します。本当によろしいですか？\n\n問題なければ、この絵文字用のタグを記入してください。`);
@@ -94,107 +96,105 @@ export const RequestCard: React.FC<RequestCardProps> = ({ request: r, details })
 
   return (
     <Card>
-      <Card.Body>
-        <Card.Title>:{r.name}:</Card.Title>
-        <Stack gap={3}>
-          <EmojiPreview src={r.url} />
-          <div>
-            {!details ? (
-              <Stack gap={3}>
-                <div>
-                  <h2 className="fs-6 fw-bold">申請者</h2>
-                  <UserLinkView username={r.username} />
-                </div>
-                <div>
-                  <h2 className="fs-6 fw-bold">コメント</h2>
-                  {r.comment.trim() ? (
-                    <AutoCollapse>
-                      <div className="text-muted border-start px-2 mb-0"><MfmView>{r.comment}</MfmView></div>
-                    </AutoCollapse>
-                  ) : (
-                    <div className="text-muted">なし</div>
-                  )}
-                </div>
-              </Stack>
-            ) : (
-              <Table striped hover borderless className="mb-0 w-auto" style={{ '--bs-table-bg': 'transparent' } as any}>
-                <tbody>
+      <Card.Title>:{r.name}:</Card.Title>
+      <Stack gap={4}>
+        <EmojiPreview src={r.url} />
+        <div>
+          {!details ? (
+            <Stack gap={4}>
+              <div>
+                <h6>申請者</h6>
+                <UserLinkView username={r.username} />
+              </div>
+              <div>
+                <h6>コメント</h6>
+                {r.comment.trim() ? (
+                  <AutoCollapse>
+                    <blockquote className="lu-m-0"><MfmView>{r.comment}</MfmView></blockquote>
+                  </AutoCollapse>
+                ) : (
+                  <div className="lu-text-dimmed">なし</div>
+                )}
+              </div>
+            </Stack>
+          ) : (
+            <table style={{ width: 'auto', marginBottom: 0 }}>
+              <tbody>
+                <>
+                  <tr>
+                    <th><i className="bi bi-card-image" /> ファイル形式</th>
+                    <td>{type != null ? (type || <span className="lu-text-dimmed">取得できませんでした。</span>) : <Spinner size="sm" />}</td>
+                  </tr>
+                  <tr>
+                    <th><i className="bi bi-pie-chart-fill" /> ファイルサイズ</th>
+                    <td>{fileSizeInKB != null ? `${fileSizeInKB} KB` : <Spinner size="sm" />}</td>
+                  </tr>
+                  <tr>
+                    <th><i className="bi bi-aspect-ratio-fill" /> 画像の大きさ</th>
+                    <td>{imageSize != null ? imageSize : <Spinner size="sm" />}</td>
+                  </tr>
+                </>
+                <tr>
+                  <th><i className="bi bi-person-circle" /> 申請者</th>
+                  <td>{<UserLinkView username={r.username} />}</td>
+                </tr>
+                {comment && (
                   <>
+                    {comment.fontName && (
+                      <tr>
+                        <th><i className="bi bi-fonts" /> 使用フォント</th>
+                        <td>{comment.fontName || noText}</td>
+                      </tr>
+                    )}
+                    {comment.fontSource && (
+                      <tr>
+                        <th><i className="bi bi-link-45deg" /> フォント入手元</th>
+                        <td>{comment.fontSource || noText}</td>
+                      </tr>
+                    )}
+                    {comment.kana && (
+                      <tr>
+                        <th><i className="bi bi-type" /> ふりがな</th>
+                        <td>{comment.kana || noText}</td>
+                      </tr>
+                    )}
                     <tr>
-                      <th><i className="bi bi-card-image" /> ファイル形式</th>
-                      <td>{type != null ? (type || <span className="text-muted">取得できませんでした。</span>) : <Spinner size="sm" />}</td>
-                    </tr>
-                    <tr>
-                      <th><i className="bi bi-pie-chart-fill" /> ファイルサイズ</th>
-                      <td>{fileSizeInKB != null ? `${fileSizeInKB} KB` : <Spinner size="sm" />}</td>
-                    </tr>
-                    <tr>
-                      <th><i className="bi bi-aspect-ratio-fill" /> 画像の大きさ</th>
-                      <td>{imageSize != null ? imageSize : <Spinner size="sm" />}</td>
+                      <th><i className="bi bi-chat-left-heart-fill" /> コメント</th>
+                      <td>{comment.description ? <MfmView>{comment.description}</MfmView> : noText}</td>
                     </tr>
                   </>
-                  <tr>
-                    <th><i className="bi bi-person-circle" /> 申請者</th>
-                    <td>{<UserLinkView username={r.username} />}</td>
-                  </tr>
-                  {comment && (
-                    <>
-                      {comment.fontName && (
-                        <tr>
-                          <th><i className="bi bi-fonts" /> 使用フォント</th>
-                          <td>{comment.fontName || noText}</td>
-                        </tr>
-                      )}
-                      {comment.fontSource && (
-                        <tr>
-                          <th><i className="bi bi-link-45deg" /> フォント入手元</th>
-                          <td>{comment.fontSource || noText}</td>
-                        </tr>
-                      )}
-                      {comment.kana && (
-                        <tr>
-                          <th><i className="bi bi-type" /> ふりがな</th>
-                          <td>{comment.kana || noText}</td>
-                        </tr>
-                      )}
-                      <tr>
-                        <th><i className="bi bi-chat-left-heart-fill" /> コメント</th>
-                        <td>{comment.description ? <MfmView>{comment.description}</MfmView> : noText}</td>
-                      </tr>
-                    </>
-                  )}
-                  {r.status !== 'pending' && (
-                    <>
-                      <tr>
-                        <th><i className="bi bi-eye-fill" /> 作業スタッフ</th>
-                        <td>{<UserLinkView username={r.processerName} />}</td>
-                      </tr>
-                      <tr>
-                        <th><i className="bi bi-chat-right-heart-fill" /> スタッフからのコメント</th>
-                        <td>{staffComment ? <MfmView>{staffComment}</MfmView> : noText}</td>
-                      </tr>
-                    </>
-                  )}
-                </tbody>
-              </Table>
-            )}
+                )}
+                {r.status !== 'pending' && (
+                  <>
+                    <tr>
+                      <th><i className="bi bi-eye-fill" /> 作業スタッフ</th>
+                      <td>{<UserLinkView username={r.processerName} />}</td>
+                    </tr>
+                    <tr>
+                      <th><i className="bi bi-chat-right-heart-fill" /> スタッフからのコメント</th>
+                      <td>{staffComment ? <MfmView>{staffComment}</MfmView> : noText}</td>
+                    </tr>
+                  </>
+                )}
+              </tbody>
+            </table>
+          )}
+        </div>
+        {!details && (
+          <div>
+            <Link to={`/admin/emoji-requests/${r.id}`}>
+              詳細を見る
+            </Link>
           </div>
-          {!details && (
-            <div>
-              <Link to={`/admin/emoji-requests/${r.id}`}>
-                詳細を見る
-              </Link>
-            </div>
-          )}
-          
-          {r.status === 'pending' && (
-            <Stack direction="horizontal" gap={3}>
-              <Button variant="primary" onClick={approve}><i className="bi bi-check2" /> 承認</Button>
-              <Button variant="danger" onClick={reject}><i className="bi bi-x-lg" /> 却下</Button>
-            </Stack>
-          )}
-        </Stack>
-      </Card.Body>
+        )}
+        
+        {r.status === 'pending' && (
+          <Stack direction="horizontal" gap={4}>
+            <Button variant="primary" onClick={approve}><i className="bi bi-check2" /> 承認</Button>
+            <Button onClick={reject}><i className="bi bi-x-lg" /> 却下</Button>
+          </Stack>
+        )}
+      </Stack>
     </Card>
   );
 };

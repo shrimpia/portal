@@ -1,11 +1,11 @@
 
 import { useAtom } from 'jotai';
 import React, { useMemo } from 'react';
-import { Container } from 'react-bootstrap';
 
 import type { PropsWithChildren } from 'react';
 
 import { Alert } from '@/components/ui/Alert';
+import { Container } from '@/components/ui/Container';
 import { userAtom } from '@/states/user';
 import { useLoginGuard } from '@/hooks/useLoginGuard';
 import { Session } from '@/types/session';

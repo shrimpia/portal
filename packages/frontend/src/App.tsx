@@ -21,16 +21,16 @@ function App() {
       <Suspense fallback={<LoadingView/>}>
         <AppHeader />
         <ModalSpinner />
-        <div className="mt-5">
+        <div className="lu-mt-12">
           <ErrorBoundary>
             <Suspense fallback={<LoadingView/>}>
               {useRoutes(routes)}
-              <footer className="text-center text-muted" style={{ marginTop: 128, fontFamily: 'serif' }}>
+              <footer className="lu-text-center lu-text-dimmed" style={{ marginTop: 128, fontFamily: 'serif' }}>
                 <p>
                   (C)2023-2026 Shrimpia Network
                 </p>
                 <p>
-                  <a className="text-muted" href="https://github.com/shrimpia/portal" target="_blank" rel="noopener noreferrer">GitHub</a>
+                  <a className="lu-text-dimmed" href="https://github.com/shrimpia/portal" target="_blank" rel="noopener noreferrer">GitHub</a>
                 </p>
               </footer>
             </Suspense>

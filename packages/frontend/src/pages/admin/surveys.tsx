@@ -2,12 +2,15 @@ import { LoadingView } from "@/components/common/LoadingView";
 import { MfmView } from "@/components/common/MfmView";
 import { AdminContainer } from "@/components/domains/admin/AdminContainer";
 import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Select } from '@/components/ui/Select';
+import { Stack } from '@/components/ui/Stack';
+import { Textarea } from '@/components/ui/Textarea';
 import { useAPI } from "@/services/api";
 import { surveyAnswersAtom } from "@/states/surveys";
 import { SurveyAnswer } from "@/types/survey-answer";
 import { useAtomValue } from "jotai";
 import React, { Suspense, useEffect, useMemo, useState } from "react";
-import { Card, Form, Stack } from "react-bootstrap";
 
 const convertBody = (body: string) => {
   // 評価: \d+ で始まる行を、星評価に変換する（例: 3 -> ★★★☆☆）
@@ -35,30 +38,27 @@ const SurveyCard: React.FC<{survey: SurveyAnswer}> = ({ survey }) => {
 
   return (
     <Card key={survey.id}>
-      <Card.Body>
-        <MfmView>
-          {convertBody(survey.body)}
-        </MfmView>
-        <div className="text-muted mt-2">
-          <div>回答者: {survey.username ? `@${survey.username}` : <span className="text-muted">匿名希望</span>}</div>
-          <div>回答日時: {new Date(survey.created_at).toLocaleString()}</div>
-        </div>
-        <div className="mt-2">
-          <textarea
-            className="form-control"
-            rows={3}
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            placeholder="スタッフのコメント"
-            maxLength={3000}
-          />
-          <Button
-            variant="primary"
-            className="mt-2"
-            onClick={updateStaffComment}
-            >更新</Button>
-        </div>
-      </Card.Body>
+      <MfmView>
+        {convertBody(survey.body)}
+      </MfmView>
+      <div className="lu-text-dimmed lu-mt-2">
+        <div>回答者: {survey.username ? `@${survey.username}` : <span className="lu-text-dimmed">匿名希望</span>}</div>
+        <div>回答日時: {new Date(survey.created_at).toLocaleString()}</div>
+      </div>
+      <div className="lu-mt-2">
+        <Textarea
+          rows={3}
+          value={comment}
+          onChange={(e) => setComment(e.target.value)}
+          placeholder="スタッフのコメント"
+          maxLength={3000}
+        />
+        <Button
+          variant="primary"
+          className="lu-mt-2"
+          onClick={updateStaffComment}
+          >更新</Button>
+      </div>
     </Card>
   );
 }
@@ -81,13 +81,12 @@ const SurveyList = () => {
 
   return (
     <>
-      <Stack direction="vertical" gap={3}>
-        <Stack direction="horizontal" gap={3}>
+      <Stack gap={4}>
+        <Stack direction="horizontal" gap={4}>
           <Button variant="primary" onClick={() => refetch()}>
             再取得
           </Button>
-          <Form.Select 
-            className="w-auto"
+          <Select 
             value={questionType}
             onChange={(e) => {
               setQuestionType(e.target.value);
@@ -99,7 +98,7 @@ const SurveyList = () => {
                 {option.name}
               </option>
             ))}
-            </Form.Select>
+            </Select>
         </Stack>
         {filteredData.map((survey) => (
           <SurveyCard
@@ -108,9 +107,9 @@ const SurveyList = () => {
             />
         ))}
         {filteredData.length === 0 && (
-          <div className="text-muted text-center">
+          <div className="lu-text-dimmed lu-text-center">
             <i className="bi bi-exclamation-triangle-fill"></i> 
-            <span className="ms-2">回答はありません</span>
+            <span className="lu-ms-2">回答はありません</span>
           </div>
         )}
       </Stack>
@@ -121,7 +120,7 @@ const SurveyList = () => {
 const SurveyAnswerPage = () => {
   return (
     <AdminContainer mode="admin">
-      <h1 className="fs-3 mb-5">投書箱の管理</h1>
+      <h1 className="lu-mb-12">投書箱の管理</h1>
       <Suspense fallback={<LoadingView />}>
         <SurveyList />
       </Suspense>

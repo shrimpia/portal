@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { css } from "@linaria/core";
 import { useAtom, useSetAtom } from "jotai";
 import { useCallback, useMemo, useState } from "react";
-import { Card, Container, Form, Image, Modal, Stack } from "react-bootstrap";
 import { ErrorCode, useDropzone } from "react-dropzone";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
@@ -11,6 +10,14 @@ import { z } from "zod";
 import { OnlyShrimpiaPlus } from "@/components/common/OnlyShrimpiaPlus";
 import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Checkbox, Switch } from '@/components/ui/Choice';
+import { Container } from '@/components/ui/Container';
+import { Dialog } from '@/components/ui/Dialog';
+import { Image } from '@/components/ui/Image';
+import { Stack } from '@/components/ui/Stack';
+import { Textarea } from '@/components/ui/Textarea';
+import { Textfield } from '@/components/ui/Textfield';
 import { useLoginGuard } from "@/hooks/useLoginGuard";
 import { useWithSpinner } from "@/hooks/useWithSpinner";
 import { api } from "@/services/api";
@@ -33,11 +40,11 @@ import { URL_AVATAR_DECORATION_REQUEST_GUIDELINES } from "@/consts";
 const uploadAreaStyle = css`
   padding: 16px;
   border-radius: 8px;
-  border: 2px dashed var(--bs-border-color);
+  border: 2px dashed var(--border);
   cursor: pointer;
 
   &[data-active] {
-    border-color: var(--bs-primary);
+    border-color: var(--primary);
   }
 `;
 
@@ -239,13 +246,13 @@ const AvatarDecorationRequestNewPage = () => {
 
   return (
     <Container style={{ maxWidth: 960 }}>
-      <h1 className="fs-3 mb-4">アバターデコレーションの申請</h1>
+      <h1 className="lu-mb-6">アバターデコレーションの申請</h1>
 
       {!isShrimpiaPlus ? (
         <OnlyShrimpiaPlus>アバターデコレーションの申請</OnlyShrimpiaPlus>
       ) : (
         <>
-          <div className="mb-4">
+          <div className="lu-mb-6">
             残り申請可能数:{" "}
             {isStaff ? (
               <b>スタッフのため無制限</b>
@@ -253,7 +260,7 @@ const AvatarDecorationRequestNewPage = () => {
               <b className={limit === 0 ? "text-danger" : ""}>{limit}</b>
             )}
             <br />
-            <small className="text-muted">
+            <small className="lu-text-dimmed">
               月ごとのリクエスト可能数は、
               <a
                 href="https://docs.shrimpia.network/services/shrimpia-plus/"
@@ -268,206 +275,183 @@ const AvatarDecorationRequestNewPage = () => {
 
           {limit > 0 && (
             <Card>
-              <Card.Body>
-                {error?.length > 0 &&
-                  error.map((e) => (
-                    <Alert variant="danger" icon="bi-exclamation-triangle-fill" key={"error-" + e}>
-                      {e}
-                    </Alert>
-                  ))}
+              {error?.length > 0 &&
+                error.map((e) => (
+                  <Alert className="lu-mb-4" variant="danger" icon="bi-exclamation-triangle-fill" key={"error-" + e}>
+                    {e}
+                  </Alert>
+                ))}
 
-                <Alert variant="info">
-                  アップロードする前に、
-                  <br />
-                  <a
-                    href={URL_AVATAR_DECORATION_REQUEST_GUIDELINES}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    アバターデコレーション申請ガイドライン
-                  </a>
-                  を必ずお読みください！
-                </Alert>
-
-                <div
-                  className={uploadAreaStyle}
-                  data-active={isDragActive ? "" : undefined}
-                  {...getRootProps()}
+              <Alert className="lu-mb-4" variant="info">
+                アップロードする前に、
+                <br />
+                <a
+                  href={URL_AVATAR_DECORATION_REQUEST_GUIDELINES}
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  <input {...getInputProps()} />
-                  {file && (
-                    <div className="mb-2">
-                      <span>{file.name} - </span>
-                      <span
-                        className={
-                          isFileSizeValid ? "text-success" : "text-danger"
-                        }
-                      >
-                        {fileSizeInMB} MB{" "}
-                        <i
-                          className={`bi bi-${isFileSizeValid ? "check" : "x"}-circle-fill`}
-                        />
-                      </span>
-                    </div>
-                  )}
-                  {isDragActive ? (
-                    <span>
-                      そう、その調子！
-                      <br />
-                      さあ、その画像をこちらへ…！
+                  アバターデコレーション申請ガイドライン
+                </a>
+                を必ずお読みください！
+              </Alert>
+
+              <div
+                className={uploadAreaStyle}
+                data-active={isDragActive ? "" : undefined}
+                {...getRootProps()}
+              >
+                <input {...getInputProps()} />
+                {file && (
+                  <div className="lu-mb-2">
+                    <span>{file.name} - </span>
+                    <span
+                      className={
+                        isFileSizeValid ? "text-success" : "text-danger"
+                      }
+                    >
+                      {fileSizeInMB} MB{" "}
+                      <i
+                        className={`bi bi-${isFileSizeValid ? "check" : "x"}-circle-fill`}
+                      />
                     </span>
-                  ) : (
-                    <span>
-                      このエリアに画像をドロップするか、
-                      <br />
-                      クリック（あるいはタップ）してください
-                    </span>
-                  )}
-                </div>
-
-                {imgDataUrl && file && (
-                  <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    className="mt-4 vstack gap-3"
-                  >
-                    <div className="vstack gap-1 text-center">
-                      <div>
-                        以下のプレビューを見て、表示に問題がないことを確認してください。
-                      </div>
-                      <div className={previewContainerStyle}>
-                        <Image
-                          src={avatarDecorationTemplate}
-                          alt="テンプレート"
-                          className={decorationTemplateStyle}
-                          fluid
-                        />
-                        {isShowingIcon && (
-                          <Image
-                            src={user.avatarUrl}
-                            alt="ユーザーアイコン"
-                            className={avatarStyle}
-                            roundedCircle
-                            fluid
-                          />
-                        )}
-                        <Image
-                          src={imgDataUrl}
-                          alt="プレビュー"
-                          className={decorationStyle}
-                          fluid
-                        />
-                      </div>
-                      <div className="mx-auto">
-                        <Form.Switch
-                          id="show-icon-checkbox"
-                          label="ユーザーアイコンを表示"
-                          checked={isShowingIcon}
-                          onChange={(e) => setShowingIcon(e.target.checked)}
-                        />
-                      </div>
-                    </div>
-
-                    <Form.Group>
-                      <Form.Label>
-                        デコレーション名 <span className="text-danger">*</span>
-                      </Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="例: キラキラ"
-                        {...register("name")}
-                        onChange={(e) => {
-                          register("name").onChange(e);
-                          setName(e.target.value);
-                        }}
-                        isInvalid={!!errors.name}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.name?.message}
-                      </Form.Control.Feedback>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                      <Form.Label>デコレーションの説明</Form.Label>
-                      <Form.Control
-                        as="textarea"
-                        rows={3}
-                        placeholder="例: アイコンをキラキラさせるデコレーションです"
-                        {...register("description")}
-                        onChange={(e) => {
-                          register("description").onChange(e);
-                          setDescription(e.target.value);
-                        }}
-                        isInvalid={!!errors.description}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.description?.message}
-                      </Form.Control.Feedback>
-                    </Form.Group>
-
-                    <Form.Group className="mb-3">
-                      <Form.Check
-                        type="checkbox"
-                        id="agreedToGuidelines"
-                        label={
-                          <>
-                            <a
-                              href={URL_AVATAR_DECORATION_REQUEST_GUIDELINES}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              ガイドライン
-                            </a>
-                            を読み、同意しました
-                          </>
-                        }
-                        {...register("agreedToGuidelines")}
-                        onChange={(e) => {
-                          register("agreedToGuidelines").onChange(e);
-                          setAgreedToGuidelines(e.target.checked);
-                        }}
-                        isInvalid={!!errors.agreedToGuidelines}
-                      />
-                      <Form.Control.Feedback type="invalid">
-                        {errors.agreedToGuidelines?.message}
-                      </Form.Control.Feedback>
-                    </Form.Group>
-
-                    <Stack direction="horizontal" gap={2}>
-                      <Button
-                        onClick={() => navigate("/avatar-decoration-request")}
-                      >
-                        キャンセル
-                      </Button>
-                      <Button
-                        type="submit"
-                        variant="primary"
-                        disabled={!isValid}
-                      >
-                        申請する
-                      </Button>
-                    </Stack>
-                  </form>
+                  </div>
                 )}
-              </Card.Body>
+                {isDragActive ? (
+                  <span>
+                    そう、その調子！
+                    <br />
+                    さあ、その画像をこちらへ…！
+                  </span>
+                ) : (
+                  <span>
+                    このエリアに画像をドロップするか、
+                    <br />
+                    クリック（あるいはタップ）してください
+                  </span>
+                )}
+              </div>
+
+              {imgDataUrl && file && (
+                <Stack as="form" onSubmit={handleSubmit(onSubmit)} gap={4} className="lu-mt-6">
+                  <Stack gap={1} className="lu-text-center">
+                    <div>
+                      以下のプレビューを見て、表示に問題がないことを確認してください。
+                    </div>
+                    <div className={previewContainerStyle}>
+                      <Image
+                        src={avatarDecorationTemplate}
+                        alt="テンプレート"
+                        className={decorationTemplateStyle}
+                        fluid
+                      />
+                      {isShowingIcon && (
+                        <Image
+                          src={user.avatarUrl}
+                          alt="ユーザーアイコン"
+                          className={avatarStyle}
+                          roundedCircle
+                          fluid
+                        />
+                      )}
+                      <Image
+                        src={imgDataUrl}
+                        alt="プレビュー"
+                        className={decorationStyle}
+                        fluid
+                      />
+                    </div>
+                    <div className="lu-mx-auto">
+                      <Switch
+                        checked={isShowingIcon}
+                        onChange={(e) => setShowingIcon(e.target.checked)}
+                      >
+                        ユーザーアイコンを表示
+                      </Switch>
+                    </div>
+                  </Stack>
+
+                  <Textfield
+                    title={<>デコレーション名 <span className="lu-text-danger">*</span></>}
+                    placeholder="例: キラキラ"
+                    {...register("name")}
+                    onChange={(e) => {
+                      register("name").onChange(e);
+                      setName(e.target.value);
+                    }}
+                    invalid={!!errors.name}
+                    caption={errors.name?.message}
+                  />
+
+                  <Textarea
+                    title="デコレーションの説明"
+                    rows={3}
+                    placeholder="例: アイコンをキラキラさせるデコレーションです"
+                    {...register("description")}
+                    onChange={(e) => {
+                      register("description").onChange(e);
+                      setDescription(e.target.value);
+                    }}
+                    invalid={!!errors.description}
+                    caption={errors.description?.message}
+                  />
+
+                  <Checkbox
+                    {...register("agreedToGuidelines")}
+                    onChange={(e) => {
+                      register("agreedToGuidelines").onChange(e);
+                      setAgreedToGuidelines(e.target.checked);
+                    }}
+                    error={errors.agreedToGuidelines?.message}
+                  >
+                    <a
+                      href={URL_AVATAR_DECORATION_REQUEST_GUIDELINES}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      ガイドライン
+                    </a>
+                    を読み、同意しました
+                  </Checkbox>
+
+                  <Stack direction="horizontal" gap={2}>
+                    <Button
+                      onClick={() => navigate("/avatar-decoration-request")}
+                    >
+                      キャンセル
+                    </Button>
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      disabled={!isValid}
+                    >
+                      申請する
+                    </Button>
+                  </Stack>
+                </Stack>
+              )}
             </Card>
           )}
         </>
       )}
 
       {/* 確認ダイアログ */}
-      <Modal
-        show={showConfirmDialog}
-        onHide={() => setShowConfirmDialog(false)}
-        centered
+      <Dialog
+        open={showConfirmDialog}
+        onClose={() => setShowConfirmDialog(false)}
+        title="申請の確認"
+        actions={
+          <>
+            <Button onClick={() => setShowConfirmDialog(false)}>キャンセル</Button>
+            <Button variant="primary" onClick={handleConfirmSubmit}>
+              申請する
+            </Button>
+          </>
+        }
       >
-        <Modal.Header closeButton>
-          <Modal.Title>申請の確認</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
           <p>
             以下の内容でアバターデコレーションを申請します。よろしいですか？
           </p>
-          <div className="vstack gap-2">
+          <Stack gap={2}>
             <div>
               <strong>デコレーション名:</strong> {name}
             </div>
@@ -477,7 +461,7 @@ const AvatarDecorationRequestNewPage = () => {
               </div>
             )}
             {imgDataUrl && (
-              <div className="text-center mt-3">
+              <div className="lu-text-center lu-mt-4">
                 <div className={previewContainerStyle}>
                   {isShowingIcon && user && (
                     <Image
@@ -497,19 +481,8 @@ const AvatarDecorationRequestNewPage = () => {
                 </div>
               </div>
             )}
-          </div>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button
-            onClick={() => setShowConfirmDialog(false)}
-          >
-            キャンセル
-          </Button>
-          <Button variant="primary" onClick={handleConfirmSubmit}>
-            申請する
-          </Button>
-        </Modal.Footer>
-      </Modal>
+          </Stack>
+        </Dialog>
     </Container>
   );
 };

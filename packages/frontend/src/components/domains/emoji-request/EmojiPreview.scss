@@ -1,9 +1,10 @@
 .sh-preview-container {
+    border-radius: var(--radius-md);
     padding: 16px;
-    background: var(--bs-gray-100);
+    background: #f8f9fa; // テーマに関わらず、明るい背景での見え方を示す
 
     &.dark {
-        background: var(--bs-gray-900);
+        background: #212529; // テーマに関わらず、暗い背景での見え方を示す
     }
 
     > img {

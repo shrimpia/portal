@@ -1,4 +1,4 @@
-import type { ComponentPropsWithoutRef, ElementType } from 'react';
+import type { ComponentPropsWithRef, ElementType } from 'react';
 
 import { classNames } from '@/util/class-names';
 
@@ -15,7 +15,7 @@ type ButtonOwnProps<T extends ElementType> = {
 };
 
 export type ButtonProps<T extends ElementType = 'button'> = ButtonOwnProps<T> &
-  Omit<ComponentPropsWithoutRef<T>, keyof ButtonOwnProps<T>>;
+  Omit<ComponentPropsWithRef<T>, keyof ButtonOwnProps<T>>;
 
 /**
  * デザインシステムの Button (`lu-button`)。

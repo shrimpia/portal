@@ -1116,3 +1116,442 @@
     background: color-mix(in oklab, var(--primary) 35%, var(--panel-button));
   }
 }
+
+/* ---------- TabBar ----------
+   A row of tabs for switching a view in place; the selected tab is underlined
+   in primary. Tabs are buttons (or links) inside a role="tablist" element. */
+
+.lu-tabbar {
+  display: flex;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  /* the hairline is a shadow, so the selected tab's underline can sit over it without overflowing the bar */
+  box-shadow: inset 0 -1px 0 var(--divider);
+  font-family: var(--font-sans);
+  overflow-x: auto;
+}
+.lu-tabbar__tab {
+  appearance: none;
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  color: var(--dimmed);
+  font-family: inherit;
+  font-size: var(--text-ui);
+  font-weight: 600;
+  line-height: 1;
+  text-box: trim-both cap alphabetic;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color var(--lu-duration) ease-out, border-color var(--lu-duration) ease-out;
+}
+.lu-tabbar__tab:hover:not(:disabled) {
+  color: var(--foreground);
+}
+.lu-tabbar__tab[aria-selected="true"],
+.lu-tabbar__tab[aria-current] {
+  border-bottom-color: var(--primary);
+  color: var(--foreground-strong);
+}
+.lu-tabbar__tab:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+.lu-tabbar__tab:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Stack ----------
+   Lays children in a column (or a row) with a token gap. */
+
+.lu-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--lu-stack-gap, 0);
+}
+.lu-stack--horizontal { flex-direction: row; }
+.lu-stack--inline { display: inline-flex; }
+.lu-stack--wrap { flex-wrap: wrap; }
+.lu-stack--align-start { align-items: flex-start; }
+.lu-stack--align-center { align-items: center; }
+.lu-stack--align-end { align-items: flex-end; }
+.lu-stack--justify-center { justify-content: center; }
+.lu-stack--justify-end { justify-content: flex-end; }
+.lu-stack--justify-between { justify-content: space-between; }
+.lu-stack--gap-1 { --lu-stack-gap: var(--space-1); }
+.lu-stack--gap-2 { --lu-stack-gap: var(--space-2); }
+.lu-stack--gap-3 { --lu-stack-gap: var(--space-3); }
+.lu-stack--gap-4 { --lu-stack-gap: var(--space-4); }
+.lu-stack--gap-6 { --lu-stack-gap: var(--space-6); }
+.lu-stack--gap-8 { --lu-stack-gap: var(--space-8); }
+.lu-stack--gap-12 { --lu-stack-gap: var(--space-12); }
+
+/* ---------- Container ----------
+   The page column: centred, capped width, side gutters. */
+
+:where(:root) {
+  --lu-container-width: 1024px;
+  --lu-grid-min: 260px;
+}
+.lu-container {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--lu-container-width);
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+.lu-container--wide {
+  --lu-container-width: 1280px;
+}
+
+/* ---------- Grid ----------
+   Cards that fill as many columns as fit (--lu-grid-min wide at least), or a
+   fixed two-up for side-by-side panels. */
+
+.lu-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, var(--lu-grid-min)), 1fr));
+  gap: var(--space-3);
+}
+.lu-grid--halves {
+  grid-template-columns: minmax(0, 1fr);
+}
+@media (min-width: 960px) {
+  .lu-grid--halves {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ---------- Spinner ----------
+   A ring that turns while something loads. Takes the colour of the text
+   (primary by default). */
+
+.lu-spinner {
+  display: inline-block;
+  box-sizing: border-box;
+  width: 2rem;
+  height: 2rem;
+  border: 0.25rem solid color-mix(in oklab, currentColor 24%, transparent);
+  border-top-color: currentColor;
+  border-radius: var(--radius-full);
+  color: var(--primary);
+  vertical-align: middle;
+  animation: lu-spin 0.75s linear infinite;
+}
+.lu-spinner--sm {
+  width: 1rem;
+  height: 1rem;
+  border-width: 0.15rem;
+}
+.lu-spinner--inherit {
+  color: inherit;
+}
+@keyframes lu-spin {
+  to { rotate: 360deg; }
+}
+
+/* ---------- Drawer (<dialog class="lu-drawer">, opened with showModal()) ----------
+   A side panel for help and details: the modal level of Elevation, docked to
+   the right edge and full height. */
+
+.lu-drawer {
+  box-sizing: border-box;
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: min(400px, 100vw);
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: var(--space-6);
+  border: none;
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  background: var(--panel-raised);
+  box-shadow: var(--shadow-lg);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  overflow: auto;
+  opacity: 0;
+  translate: var(--space-8) 0;
+  transition:
+    opacity var(--lu-duration-slow) ease-out,
+    translate var(--lu-duration-slow) ease-out,
+    overlay var(--lu-duration-slow) allow-discrete,
+    display var(--lu-duration-slow) allow-discrete;
+}
+.lu-drawer[open] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  opacity: 1;
+  translate: 0 0;
+}
+@starting-style {
+  .lu-drawer[open] {
+    opacity: 0;
+    translate: var(--space-8) 0;
+  }
+}
+.lu-drawer::backdrop {
+  background: color-mix(in oklab, var(--background) 60%, transparent);
+  -webkit-backdrop-filter: blur(4px);
+          backdrop-filter: blur(4px);
+  opacity: 0;
+  transition:
+    opacity var(--lu-duration-slow) ease-out,
+    overlay var(--lu-duration-slow) allow-discrete,
+    display var(--lu-duration-slow) allow-discrete;
+}
+.lu-drawer[open]::backdrop {
+  opacity: 1;
+}
+@starting-style {
+  .lu-drawer[open]::backdrop {
+    opacity: 0;
+  }
+}
+.lu-drawer__title {
+  margin: 0;
+  color: var(--foreground-strong);
+  font-size: var(--text-h4);
+  font-weight: 700;
+  line-height: 1.5;
+}
+.lu-drawer__body {
+  line-height: 2;
+}
+.lu-drawer__body > :first-child { margin-top: 0; }
+.lu-drawer__body > :last-child { margin-bottom: 0; }
+
+/* ---------- Menu ----------
+   A dropdown of actions that opens under its trigger: the dropdown level of
+   Elevation (panel-raised, shadow-md). Open and close it from script; the
+   panel is hidden with the `hidden` attribute. */
+
+.lu-menu {
+  position: relative;
+  display: inline-block;
+}
+.lu-menu__panel {
+  box-sizing: border-box;
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  right: 0;
+  z-index: 200;
+  display: grid;
+  min-width: 12rem;
+  padding: var(--space-1);
+  border-radius: var(--radius-md);
+  background: var(--panel-raised);
+  box-shadow: var(--shadow-md);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+.lu-menu__panel[hidden] {
+  display: none;
+}
+.lu-menu__item {
+  appearance: none;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--foreground);
+  font-family: inherit;
+  font-size: var(--text-ui);
+  line-height: 1.5;
+  text-align: start;
+  text-decoration: none;
+  cursor: pointer;
+}
+.lu-menu__item:hover,
+.lu-menu__item:focus-visible {
+  background: color-mix(in oklab, var(--primary) 12%, transparent);
+}
+.lu-menu__item:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: -2px;
+}
+.lu-menu__item--danger {
+  color: var(--danger);
+}
+.lu-menu__divider {
+  height: 1px;
+  margin: var(--space-1) 0;
+  border: none;
+  background: var(--divider);
+}
+.lu-menu__text {
+  margin: 0;
+  padding: var(--space-2) var(--space-3);
+  color: var(--dimmed);
+  font-size: var(--text-small);
+  line-height: 1.5;
+}
+
+/* ---------- Utilities ----------
+   A few single-purpose classes for spacing and text, on the spacing tokens:
+   lu-m{t,b,s,e,x,y}-{n} / lu-p{t,b,s,e,x,y}-{n} with n in 0, 1, 2, 3, 4, 6, 8, 12, 16
+   (no side letter: all four sides). */
+
+.lu-mt-0 { margin-top: 0; }
+.lu-mt-1 { margin-top: var(--space-1); }
+.lu-mt-2 { margin-top: var(--space-2); }
+.lu-mt-3 { margin-top: var(--space-3); }
+.lu-mt-4 { margin-top: var(--space-4); }
+.lu-mt-6 { margin-top: var(--space-6); }
+.lu-mt-8 { margin-top: var(--space-8); }
+.lu-mt-12 { margin-top: var(--space-12); }
+.lu-mt-16 { margin-top: var(--space-16); }
+.lu-mb-0 { margin-bottom: 0; }
+.lu-mb-1 { margin-bottom: var(--space-1); }
+.lu-mb-2 { margin-bottom: var(--space-2); }
+.lu-mb-3 { margin-bottom: var(--space-3); }
+.lu-mb-4 { margin-bottom: var(--space-4); }
+.lu-mb-6 { margin-bottom: var(--space-6); }
+.lu-mb-8 { margin-bottom: var(--space-8); }
+.lu-mb-12 { margin-bottom: var(--space-12); }
+.lu-mb-16 { margin-bottom: var(--space-16); }
+.lu-ms-0 { margin-inline-start: 0; }
+.lu-ms-1 { margin-inline-start: var(--space-1); }
+.lu-ms-2 { margin-inline-start: var(--space-2); }
+.lu-ms-3 { margin-inline-start: var(--space-3); }
+.lu-ms-4 { margin-inline-start: var(--space-4); }
+.lu-ms-6 { margin-inline-start: var(--space-6); }
+.lu-ms-8 { margin-inline-start: var(--space-8); }
+.lu-ms-12 { margin-inline-start: var(--space-12); }
+.lu-ms-16 { margin-inline-start: var(--space-16); }
+.lu-me-0 { margin-inline-end: 0; }
+.lu-me-1 { margin-inline-end: var(--space-1); }
+.lu-me-2 { margin-inline-end: var(--space-2); }
+.lu-me-3 { margin-inline-end: var(--space-3); }
+.lu-me-4 { margin-inline-end: var(--space-4); }
+.lu-me-6 { margin-inline-end: var(--space-6); }
+.lu-me-8 { margin-inline-end: var(--space-8); }
+.lu-me-12 { margin-inline-end: var(--space-12); }
+.lu-me-16 { margin-inline-end: var(--space-16); }
+.lu-mx-0 { margin-inline: 0; }
+.lu-mx-1 { margin-inline: var(--space-1); }
+.lu-mx-2 { margin-inline: var(--space-2); }
+.lu-mx-3 { margin-inline: var(--space-3); }
+.lu-mx-4 { margin-inline: var(--space-4); }
+.lu-mx-6 { margin-inline: var(--space-6); }
+.lu-mx-8 { margin-inline: var(--space-8); }
+.lu-mx-12 { margin-inline: var(--space-12); }
+.lu-mx-16 { margin-inline: var(--space-16); }
+.lu-my-0 { margin-block: 0; }
+.lu-my-1 { margin-block: var(--space-1); }
+.lu-my-2 { margin-block: var(--space-2); }
+.lu-my-3 { margin-block: var(--space-3); }
+.lu-my-4 { margin-block: var(--space-4); }
+.lu-my-6 { margin-block: var(--space-6); }
+.lu-my-8 { margin-block: var(--space-8); }
+.lu-my-12 { margin-block: var(--space-12); }
+.lu-my-16 { margin-block: var(--space-16); }
+.lu-m-0 { margin: 0; }
+.lu-m-1 { margin: var(--space-1); }
+.lu-m-2 { margin: var(--space-2); }
+.lu-m-3 { margin: var(--space-3); }
+.lu-m-4 { margin: var(--space-4); }
+.lu-m-6 { margin: var(--space-6); }
+.lu-m-8 { margin: var(--space-8); }
+.lu-m-12 { margin: var(--space-12); }
+.lu-m-16 { margin: var(--space-16); }
+.lu-pt-0 { padding-top: 0; }
+.lu-pt-1 { padding-top: var(--space-1); }
+.lu-pt-2 { padding-top: var(--space-2); }
+.lu-pt-3 { padding-top: var(--space-3); }
+.lu-pt-4 { padding-top: var(--space-4); }
+.lu-pt-6 { padding-top: var(--space-6); }
+.lu-pt-8 { padding-top: var(--space-8); }
+.lu-pt-12 { padding-top: var(--space-12); }
+.lu-pt-16 { padding-top: var(--space-16); }
+.lu-pb-0 { padding-bottom: 0; }
+.lu-pb-1 { padding-bottom: var(--space-1); }
+.lu-pb-2 { padding-bottom: var(--space-2); }
+.lu-pb-3 { padding-bottom: var(--space-3); }
+.lu-pb-4 { padding-bottom: var(--space-4); }
+.lu-pb-6 { padding-bottom: var(--space-6); }
+.lu-pb-8 { padding-bottom: var(--space-8); }
+.lu-pb-12 { padding-bottom: var(--space-12); }
+.lu-pb-16 { padding-bottom: var(--space-16); }
+.lu-ps-0 { padding-inline-start: 0; }
+.lu-ps-1 { padding-inline-start: var(--space-1); }
+.lu-ps-2 { padding-inline-start: var(--space-2); }
+.lu-ps-3 { padding-inline-start: var(--space-3); }
+.lu-ps-4 { padding-inline-start: var(--space-4); }
+.lu-ps-6 { padding-inline-start: var(--space-6); }
+.lu-ps-8 { padding-inline-start: var(--space-8); }
+.lu-ps-12 { padding-inline-start: var(--space-12); }
+.lu-ps-16 { padding-inline-start: var(--space-16); }
+.lu-pe-0 { padding-inline-end: 0; }
+.lu-pe-1 { padding-inline-end: var(--space-1); }
+.lu-pe-2 { padding-inline-end: var(--space-2); }
+.lu-pe-3 { padding-inline-end: var(--space-3); }
+.lu-pe-4 { padding-inline-end: var(--space-4); }
+.lu-pe-6 { padding-inline-end: var(--space-6); }
+.lu-pe-8 { padding-inline-end: var(--space-8); }
+.lu-pe-12 { padding-inline-end: var(--space-12); }
+.lu-pe-16 { padding-inline-end: var(--space-16); }
+.lu-px-0 { padding-inline: 0; }
+.lu-px-1 { padding-inline: var(--space-1); }
+.lu-px-2 { padding-inline: var(--space-2); }
+.lu-px-3 { padding-inline: var(--space-3); }
+.lu-px-4 { padding-inline: var(--space-4); }
+.lu-px-6 { padding-inline: var(--space-6); }
+.lu-px-8 { padding-inline: var(--space-8); }
+.lu-px-12 { padding-inline: var(--space-12); }
+.lu-px-16 { padding-inline: var(--space-16); }
+.lu-py-0 { padding-block: 0; }
+.lu-py-1 { padding-block: var(--space-1); }
+.lu-py-2 { padding-block: var(--space-2); }
+.lu-py-3 { padding-block: var(--space-3); }
+.lu-py-4 { padding-block: var(--space-4); }
+.lu-py-6 { padding-block: var(--space-6); }
+.lu-py-8 { padding-block: var(--space-8); }
+.lu-py-12 { padding-block: var(--space-12); }
+.lu-py-16 { padding-block: var(--space-16); }
+.lu-p-0 { padding: 0; }
+.lu-p-1 { padding: var(--space-1); }
+.lu-p-2 { padding: var(--space-2); }
+.lu-p-3 { padding: var(--space-3); }
+.lu-p-4 { padding: var(--space-4); }
+.lu-p-6 { padding: var(--space-6); }
+.lu-p-8 { padding: var(--space-8); }
+.lu-p-12 { padding: var(--space-12); }
+.lu-p-16 { padding: var(--space-16); }
+
+.lu-ms-auto { margin-inline-start: auto; }
+.lu-me-auto { margin-inline-end: auto; }
+.lu-mx-auto { margin-inline: auto; }
+
+.lu-text-dimmed { color: var(--dimmed); }
+.lu-text-primary { color: var(--primary); }
+.lu-text-success { color: var(--success); }
+.lu-text-warning { color: var(--warning); }
+.lu-text-danger { color: var(--danger); }
+.lu-text-center { text-align: center; }
+.lu-text-start { text-align: start; }
+.lu-text-end { text-align: end; }
+.lu-text-small { font-size: var(--text-small); line-height: 1.5; }
+.lu-text-bold { font-weight: 700; }
+
+@media (prefers-reduced-motion: reduce) {
+  .lu-tabbar__tab, .lu-drawer, .lu-drawer::backdrop {
+    transition: none;
+  }
+  .lu-spinner {
+    animation-duration: 2s;
+  }
+}

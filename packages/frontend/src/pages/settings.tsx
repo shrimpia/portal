@@ -1,9 +1,12 @@
 import { useAtom, useAtomValue } from 'jotai';
 import { useCallback } from 'react';
-import { Card, Container, Form, Stack } from 'react-bootstrap';
 
 import type { ThemeType } from '@/types/theme-type';
 
+import { Card } from '@/components/ui/Card';
+import { Radio } from '@/components/ui/Choice';
+import { Container } from '@/components/ui/Container';
+import { Stack } from '@/components/ui/Stack';
 import { currentThemeAtom, themeAtom } from '@/states/screen';
 import { useLoginGuard } from '@/hooks/useLoginGuard';
 
@@ -17,16 +20,16 @@ const SettingsPage = () => {
 
   return (
     <Container>
-      <h1 className="fs-3 mb-5">設定</h1>
-      <Stack gap={3}>
+      <h1 className="lu-mb-12">設定</h1>
+      <Stack gap={4}>
         <Card>
-          <Card.Body>
-            <Card.Title><i className={`bi bi-${currentTheme === 'light' ? 'sun' : 'moon'}-fill`} /> テーマ設定</Card.Title>
-            <Card.Text className="text-muted">ポータル全体に適用されるカラーテーマを設定します。</Card.Text>
-            <Form.Check id="system" type="radio" label="システム設定に合わせる" value="system" checked={theme === 'system'} onChange={updateTheme} />
-            <Form.Check id="dark" type="radio" label="ダークテーマ" value="dark" checked={theme === 'dark'} onChange={updateTheme} />
-            <Form.Check id="light" type="radio" label="ライトテーマ" value="light" checked={theme === 'light'} onChange={updateTheme} />
-          </Card.Body>
+          <Card.Title><i className={`bi bi-${currentTheme === 'light' ? 'sun' : 'moon'}-fill`} /> テーマ設定</Card.Title>
+          <Card.Text className="lu-text-dimmed">ポータル全体に適用されるカラーテーマを設定します。</Card.Text>
+          <div role="radiogroup" aria-label="テーマ">
+            <Radio name="theme" value="system" checked={theme === 'system'} onChange={updateTheme}>システム設定に合わせる</Radio>
+            <Radio name="theme" value="dark" checked={theme === 'dark'} onChange={updateTheme}>ダークテーマ</Radio>
+            <Radio name="theme" value="light" checked={theme === 'light'} onChange={updateTheme}>ライトテーマ</Radio>
+          </div>
         </Card>
       </Stack>
     </Container>
