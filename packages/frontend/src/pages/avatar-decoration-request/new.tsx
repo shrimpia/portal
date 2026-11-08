@@ -274,7 +274,7 @@ const AvatarDecorationRequestNewPage = () => {
           </div>
 
           {limit > 0 && (
-            <Card>
+            <div>
               {error?.length > 0 &&
                 error.map((e) => (
                   <Alert className="lu-mb-4" variant="danger" icon="bi-exclamation-triangle-fill" key={"error-" + e}>
@@ -429,7 +429,7 @@ const AvatarDecorationRequestNewPage = () => {
                   </Stack>
                 </Stack>
               )}
-            </Card>
+            </div>
           )}
         </>
       )}

@@ -185,9 +185,9 @@ const DetailForm: React.FC = () => {
               </FieldCaption>
 
               <TabBar value={commentFormType} onChange={setCommentFormType} className="lu-ms-2" aria-label="表示の切り替え">
-  <TabBar.Tab value="editor">エディタ</TabBar.Tab>
-  <TabBar.Tab value="preview">プレビュー</TabBar.Tab>
-</TabBar>
+                <TabBar.Tab value="editor">エディタ</TabBar.Tab>
+                <TabBar.Tab value="preview">プレビュー</TabBar.Tab>
+              </TabBar>
               {commentFormType === 'editor' ? (
                 <Textarea
                   rows={6}

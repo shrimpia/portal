@@ -25,7 +25,7 @@ function App() {
           <ErrorBoundary>
             <Suspense fallback={<LoadingView/>}>
               {useRoutes(routes)}
-              <footer className="lu-text-center lu-text-dimmed" style={{ marginTop: 128, fontFamily: 'serif' }}>
+              <footer className="lu-text-center lu-text-dimmed" style={{ marginTop: 128 }}>
                 <p>
                   (C)2023-2026 Shrimpia Network
                 </p>

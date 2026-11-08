@@ -1,11 +1,7 @@
-import { css } from "@linaria/core";
 import { useAtom } from "jotai";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import DatePicker, { registerLocale } from "react-datepicker";
 
 import type { EventDraft, EventDto } from "@/types/event";
-
-import "react-datepicker/dist/react-datepicker.css";
 
 import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
@@ -17,20 +13,7 @@ import { Stack } from '@/components/ui/Stack';
 import { Textarea } from '@/components/ui/Textarea';
 import { Textfield } from '@/components/ui/Textfield';
 import { userAtom } from "@/states/user";
-
-import { ja } from "date-fns/locale/ja";
-
-registerLocale("ja", ja);
-
-// Control の中で、日時の入力欄が幅を等分するようにする
-const pickerWrapperStyle = css`
-  flex: 1 1 0;
-  min-width: 0;
-
-  .react-datepicker__input-container {
-    display: block;
-  }
-`;
+import { fromInputValue, toInputValue } from "@/util/datetime-input";
 
 export type EditEventModalProp = {
   show: boolean;
@@ -152,25 +135,25 @@ export const EditEventModal: React.FC<EditEventModalProp> = (p) => {
           </div>
           <div>
             <Control title="日時">
-              <DatePicker
-                dateFormat={isAllDay ? "y年M月d日" : "y年M月d日 HH:mm"}
-                locale="ja"
-                showTimeSelect={!isAllDay}
-                selected={startDate}
-                customInput={<Well aria-label="開始" />}
-                wrapperClassName={pickerWrapperStyle}
-                onChange={(date) => setStartDate(date ?? new Date())}
+              <Well
+                type={isAllDay ? "date" : "datetime-local"}
+                aria-label="開始"
+                value={toInputValue(startDate, isAllDay)}
+                onChange={(e) => {
+                  const date = fromInputValue(e.target.value);
+                  if (date) setStartDate(date);
+                }}
                 onBlur={checkErrors}
               />
               <Control.Separator>～</Control.Separator>
-              <DatePicker
-                dateFormat={isAllDay ? "y年M月d日" : "y年M月d日 HH:mm"}
-                locale="ja"
-                showTimeSelect={!isAllDay}
-                selected={endDate}
-                customInput={<Well aria-label="終了" />}
-                wrapperClassName={pickerWrapperStyle}
-                onChange={(date) => setEndDate(date ?? new Date())}
+              <Well
+                type={isAllDay ? "date" : "datetime-local"}
+                aria-label="終了"
+                value={toInputValue(endDate, isAllDay)}
+                onChange={(e) => {
+                  const date = fromInputValue(e.target.value);
+                  if (date) setEndDate(date);
+                }}
                 onBlur={checkErrors}
               />
             </Control>
